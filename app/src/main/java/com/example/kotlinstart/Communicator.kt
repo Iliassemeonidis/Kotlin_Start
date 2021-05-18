@@ -1,5 +1,6 @@
 package com.example.kotlinstart
 
-interface Communicator {
+internal interface Communicator {
+
     fun passDataComm(person: Person)
 }
