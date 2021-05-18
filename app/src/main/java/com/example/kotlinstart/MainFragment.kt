@@ -33,7 +33,6 @@ class MainFragment : Fragment() {
             else -> view.findViewById<TextView>(R.id.text_introduce).text =
                 "Привет, ${person.name}! Отправляйся в криогенный сон, малыш!"
         }
-
         return view
     }
 
