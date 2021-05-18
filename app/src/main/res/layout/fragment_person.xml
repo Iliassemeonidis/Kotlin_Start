@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/kogaionon"
+    tools:context=".PersonFragment">
+
+
+    <TextView
+        android:id="@+id/text_introduce"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Text.Alien"
+        android:text="@string/title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/text_view_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/write_your_name"
+        style="@style/Text.Alien"
+        app:layout_constraintBottom_toTopOf="@+id/fragment_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_introduce"/>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/fragment_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:hint="@string/name"
+        android:textColorHint="@color/black"
+        app:errorEnabled="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_info">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/text_view_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/purple_200"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/text_view_age"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Text.Alien"
+        android:text="@string/write_your_age"
+        app:layout_constraintBottom_toTopOf="@+id/fragment_age"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_name" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/fragment_age"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:hint="@string/age"
+        app:errorEnabled="true"
+        app:errorTextColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_age">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_text_age"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="@color/black"
+            android:background="@color/purple_200"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/button_apply"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="@string/apply"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
