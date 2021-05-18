@@ -7,10 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_main.*
 
 
-class MainFragment : Fragment() {
+class FragmentGreeting : Fragment() {
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -18,13 +17,14 @@ class MainFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_main, container, false)
+        val view = inflater.inflate(R.layout.fragment_greeting, container, false)
 
         val person: Person? = arguments?.getParcelable(personKye)
 
         when {
             person?.age!! in 19..49 -> {
-                view.findViewById<TextView>(R.id.text_introduce).text  = "Привет, ${person.name}! Тебе уже можно сгоняй за пивком"
+                view.findViewById<TextView>(R.id.text_introduce).text =
+                    "Привет, ${person.name}! Тебе уже можно сгоняй за пивком"
             }
             person.age > 50 -> {
                 view.findViewById<TextView>(R.id.text_introduce).text =

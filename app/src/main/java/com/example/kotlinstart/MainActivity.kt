@@ -18,9 +18,9 @@ class MainActivity : AppCompatActivity(), Communicator {
         bundle.putParcelable(personKye, person)
 
         val transaction = this.supportFragmentManager.beginTransaction()
-        val fragmentMain = MainFragment()
-        fragmentMain.arguments = bundle
+        val fragmentGreeting = FragmentGreeting()
+        fragmentGreeting.arguments = bundle
 
-        transaction.replace(R.id.list_container, fragmentMain).addToBackStack(null).commitAllowingStateLoss()
+        transaction.replace(R.id.list_container, fragmentGreeting).addToBackStack(null).commitAllowingStateLoss()
     }
 }
