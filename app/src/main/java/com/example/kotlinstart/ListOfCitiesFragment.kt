@@ -8,9 +8,8 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.fragment_person.*
-// TODO rename this class in listOfCitiesFragment
-internal class PersonFragment : Fragment() {
+
+internal class ListOfCitiesFragment : Fragment() {
 
     private lateinit var communicator: Communicator
 
@@ -27,7 +26,7 @@ internal class PersonFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_person, container, false)
+        return inflater.inflate(R.layout.fragment_list_of_cities, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -38,28 +37,29 @@ internal class PersonFragment : Fragment() {
 //            communicator.passDataComm(person)
 //        }
         createList(view)
-
-
     }
 
     private fun createList(view: View) {
         val recyclerView: RecyclerView = view.findViewById(R.id.recycler_view_main)
-        val arr = resources.getStringArray(R.array.city).toList()
+        val cityArray = resources.getStringArray(R.array.city).toList()
+        val regionArray = resources.getStringArray(R.array.region).toList()
         val weather = ArrayList<Weather>()
-        (arr.indices).forEach{ i -> weather.add(Weather(arr[i],"27°C"))}
 
+        //Временно, сделанно для примера заполняние,а не как реализация
+        if (cityArray.size == regionArray.size) {
+            for (i in cityArray.indices) {
+                weather.add(Weather(cityArray[i],regionArray[i],"27°C"))
+            }
+        }
         recyclerView.adapter = WeatherAdapter(weather)
     }
-
-
-
 
     companion object {
         const val PERSON_KEY = "personKye"
 
         @JvmStatic
         fun newInstance(counter: Int) =
-            PersonFragment().apply { arguments = bundleOf(PERSON_KEY to counter) }
+            ListOfCitiesFragment().apply { arguments = bundleOf(PERSON_KEY to counter) }
     }
 
     interface OnClickItem{

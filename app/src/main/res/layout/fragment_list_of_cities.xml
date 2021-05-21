@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PersonFragment">
+    tools:context=".ListOfCitiesFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_main"
@@ -17,7 +17,7 @@
         tools:listitem="@layout/item_city_weather"
         app:layout_constraintTop_toTopOf="parent"/>
 
-
+<!--TODO Разобраться почему не отображается корректно иконка-->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/floating_action_button"
             android:layout_width="wrap_content"

@@ -14,28 +14,30 @@
         android:layout_height="match_parent"
         android:background="@color/SkyBlue">
 
-        <!--TODO rename id  text_view_region in text_view_city-->
         <TextView
-            android:id="@+id/text_view_region"
+            android:id="@+id/text_view_city"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10sp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Москва" />
-        <!--TODO rename id  text_view_city in text_view_region-->
+
         <TextView
-            android:id="@+id/text_view_city"
+            android:id="@+id/text_view_region"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10sp"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="10dp"
+            android:paddingBottom="10sp"
             android:textColor="@color/white"
-            android:textSize="17sp"
+            android:textSize="15sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_view_region"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_city"
             tools:text="Москва" />
 
         <TextView
@@ -45,17 +47,19 @@
             android:layout_margin="10sp"
             android:textColor="@color/white"
             android:textSize="25sp"
+            android:paddingBottom="10sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/icon_sun"
+            app:layout_constraintEnd_toStartOf="@+id/weather_icon"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="27°C" />
-<!--TODO rename id in weather -->
+
         <ImageView
-            android:id="@+id/icon_sun"
+            android:id="@+id/weather_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10sp"
+            android:paddingBottom="10sp"
             android:contentDescription="@string/icon_sun"
             android:src="@drawable/sun"
             app:layout_constraintEnd_toEndOf="parent"

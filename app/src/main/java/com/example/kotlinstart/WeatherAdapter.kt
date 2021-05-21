@@ -5,7 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import org.w3c.dom.Text
 
 internal class WeatherAdapter(
     var weatherList: ArrayList<Weather>,
@@ -23,12 +22,14 @@ internal class WeatherAdapter(
     }
 
     class MainFragmentWeatherList(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private var city: TextView = itemView.findViewById(R.id.text_view_city)
         private var region: TextView = itemView.findViewById(R.id.text_view_region)
-        private var temp : TextView = itemView.findViewById(R.id.temperature)
+        private var temp: TextView = itemView.findViewById(R.id.temperature)
 
         fun bind(weather: Weather) {
-            region.text = weather.cityName
+            city.text = weather.cityName
             temp.text = weather.temperature
+            region.text = weather.region
         }
     }
 }

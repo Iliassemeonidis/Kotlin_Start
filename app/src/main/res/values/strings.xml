@@ -20,6 +20,16 @@
         <item>Москва</item>
         <item>Калифорния</item>
         <item>Афины</item>
-        <item>Пекин</item>
+        <item>Сочи</item>
+        <item>Владикавказ</item>
     </string-array>
+
+    <string-array name="region">
+        <item>Москва</item>
+        <item>Мериленд</item>
+        <item>Аттика</item>
+        <item>Краснодарский край</item>
+        <item>Республика Северная Осетия-Алания</item>
+    </string-array>
+
 </resources>
