@@ -49,11 +49,11 @@ internal class MainActivity : AppCompatActivity(), Communicator {
             .commitAllowingStateLoss()
     }
 
-    override fun passDataComm(person: Person) {
+    override fun passDataComm(weather: Weather) {
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.list_container, FragmentGreeting().apply {
-                arguments = bundleOf(PersonFragment.PERSON_KEY to person)
+                arguments = bundleOf(PersonFragment.PERSON_KEY to weather)
             })
             .addToBackStack(null).commitAllowingStateLoss()
     }

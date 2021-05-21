@@ -4,4 +4,5 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-internal data class Person(var name: String?, var age: Int) : Parcelable
+internal data class Weather(var cityName: String, var temperature : String) : Parcelable
+

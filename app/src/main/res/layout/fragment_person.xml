@@ -4,97 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/kogaionon"
     tools:context=".PersonFragment">
 
-
-    <TextView
-        android:id="@+id/text_introduce"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/Text.Alien"
-        android:text="@string/title"
+        android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/text_view_info"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/write_your_name"
-        style="@style/Text.Alien"
-        app:layout_constraintBottom_toTopOf="@+id/fragment_name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_introduce"/>
+        tools:listitem="@layout/item_city_weather"
+        app:layout_constraintTop_toTopOf="parent"/>
 
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/fragment_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:hint="@string/name"
-        android:textColorHint="@color/black"
-        app:errorEnabled="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_info">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/text_view_name"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/purple_200"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <TextView
-        android:id="@+id/text_view_age"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/Text.Alien"
-        android:text="@string/write_your_age"
-        app:layout_constraintBottom_toTopOf="@+id/fragment_age"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_name" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/fragment_age"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:hint="@string/age"
-        app:errorEnabled="true"
-        app:errorTextColor="@color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_age">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edit_text_age"
-            android:layout_width="match_parent"
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floating_action_button"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="number"
-            android:textColorHint="@color/black"
-            android:background="@color/purple_200"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16sp"
+            android:contentDescription="@string/add_new_city"
+            android:src="@drawable/plus"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-    <Button
-        android:id="@+id/button_apply"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="@string/apply"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

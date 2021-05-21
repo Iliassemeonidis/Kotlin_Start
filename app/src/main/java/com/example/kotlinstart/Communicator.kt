@@ -2,5 +2,5 @@ package com.example.kotlinstart
 
 internal interface Communicator {
 
-    fun passDataComm(person: Person)
+    fun passDataComm(weather: Weather)
 }

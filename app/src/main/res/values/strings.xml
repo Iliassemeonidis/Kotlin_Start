@@ -13,4 +13,13 @@
     <string name="greeting">Приветсвую тебя человечешка!</string>
     <string name="introduce_yourself">Жми на кнопку человечешка!</string>
     <string name="title">Укажи свои данные, земляненен и нажми кнопку!</string>
+    <string name="add_new_city">add new city</string>
+    <string name="icon_sun">icon_sun</string>
+
+    <string-array name="city">
+        <item>Москва</item>
+        <item>Калифорния</item>
+        <item>Афины</item>
+        <item>Пекин</item>
+    </string-array>
 </resources>
