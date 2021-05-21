@@ -1,14 +1,17 @@
-package com.example.kotlinstart
+package com.example.kotlinstart.weather
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.kotlinstart.R
 
 internal class WeatherAdapter(
-    var weatherList: ArrayList<Weather>,
+    private var weatherList: ArrayList<Weather>,
+    private val onClickItem: WeatherFragment.OnClickItem
 ) : RecyclerView.Adapter<WeatherAdapter.MainFragmentWeatherList>() {
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainFragmentWeatherList =
         MainFragmentWeatherList(
@@ -19,12 +22,17 @@ internal class WeatherAdapter(
 
     override fun onBindViewHolder(holder: MainFragmentWeatherList, position: Int) {
         holder.bind(weatherList[position])
+
     }
 
-    class MainFragmentWeatherList(itemView: View) : RecyclerView.ViewHolder(itemView) {
+  internal class MainFragmentWeatherList(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private var city: TextView = itemView.findViewById(R.id.text_view_city)
         private var region: TextView = itemView.findViewById(R.id.text_view_region)
         private var temp: TextView = itemView.findViewById(R.id.temperature)
+
+        init {
+            itemView.setOnClickListener{}
+        }
 
         fun bind(weather: Weather) {
             city.text = weather.cityName

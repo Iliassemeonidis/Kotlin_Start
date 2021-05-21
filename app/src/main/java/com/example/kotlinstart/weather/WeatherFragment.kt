@@ -1,4 +1,4 @@
-package com.example.kotlinstart
+package com.example.kotlinstart.weather
 
 import android.content.Context
 import android.os.Bundle
@@ -8,14 +8,23 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import com.example.kotlinstart.Communicator
+import com.example.kotlinstart.R
 
-internal class ListOfCitiesFragment : Fragment() {
+internal class WeatherFragment : Fragment() {
 
     private lateinit var communicator: Communicator
 
     /*fun getCommunicator():Communicator = communicator
     fun setCommunicator(communicator: Communicator) {this.communicator = communicator}
     */
+    private val onClickItem: OnClickItem = object : OnClickItem {
+        override fun onClick(weather: Weather) {
+            communicator.passDataComm(weather)
+
+        }
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         communicator = context as Communicator
@@ -26,32 +35,27 @@ internal class ListOfCitiesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_list_of_cities, container, false)
+        return inflater.inflate(R.layout.fragment_weather, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        floating_action_button.setOnClickListener {
-//            val person =
-//                Weather("text_view_name.text.toString()", 6)
-//            communicator.passDataComm(person)
-//        }
         createList(view)
     }
 
     private fun createList(view: View) {
+        //Временно, сделанно для примера заполняние,а не как реализация
         val recyclerView: RecyclerView = view.findViewById(R.id.recycler_view_main)
         val cityArray = resources.getStringArray(R.array.city).toList()
         val regionArray = resources.getStringArray(R.array.region).toList()
         val weather = ArrayList<Weather>()
 
-        //Временно, сделанно для примера заполняние,а не как реализация
         if (cityArray.size == regionArray.size) {
             for (i in cityArray.indices) {
                 weather.add(Weather(cityArray[i],regionArray[i],"27°C"))
             }
         }
-        recyclerView.adapter = WeatherAdapter(weather)
+        recyclerView.adapter = WeatherAdapter(weather,onClickItem)
     }
 
     companion object {
@@ -59,10 +63,10 @@ internal class ListOfCitiesFragment : Fragment() {
 
         @JvmStatic
         fun newInstance(counter: Int) =
-            ListOfCitiesFragment().apply { arguments = bundleOf(PERSON_KEY to counter) }
+            WeatherFragment().apply { arguments = bundleOf(PERSON_KEY to counter) }
     }
 
     interface OnClickItem{
-       fun onClickItem(weather: Weather)
+       fun onClick(weather: Weather)
     }
 }
