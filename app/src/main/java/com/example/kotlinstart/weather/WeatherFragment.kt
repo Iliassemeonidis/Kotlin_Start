@@ -21,7 +21,6 @@ internal class WeatherFragment : Fragment() {
     private val onClickItem: OnClickItem = object : OnClickItem {
         override fun onClick(weather: Weather) {
             communicator.passDataComm(weather)
-
         }
     }
 
@@ -52,10 +51,10 @@ internal class WeatherFragment : Fragment() {
 
         if (cityArray.size == regionArray.size) {
             for (i in cityArray.indices) {
-                weather.add(Weather(cityArray[i],regionArray[i],"27°C"))
+                weather.add(Weather(cityArray[i], regionArray[i], "27°C"))
             }
         }
-        recyclerView.adapter = WeatherAdapter(weather,onClickItem)
+        recyclerView.adapter = WeatherAdapter(weather, onClickItem)
     }
 
     companion object {
@@ -66,7 +65,7 @@ internal class WeatherFragment : Fragment() {
             WeatherFragment().apply { arguments = bundleOf(PERSON_KEY to counter) }
     }
 
-    interface OnClickItem{
-       fun onClick(weather: Weather)
+    interface OnClickItem {
+        fun onClick(weather: Weather)
     }
 }
