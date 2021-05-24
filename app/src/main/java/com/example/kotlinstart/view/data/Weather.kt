@@ -1,4 +1,4 @@
-package com.example.kotlinstart.weather
+package com.example.kotlinstart.view.data
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

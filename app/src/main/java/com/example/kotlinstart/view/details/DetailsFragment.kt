@@ -1,12 +1,13 @@
-package com.example.kotlinstart
+package com.example.kotlinstart.view.details
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.kotlinstart.weather.Weather
-import com.example.kotlinstart.weather.WeatherFragment
+import com.example.kotlinstart.R
+import com.example.kotlinstart.view.data.Weather
+import com.example.kotlinstart.view.main.WeatherFragment
 import kotlinx.android.synthetic.main.fragment_details.*
 
 internal class DetailsFragment : Fragment() {
@@ -26,9 +27,11 @@ internal class DetailsFragment : Fragment() {
 
     private fun initView() {
         val weather: Weather? = arguments?.getParcelable(WeatherFragment.PERSON_KEY)
-        text_view_city_name.text = weather?.cityName
-        degrees.text = weather?.temperature
-        weather_condition.text = "Солнечно"
-        text_view_feels_like.text = "Ощущается как 27°"
+        weather?.let {
+            text_view_city_name.text = it.cityName
+            degrees.text = it.temperature
+            weather_condition.text = "Солнечно"
+            text_view_feels_like.text = "Ощущается как 27°"
+        }
     }
 }

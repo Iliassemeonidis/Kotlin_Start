@@ -1,10 +1,12 @@
-package com.example.kotlinstart
+package com.example.kotlinstart.view
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
-import com.example.kotlinstart.weather.Weather
-import com.example.kotlinstart.weather.WeatherFragment
+import com.example.kotlinstart.R
+import com.example.kotlinstart.view.data.Weather
+import com.example.kotlinstart.view.details.DetailsFragment
+import com.example.kotlinstart.view.main.WeatherFragment
 
 internal class MainActivity : AppCompatActivity(), Communicator {
 
@@ -17,12 +19,13 @@ internal class MainActivity : AppCompatActivity(), Communicator {
             .commitAllowingStateLoss()
     }
 
-    override fun passDataComm(weather: Weather) {
+    override fun openWeatherDetails(weather: Weather) {
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.list_container, DetailsFragment().apply {
                 arguments = bundleOf(WeatherFragment.PERSON_KEY to weather)
             })
-            .addToBackStack(null).commitAllowingStateLoss()
+            .addToBackStack(null)
+            .commitAllowingStateLoss()
     }
 }

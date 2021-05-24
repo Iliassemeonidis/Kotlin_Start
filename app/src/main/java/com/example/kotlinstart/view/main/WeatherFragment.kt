@@ -1,4 +1,4 @@
-package com.example.kotlinstart.weather
+package com.example.kotlinstart.view.main
 
 import android.content.Context
 import android.os.Bundle
@@ -8,8 +8,9 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import com.example.kotlinstart.Communicator
 import com.example.kotlinstart.R
+import com.example.kotlinstart.view.Communicator
+import com.example.kotlinstart.view.data.Weather
 
 internal class WeatherFragment : Fragment() {
 
@@ -19,8 +20,9 @@ internal class WeatherFragment : Fragment() {
     fun setCommunicator(communicator: Communicator) {this.communicator = communicator}
     */
     private val onClickItem: OnClickItem = object : OnClickItem {
+
         override fun onClick(weather: Weather) {
-            communicator.passDataComm(weather)
+            communicator.openWeatherDetails(weather)
         }
     }
 
@@ -44,7 +46,6 @@ internal class WeatherFragment : Fragment() {
 
     private fun createList(view: View) {
         //Временно, сделанно для примера заполняние,а не как реализация
-        val recyclerView: RecyclerView = view.findViewById(R.id.recycler_view_main)
         val cityArray = resources.getStringArray(R.array.city).toList()
         val regionArray = resources.getStringArray(R.array.region).toList()
         val weather = ArrayList<Weather>()
@@ -54,10 +55,11 @@ internal class WeatherFragment : Fragment() {
                 weather.add(Weather(cityArray[i], regionArray[i], "27°C"))
             }
         }
-        recyclerView.adapter = WeatherAdapter(weather, onClickItem)
+        view.findViewById<RecyclerView>(R.id.recycler_view_main).adapter = WeatherAdapter(weather, onClickItem)
     }
 
     companion object {
+
         const val PERSON_KEY = "personKye"
 
         @JvmStatic

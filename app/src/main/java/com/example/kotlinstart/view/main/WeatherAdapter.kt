@@ -1,4 +1,4 @@
-package com.example.kotlinstart.weather
+package com.example.kotlinstart.view.main
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlinstart.R
+import com.example.kotlinstart.view.data.Weather
 
 internal class WeatherAdapter(
     private var weatherList: ArrayList<Weather>,
