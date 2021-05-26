@@ -43,15 +43,15 @@ internal class WeatherFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        createList(view)
-        initButtonAdd(view)
+        createList()
+        initButtonAdd()
     }
 
-    private fun initButtonAdd(view: View) {
+    private fun initButtonAdd() {
         floating_action_button.setOnClickListener{communicator.openNewFragment(CityFragment())}
     }
 
-    private fun createList(view: View) {
+    private fun createList() {
         //Временно, сделанно для примера заполняние,а не как реализация
         val cityArray = resources.getStringArray(R.array.city).toList()
         val regionArray = resources.getStringArray(R.array.region).toList()
@@ -62,7 +62,7 @@ internal class WeatherFragment : Fragment() {
                 weather.add(Weather(cityArray[i], regionArray[i], "27°C"))
             }
         }
-        view.findViewById<RecyclerView>(R.id.recycler_view_main).adapter = WeatherAdapter(weather, onClickItem)
+        recycler_view_main.adapter = WeatherAdapter(weather, onClickItem)
     }
 
     companion object {
