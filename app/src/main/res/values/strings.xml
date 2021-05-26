@@ -1,8 +1,6 @@
 <resources>
     <string name="app_name">Kotlin Start</string>
     <string name="click_me">Click me</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="name">Name</string>
     <string name="age">Age</string>
     <string name="apply">Apply</string>
@@ -15,6 +13,9 @@
     <string name="title">Укажи свои данные, земляненен и нажми кнопку!</string>
     <string name="add_new_city">add new city</string>
     <string name="icon_sun">icon_sun</string>
+    <string name="city_search">Выполните поиск города на текущем яыке</string>
+    <string name="hint_city">Город</string>
+    <string name="add_your_place">Добавить текущее местоположение</string>
 
     <string-array name="city">
         <item>Москва</item>

@@ -8,9 +8,11 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import com.example.kotlinstart.view.search.CityFragment
 import com.example.kotlinstart.R
 import com.example.kotlinstart.view.Communicator
 import com.example.kotlinstart.view.data.Weather
+import kotlinx.android.synthetic.main.fragment_weather.*
 
 internal class WeatherFragment : Fragment() {
 
@@ -42,6 +44,11 @@ internal class WeatherFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         createList(view)
+        initButtonAdd(view)
+    }
+
+    private fun initButtonAdd(view: View) {
+        floating_action_button.setOnClickListener{communicator.openNewFragment(CityFragment())}
     }
 
     private fun createList(view: View) {
