@@ -3,7 +3,7 @@ package com.example.kotlinstart.view
 import androidx.fragment.app.Fragment
 import com.example.kotlinstart.view.data.Weather
 
-internal interface Communicator {
+internal interface Navigator {
 
     fun openWeatherDetails(weather: Weather)
 

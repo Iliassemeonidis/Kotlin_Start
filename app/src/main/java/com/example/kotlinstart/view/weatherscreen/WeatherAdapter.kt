@@ -1,12 +1,14 @@
-package com.example.kotlinstart.view.main
+package com.example.kotlinstart.view.weatherscreen
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.Nullable
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlinstart.databinding.ItemCityWeatherBinding
 import com.example.kotlinstart.view.data.Weather
 
 internal class WeatherAdapter(
+    @Nullable
     private var weatherList: ArrayList<Weather>,
     private val onClickItem: WeatherFragment.OnClickItem
 ) : RecyclerView.Adapter<WeatherAdapter.WeatherViewHolder>() {

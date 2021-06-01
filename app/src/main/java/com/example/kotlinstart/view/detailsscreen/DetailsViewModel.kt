@@ -1,20 +1,23 @@
-package com.example.kotlinstart.view.ui
+package com.example.kotlinstart.view.detailsscreen
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.kotlinstart.view.data.Weather
 
-internal class MainViewModel(
-    private val liveDataToObserver: MutableLiveData<Any> = MutableLiveData()
+internal class DetailsViewModel(
+    private val liveDataForObservation: MutableLiveData<ArrayList<Weather>> = MutableLiveData()
 ) : ViewModel() {
 
-    fun getData(): LiveData<Any> {
-        listData()
-        return liveDataToObserver
+    fun subscribe(): LiveData<ArrayList<Weather>> {
+        return liveDataForObservation
     }
 
-    private fun listData() {
+    fun getCitiesList() {
+        createWeatherData()
+    }
+
+    private fun createWeatherData() {
         // на сколько понимаю тут должен идти запрос в бд от куда получаем список
         // тут мы его обрабатываем и по подписке передаем во фрагмент
 
@@ -32,6 +35,6 @@ internal class MainViewModel(
                 weather.add(Weather(cityArray[i], regionArray[i], "27°C"))
             }
         }
-        liveDataToObserver.value = weather
+        liveDataForObservation.value = weather
     }
 }

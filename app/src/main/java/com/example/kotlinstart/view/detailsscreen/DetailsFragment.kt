@@ -1,14 +1,14 @@
-package com.example.kotlinstart.view.details
+package com.example.kotlinstart.view.detailsscreen
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.example.kotlinstart.databinding.FragmentDetailsBinding
-import com.example.kotlinstart.view.data.Weather
-import com.example.kotlinstart.view.main.WeatherFragment
-import kotlinx.android.synthetic.main.fragment_details.*
+
+//TODO Create ViewModel
 
 internal class DetailsFragment : Fragment() {
 
@@ -30,10 +30,10 @@ internal class DetailsFragment : Fragment() {
     }
 
     private fun initView() {
-        val weather: Weather? = arguments?.getParcelable(WeatherFragment.PERSON_KEY)
-        weather?.let {
-            binding.textViewCityName.text = it.cityName
-            binding.degrees.text = it.temperature
+        val cityName = arguments?.getString(CITY_EXTRA)
+        cityName?.let {
+            binding.textViewCityName.text = it
+            binding.degrees.text = "27°"
             binding.weatherCondition.text = "Солнечно"
             binding.textViewFeelsLike.text = "Ощущается как 27°"
         }
@@ -42,5 +42,14 @@ internal class DetailsFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         detailsBinding = null
+    }
+
+    companion object {
+
+        const val CITY_EXTRA = "personKye"
+
+        @JvmStatic
+        fun newInstance(city: String) =
+            DetailsFragment().apply { arguments = bundleOf(CITY_EXTRA to city) }
     }
 }

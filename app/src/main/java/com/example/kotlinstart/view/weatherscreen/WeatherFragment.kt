@@ -1,42 +1,39 @@
-package com.example.kotlinstart.view.main
+package com.example.kotlinstart.view.weatherscreen
 
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.kotlinstart.databinding.FragmentWeatherBinding
-import com.example.kotlinstart.view.Communicator
+import com.example.kotlinstart.view.Navigator
 import com.example.kotlinstart.view.data.Weather
 import com.example.kotlinstart.view.search.CityFragment
-import com.example.kotlinstart.view.ui.MainViewModel
 
 internal class WeatherFragment : Fragment() {
 
-    private lateinit var communicator: Communicator
-    private lateinit var viewModel: MainViewModel
+    private lateinit var navigator: Navigator
+    private lateinit var viewModel: WeatherViewModel
     private var weatherBinding: FragmentWeatherBinding? = null
     private val binding get() = weatherBinding!!
 
-    private val onClickItem: OnClickItem = object : OnClickItem {
+    private val onClickListItem: OnClickItem = object : OnClickItem {
 
         override fun onClick(weather: Weather) {
-            communicator.openWeatherDetails(weather)
+            navigator.openWeatherDetails(weather)
         }
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        communicator = context as Communicator
+        navigator = context as Navigator
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -50,37 +47,24 @@ internal class WeatherFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val observer = Observer<Any> { renderData(it) }
-        viewModel.getData().observe(viewLifecycleOwner, observer)
-        createList(viewModel.getData().value as ArrayList<Weather>)
+        //val listener = Observer<ArrayList<Weather>> { renderData(it) }
+        viewModel.subscribe().observe(viewLifecycleOwner, { renderData(it) })
+        viewModel.getCitiesList()
         initButtonAdd()
     }
 
     private fun initButtonAdd() {
         // todo пределать так чтоб открывался не новый фрагмент, а DialogFragment
-        binding.floatingActionButton.setOnClickListener { communicator.openNewFragment(CityFragment()) }
+        binding.floatingActionButton.setOnClickListener { navigator.openNewFragment(CityFragment()) }
     }
 
-    private fun createList(weather: ArrayList<Weather>) {
-        binding.recyclerViewMain.adapter = WeatherAdapter(weather, onClickItem)
-    }
-
-    // не понимаю реализацию, типа после изменение д
-    private fun renderData(data: Any) {
+    private fun renderData(weatherList: ArrayList<Weather>) {
+        binding.recyclerViewMain.adapter = WeatherAdapter(weatherList, onClickListItem)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         weatherBinding = null
-    }
-
-    companion object {
-
-        const val PERSON_KEY = "personKye"
-
-        @JvmStatic
-        fun newInstance(counter: Int) =
-            WeatherFragment().apply { arguments = bundleOf(PERSON_KEY to counter) }
     }
 
     interface OnClickItem {
