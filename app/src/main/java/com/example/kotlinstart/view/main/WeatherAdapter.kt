@@ -1,11 +1,9 @@
 package com.example.kotlinstart.view.main
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.kotlinstart.R
+import com.example.kotlinstart.databinding.ItemCityWeatherBinding
 import com.example.kotlinstart.view.data.Weather
 
 internal class WeatherAdapter(
@@ -13,10 +11,11 @@ internal class WeatherAdapter(
     private val onClickItem: WeatherFragment.OnClickItem
 ) : RecyclerView.Adapter<WeatherAdapter.WeatherViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherViewHolder =
-        WeatherViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.item_city_weather, parent, false)
-        )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherViewHolder {
+        val layoutInflater = LayoutInflater.from(parent.context)
+        val itemPersonBinding = ItemCityWeatherBinding.inflate(layoutInflater, parent, false)
+        return WeatherViewHolder(itemPersonBinding)
+    }
 
     override fun getItemCount() = weatherList.size
 
@@ -24,15 +23,12 @@ internal class WeatherAdapter(
         holder.bind(weatherList[position])
     }
 
-    inner class WeatherViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private var city: TextView = itemView.findViewById(R.id.text_view_city)
-        private var region: TextView = itemView.findViewById(R.id.text_view_region)
-        private var temp: TextView = itemView.findViewById(R.id.temperature)
-
+    inner class WeatherViewHolder(private val itemWeatherBinding: ItemCityWeatherBinding) :
+        RecyclerView.ViewHolder(itemWeatherBinding.root) {
         fun bind(weather: Weather) {
-            city.text = weather.cityName
-            temp.text = weather.temperature
-            region.text = weather.region
+            itemWeatherBinding.textViewCity.text = weather.cityName
+            itemWeatherBinding.textViewRegion.text = weather.region
+            itemWeatherBinding.temperature.text = weather.temperature
             itemView.setOnClickListener { onClickItem.onClick(weatherList[adapterPosition]) }
         }
     }
