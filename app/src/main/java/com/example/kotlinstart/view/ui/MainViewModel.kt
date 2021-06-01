@@ -10,13 +10,13 @@ internal class MainViewModel(
 ) : ViewModel() {
 
     fun getData(): LiveData<Any> {
-        gelListData()
+        listData()
         return liveDataToObserver
     }
 
-    private fun gelListData() {
+    private fun listData() {
         // на сколько понимаю тут должен идти запрос в бд от куда получаем список
-        // тут мы его обрабатываем и по подписке передаем в
+        // тут мы его обрабатываем и по подписке передаем во фрагмент
 
         val cityArray = listOf("Москва", "Калифорния", "Афины", "Сочи", "Владикавказ")
         val regionArray = listOf(
