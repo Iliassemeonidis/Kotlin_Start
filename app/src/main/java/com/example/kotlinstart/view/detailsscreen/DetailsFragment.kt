@@ -6,12 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.kotlinstart.databinding.FragmentDetailsBinding
-
-//TODO Create ViewModel
 
 internal class DetailsFragment : Fragment() {
 
+    private lateinit var detailsViewModel: DetailsViewModel
     private var detailsBinding: FragmentDetailsBinding? = null
     private val binding get() = detailsBinding!!
 
@@ -24,14 +24,22 @@ internal class DetailsFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initView()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        detailsViewModel = ViewModelProvider(
+            this,
+            DetailsFactory(city = arguments?.getString(CITY_EXTRA) ?: DEFAULT_CITY)
+        ).get(DetailsViewModel::class.java)
     }
 
-    private fun initView() {
-        val cityName = arguments?.getString(CITY_EXTRA)
-        cityName?.let {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        detailsViewModel.subscribe().observe(viewLifecycleOwner, { renderData(it) })
+        detailsViewModel.getCityName()
+    }
+
+    private fun renderData(city: String?) {
+        city?.let {
             binding.textViewCityName.text = it
             binding.degrees.text = "27°"
             binding.weatherCondition.text = "Солнечно"
@@ -46,7 +54,8 @@ internal class DetailsFragment : Fragment() {
 
     companion object {
 
-        const val CITY_EXTRA = "personKye"
+        const val CITY_EXTRA = "CITY_EXTRA"
+        const val DEFAULT_CITY: String = "DEFAULT_CITY"
 
         @JvmStatic
         fun newInstance(city: String) =

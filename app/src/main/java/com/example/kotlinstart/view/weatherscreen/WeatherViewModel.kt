@@ -18,17 +18,6 @@ internal class WeatherViewModel(
     }
 
     private fun createWeatherData() {
-        var nonNull: String = ""
-        var nullable: String? = ""
-        if (nullable != null) {
-            nullable.length
-            nonNull = nullable
-        }
-
-
-        // на сколько понимаю тут должен идти запрос в бд от куда получаем список
-        // тут мы его обрабатываем и по подписке передаем во фрагмент
-
         val cityArray = listOf("Москва", "Калифорния", "Афины", "Сочи", "Владикавказ")
         val regionArray = listOf(
             "Москва",
