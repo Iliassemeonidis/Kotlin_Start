@@ -26,24 +26,22 @@ internal class DetailsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        detailsViewModel = ViewModelProvider(
-            this,
-            DetailsFactory(city = arguments?.getString(CITY_EXTRA) ?: DEFAULT_CITY)
-        ).get(DetailsViewModel::class.java)
+        detailsViewModel = ViewModelProvider(this).get(DetailsViewModel::class.java)
+        detailsViewModel.setCityData(arguments?.getString(CITY_EXTRA) ?: DEFAULT_CITY)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         detailsViewModel.subscribe().observe(viewLifecycleOwner, { renderData(it) })
-        detailsViewModel.getCityName()
+        detailsViewModel.getWeatherDataByCityName()
     }
 
-    private fun renderData(city: String?) {
-        city?.let {
-            binding.textViewCityName.text = it
-            binding.degrees.text = "27°"
-            binding.weatherCondition.text = "Солнечно"
-            binding.textViewFeelsLike.text = "Ощущается как 27°"
+    private fun renderData(data: WeatherData?) {
+        data?.let {
+            binding.textViewCityName.text = it.city
+            binding.degrees.text = it.degrees
+            binding.weatherCondition.text = it.weatherCondition
+            binding.textViewFeelsLike.text = it.textViewFeelsLike
         }
     }
 
@@ -51,6 +49,7 @@ internal class DetailsFragment : Fragment() {
         super.onDestroy()
         detailsBinding = null
     }
+
 
     companion object {
 
@@ -62,3 +61,4 @@ internal class DetailsFragment : Fragment() {
             DetailsFragment().apply { arguments = bundleOf(CITY_EXTRA to city) }
     }
 }
+
