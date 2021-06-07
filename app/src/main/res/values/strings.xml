@@ -16,6 +16,7 @@
     <string name="city_search">Выполните поиск города на текущем яыке</string>
     <string name="hint_city">Город</string>
     <string name="add_your_place">Добавить текущее местоположение</string>
+    <string name="exit">Для выхода нажмите еще раз</string>
 
     <string-array name="city">
         <item>Москва</item>

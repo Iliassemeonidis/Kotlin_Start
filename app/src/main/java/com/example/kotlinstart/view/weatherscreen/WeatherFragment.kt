@@ -10,6 +10,7 @@ import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.FragmentWeatherBinding
 import com.example.kotlinstart.view.data.Weather
 import com.example.kotlinstart.view.detailsscreen.DetailsFragment
+import com.example.kotlinstart.view.search.CityDialogFragment
 
 internal class WeatherFragment : Fragment() {
 
@@ -53,8 +54,9 @@ internal class WeatherFragment : Fragment() {
     }
 
     private fun initButtonAdd() {
-        // todo пределать так чтоб открывался не новый фрагмент, а DialogFragment
-        binding.floatingActionButton.setOnClickListener { }
+        binding.floatingActionButton.setOnClickListener {
+            CityDialogFragment().show(requireActivity().supportFragmentManager, SEARCH_CITY_TAG)
+        }
     }
 
     private fun renderData(weatherList: ArrayList<Weather>) {
@@ -64,6 +66,10 @@ internal class WeatherFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         weatherBinding = null
+    }
+
+    companion object {
+        private const val SEARCH_CITY_TAG = "SEARCH_CITY_TAG"
     }
 
     interface OnClickItem {

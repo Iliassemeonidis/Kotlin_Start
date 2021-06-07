@@ -19,17 +19,11 @@ internal class WeatherViewModel(
 
     private fun createWeatherData() {
         val cityArray = listOf("Москва", "Калифорния", "Афины", "Сочи", "Владикавказ")
-        val regionArray = listOf(
-            "Москва",
-            "Мериленд",
-            "Аттика",
-            "Краснодарский край",
-            "Республика Северная Осетия-Алания "
-        )
+        val regionArray = listOf("Москва", "Мериленд", "Аттика", "Краснодарский край", "Республика Северная Осетия-Алания ")
         val weather = ArrayList<Weather>()
         if (cityArray.size == regionArray.size) {
             for (i in cityArray.indices) {
-                weather.add(Weather(cityArray[i], regionArray[i], "27°C"))
+                weather.add(Weather(cityArray[i], regionArray[i]))
             }
         }
         liveDataForObservation.value = weather
