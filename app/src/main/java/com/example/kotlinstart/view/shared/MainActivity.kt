@@ -1,4 +1,4 @@
-package com.example.kotlinstart.view
+package com.example.kotlinstart.view.shared
 
 import android.os.Bundle
 import android.widget.Toast
@@ -7,6 +7,7 @@ import com.example.kotlinstart.R
 import com.example.kotlinstart.view.weatherscreen.WeatherFragment
 
 internal class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

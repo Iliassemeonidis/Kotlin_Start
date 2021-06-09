@@ -7,6 +7,7 @@ import com.example.kotlinstart.view.data.Weather
 
 internal class WeatherViewModel(
     private val liveDataForObservation: MutableLiveData<ArrayList<Weather>> = MutableLiveData()
+
 ) : ViewModel() {
 
     fun subscribe(): LiveData<ArrayList<Weather>> {
@@ -19,7 +20,13 @@ internal class WeatherViewModel(
 
     private fun createWeatherData() {
         val cityArray = listOf("Москва", "Калифорния", "Афины", "Сочи", "Владикавказ")
-        val regionArray = listOf("Москва", "Мериленд", "Аттика", "Краснодарский край", "Республика Северная Осетия-Алания ")
+        val regionArray = listOf(
+            "Москва",
+            "Мериленд",
+            "Аттика",
+            "Краснодарский край",
+            "Республика Северная Осетия-Алания "
+        )
         val weather = ArrayList<Weather>()
         if (cityArray.size == regionArray.size) {
             for (i in cityArray.indices) {

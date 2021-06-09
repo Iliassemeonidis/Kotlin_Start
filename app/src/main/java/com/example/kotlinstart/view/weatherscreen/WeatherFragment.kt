@@ -4,13 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.FragmentWeatherBinding
 import com.example.kotlinstart.view.data.Weather
 import com.example.kotlinstart.view.detailsscreen.DetailsFragment
 import com.example.kotlinstart.view.search.CityDialogFragment
+import com.example.kotlinstart.view.shared.SharedViewModel
 
 internal class WeatherFragment : Fragment() {
 
@@ -50,7 +53,19 @@ internal class WeatherFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.subscribe().observe(viewLifecycleOwner, { renderData(it) })
         viewModel.getCitiesList()
+        subscribeToSharedViewModel()
         initButtonAdd()
+    }
+
+    private fun subscribeToSharedViewModel() {
+        val sharedViewModel: SharedViewModel by activityViewModels()
+        sharedViewModel.subscribe().observe(viewLifecycleOwner, {
+            Toast.makeText(
+                requireContext(),
+                it,
+                Toast.LENGTH_SHORT
+            ).show()
+        })
     }
 
     private fun initButtonAdd() {
