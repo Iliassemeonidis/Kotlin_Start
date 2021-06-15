@@ -7,9 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.kotlinstart.databinding.FragmentCityDialogBinding
-import com.example.kotlinstart.view.data.CityData
-import com.example.kotlinstart.view.data.Weather
-import com.example.kotlinstart.view.weatherscreen.WeatherFragment
+import com.example.kotlinstart.model.CityData
 import java.util.*
 
 internal class CityDialogFragment : DialogFragment() {

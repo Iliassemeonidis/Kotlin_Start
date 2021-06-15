@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlinstart.databinding.ItemCityBinding
-import com.example.kotlinstart.view.data.CityData
+import com.example.kotlinstart.model.CityData
 
 internal class CityDialogAdapter(private val cityList: ArrayList<CityData>) :
     RecyclerView.Adapter<CityDialogAdapter.CityViewHolder>() {

@@ -1,4 +1,4 @@
-package com.example.kotlinstart.view.data
+package com.example.kotlinstart.model
 
 data class WeatherData(
     val city: String,

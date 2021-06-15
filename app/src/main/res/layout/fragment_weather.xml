@@ -26,10 +26,10 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:contentDescription="@string/add_new_city"
-        android:src="@drawable/ic_plus"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:maxImageSize="56dp" />
+        app:maxImageSize="56dp"
+        app:srcCompat="@drawable/ic_russia" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

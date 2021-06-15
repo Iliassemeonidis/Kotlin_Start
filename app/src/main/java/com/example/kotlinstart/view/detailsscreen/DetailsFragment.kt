@@ -8,7 +8,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.kotlinstart.databinding.FragmentDetailsBinding
-import com.example.kotlinstart.view.data.WeatherData
+import com.example.kotlinstart.model.WeatherData
 
 internal class DetailsFragment : Fragment() {
 

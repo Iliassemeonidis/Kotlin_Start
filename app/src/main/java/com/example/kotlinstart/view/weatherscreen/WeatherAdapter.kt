@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.annotation.Nullable
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlinstart.databinding.ItemCityWeatherBinding
-import com.example.kotlinstart.view.data.Weather
+import com.example.kotlinstart.model.Weather
 
 internal class WeatherAdapter(
     @Nullable

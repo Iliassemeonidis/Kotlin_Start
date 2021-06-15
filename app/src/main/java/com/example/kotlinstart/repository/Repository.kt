@@ -1,8 +1,8 @@
 package com.example.kotlinstart.repository
 
-import com.example.kotlinstart.view.data.CityData
-import com.example.kotlinstart.view.data.Weather
-import com.example.kotlinstart.view.data.WeatherData
+import com.example.kotlinstart.model.CityData
+import com.example.kotlinstart.model.Weather
+import com.example.kotlinstart.model.WeatherData
 
 interface Repository {
 

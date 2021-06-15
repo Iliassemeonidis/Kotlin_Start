@@ -3,8 +3,8 @@ package com.example.kotlinstart.view.detailsscreen
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.kotlinstart.model.WeatherData
 import com.example.kotlinstart.repository.RepositoryImpl
-import com.example.kotlinstart.view.data.WeatherData
 
 internal class DetailsViewModel(
     private val liveDataForObservation: MutableLiveData<WeatherData> = MutableLiveData(),

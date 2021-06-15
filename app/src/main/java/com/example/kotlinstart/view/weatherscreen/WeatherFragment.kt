@@ -10,7 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.FragmentWeatherBinding
-import com.example.kotlinstart.view.data.Weather
+import com.example.kotlinstart.model.Weather
 import com.example.kotlinstart.view.detailsscreen.DetailsFragment
 import com.example.kotlinstart.view.search.CityDialogFragment
 import com.example.kotlinstart.view.shared.SharedViewModel
@@ -29,7 +29,7 @@ internal class WeatherFragment : Fragment() {
         private fun openWeatherDetails(weather: Weather) {
             requireActivity().supportFragmentManager
                 .beginTransaction()
-                //.replace(R.id.list_container, DetailsFragment.newInstance(weather.cityName))
+                .replace(R.id.list_container, DetailsFragment.newInstance(weather.cityName))
                 .addToBackStack(null)
                 .commitAllowingStateLoss()
         }
