@@ -1,26 +1,50 @@
 package com.example.kotlinstart.view.search
 
-import android.annotation.SuppressLint
-import android.app.Dialog
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.activityViewModels
-import com.example.kotlinstart.R
-import com.example.kotlinstart.view.shared.SharedViewModel
+import androidx.lifecycle.ViewModelProvider
+import com.example.kotlinstart.databinding.FragmentCityDialogBinding
+import com.example.kotlinstart.view.data.CityData
+import com.example.kotlinstart.view.data.Weather
+import com.example.kotlinstart.view.weatherscreen.WeatherFragment
+import java.util.*
 
 internal class CityDialogFragment : DialogFragment() {
-    @SuppressLint("InflateParams")
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(requireActivity())
-        val inflater = requireActivity().layoutInflater
-        //todo допилить реализацию
-        builder.setView(inflater.inflate(R.layout.fragment_city_dialog, null))
-            .setPositiveButton("Apply") { _, _ ->
-                val sharedViewModel: SharedViewModel by activityViewModels()
-                sharedViewModel.setCity("Moscow")
-            }
-            .setNegativeButton("Cancel") { _, _ -> println() }
-        return builder.create()
+
+    private lateinit var cityDialogViewModel: CityDialogViewModel
+    private var cityDialogBinding: FragmentCityDialogBinding? = null
+    private val binding get() = cityDialogBinding!!
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        cityDialogViewModel = ViewModelProvider(this).get(CityDialogViewModel::class.java)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        cityDialogBinding = FragmentCityDialogBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        cityDialogViewModel.subscribe().observe(viewLifecycleOwner, { renderData(it) })
+        cityDialogViewModel.getCityNamesList()
+    }
+
+    private fun renderData(it: ArrayList<CityData>) {
+        binding.recyclerViewCitySearch.adapter = CityDialogAdapter(it)
+    }
+
+    interface OnClickCity {
+        fun onClick(cityData: CityData)
     }
 }

@@ -29,7 +29,7 @@ internal class WeatherFragment : Fragment() {
         private fun openWeatherDetails(weather: Weather) {
             requireActivity().supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.list_container, DetailsFragment.newInstance(weather.cityName))
+                //.replace(R.id.list_container, DetailsFragment.newInstance(weather.cityName))
                 .addToBackStack(null)
                 .commitAllowingStateLoss()
         }

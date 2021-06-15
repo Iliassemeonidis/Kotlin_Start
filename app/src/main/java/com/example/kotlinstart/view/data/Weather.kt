@@ -4,6 +4,16 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class Weather(var cityName: String, var region: String, var temperature: String = "27°C") :
-    Parcelable
+data class Weather(
+    var cityName: String = "Москва",
+    var region: String = "Москва",
+    var temperature: String = "27°C"
+) : Parcelable
 
+fun getCityWeather() = arrayListOf(
+    Weather("Москва", "Москва"),
+    Weather("Калифорния", "Мериленд"),
+    Weather("Афины", "Аттика"),
+    Weather("Сочи", "Краснодарский край"),
+    Weather("Владикавказ", "Республика Северная Осетия-Алания")
+)

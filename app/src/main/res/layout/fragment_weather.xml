@@ -14,21 +14,22 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:listitem="@layout/item_city_weather"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/item_city_weather" />
 
-<!--TODO Разобраться почему не отображается корректно иконка-->
+    <!--TODO Разобраться почему не отображается корректно иконка-->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floating_action_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
         android:layout_margin="16sp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:contentDescription="@string/add_new_city"
-        android:src="@android:drawable/ic_input_add"
-        app:backgroundTint="@color/SkyBlue"
+        android:src="@drawable/ic_plus"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:maxImageSize="56dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,9 +3,12 @@ package com.example.kotlinstart.view.detailsscreen
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.kotlinstart.repository.RepositoryImpl
+import com.example.kotlinstart.view.data.WeatherData
 
 internal class DetailsViewModel(
     private val liveDataForObservation: MutableLiveData<WeatherData> = MutableLiveData(),
+    private val repositoryImpl: RepositoryImpl = RepositoryImpl()
 ) : ViewModel() {
 
     lateinit var city: String
@@ -23,6 +26,6 @@ internal class DetailsViewModel(
     }
 
     private fun createWeatherData() {
-        liveDataForObservation.value = WeatherData(city)
+        liveDataForObservation.value = repositoryImpl.getWeatherDataFromLocalStorage(city)
     }
 }

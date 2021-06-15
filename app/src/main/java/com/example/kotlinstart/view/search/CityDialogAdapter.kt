@@ -4,8 +4,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlinstart.databinding.ItemCityBinding
+import com.example.kotlinstart.view.data.CityData
 
-internal class CityDialogAdapter(private val cityList: ArrayList<String>) :
+internal class CityDialogAdapter(private val cityList: ArrayList<CityData>) :
     RecyclerView.Adapter<CityDialogAdapter.CityViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CityViewHolder {
@@ -22,8 +23,8 @@ internal class CityDialogAdapter(private val cityList: ArrayList<String>) :
 
     inner class CityViewHolder(private val itemCityBinding: ItemCityBinding) :
         RecyclerView.ViewHolder(itemCityBinding.root) {
-        fun bind(cityName: String) {
-            itemCityBinding.textViewCityName.text = cityName
+        fun bind(cityName: CityData) {
+            itemCityBinding.textViewCityName.text = cityName.cityName
         }
     }
 }
