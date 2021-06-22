@@ -1,9 +1,11 @@
 package com.example.kotlinstart.view.detailsscreen
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -15,6 +17,7 @@ internal class DetailsFragment : Fragment() {
     private lateinit var detailsViewModel: DetailsViewModel
     private var detailsBinding: FragmentDetailsBinding? = null
     private val binding get() = detailsBinding!!
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,6 +34,7 @@ internal class DetailsFragment : Fragment() {
         detailsViewModel.setCityData(arguments?.getString(CITY_EXTRA) ?: DEFAULT_CITY)
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         detailsViewModel.subscribe().observe(viewLifecycleOwner, { renderData(it) })
