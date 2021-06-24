@@ -37,6 +37,8 @@ internal class DetailsFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.detailsConstraint.visibility = View.GONE
+        binding.loadingLayout.visibility = View.VISIBLE
         detailsViewModel.subscribe().observe(viewLifecycleOwner, { renderData(it) })
         detailsViewModel.getWeatherDataByCityName()
     }
@@ -47,6 +49,8 @@ internal class DetailsFragment : Fragment() {
             binding.degrees.text = it.degrees
             binding.weatherCondition.text = it.weatherCondition
             binding.textViewFeelsLike.text = it.textViewFeelsLike
+            binding.detailsConstraint.visibility = View.VISIBLE
+            binding.loadingLayout.visibility = View.GONE
         }
     }
 
@@ -54,7 +58,6 @@ internal class DetailsFragment : Fragment() {
         super.onDestroy()
         detailsBinding = null
     }
-
 
     companion object {
 
