@@ -15,57 +15,42 @@
         <!--TODO вероятней всего нужно дует сделать RecyclerView-->
         <TextView
             android:id="@+id/text_view_city_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="15sp"
-            android:textColor="@color/white"
-            android:textSize="25sp"
-            android:textStyle="bold"
+            style="@style/MainCityItemStyle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Москва" />
+            tools:text="@string/city_name" />
 
         <!--TODO поправить расоложение чтоб было все в одну линию-->
         <TextView
             android:id="@+id/degrees"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="25sp"
+            android:layout_margin="@dimen/margin_degrees"
             android:textColor="@color/white"
-            android:textSize="90sp"
+            android:textSize="@dimen/text_size_degrees"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/weather_condition"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_view_city_name"
-            tools:text="27°" />
+            tools:text="@string/degrees_centigrade" />
 
         <TextView
             android:id="@+id/weather_condition"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="15sp"
-            android:textColor="@color/white"
-            android:textSize="25sp"
-            android:textStyle="bold"
+            style="@style/MainCityItemStyle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/degrees"
-            tools:text="Солнечно" />
+            tools:text="@string/weather_condition" />
 
         <TextView
             android:id="@+id/text_view_feels_like"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="15sp"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:textStyle="bold"
+            style="@style/MainCityItemStyle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/weather_condition"
-            tools:text="Ощущается как 27°" />
+            tools:text="@string/fills_like_text" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"
@@ -83,7 +68,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/guideline"
-            tools:text="Дитальная информация о погоде на неделю и в течении дня" />
+            tools:text="@string/detail_information_text" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <FrameLayout

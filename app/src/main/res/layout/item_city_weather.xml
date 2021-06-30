@@ -16,51 +16,36 @@
 
         <TextView
             android:id="@+id/text_view_city"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:textStyle="bold"
+            style="@style/MainCityItemStyle"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Москва" />
+            tools:text="@string/city_name" />
 
         <TextView
             android:id="@+id/text_view_region"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginStart="10dp"
-            android:paddingBottom="10sp"
-            android:textColor="@color/white"
-            android:textSize="15sp"
+            style="@style/CityItem"
+            android:textSize="@dimen/text_size_region"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_view_city"
-            tools:text="Москва" />
+            tools:text="@string/region_name" />
 
         <TextView
             android:id="@+id/temperature"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10sp"
-            android:textColor="@color/white"
-            android:textSize="25sp"
-            android:paddingBottom="10sp"
+            style="@style/CityItem"
+            android:textSize="@dimen/text_size_temp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/weather_icon"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="27°C" />
+            tools:text="@string/degrees_centigrade" />
 
         <ImageView
             android:id="@+id/weather_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10sp"
-            android:paddingBottom="10sp"
+            android:layout_margin="@dimen/margin_icon"
             android:contentDescription="@string/icon_sun"
+            android:paddingBottom="@dimen/bottom_icon"
             android:src="@drawable/sun"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

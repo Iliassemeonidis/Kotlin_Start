@@ -17,6 +17,12 @@
     <string name="hint_city">Город</string>
     <string name="add_your_place">Добавить текущее местоположение</string>
     <string name="exit">Для выхода нажмите еще раз</string>
+    <string name="city_name">Москва</string>
+    <string name="region_name">Москва</string>
+    <string name="degrees_centigrade">27°C</string>
+    <string name="fills_like_text">Ощущается как 27°</string>
+    <string name="weather_condition">Солнечно</string>
+    <string name="detail_information_text">Дитальная информация о погоде на неделю и в течении дня</string>
 
     <string-array name="city">
         <item>Москва</item>

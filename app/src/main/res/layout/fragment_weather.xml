@@ -22,14 +22,14 @@
         android:id="@+id/floating_action_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16sp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_margin="@dimen/margin_float"
+        android:layout_marginEnd="@dimen/margin_end_float"
+        android:layout_marginBottom="@dimen/margin_bottom_float"
         android:contentDescription="@string/add_new_city"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:maxImageSize="56dp"
-        app:srcCompat="@drawable/ic_russia" />
+        app:maxImageSize="@dimen/max_size_float"
+        app:srcCompat="@drawable/ic_plus" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

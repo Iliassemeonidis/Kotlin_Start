@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlinstart.databinding.ItemCityBinding
 import com.example.kotlinstart.model.CityData
 
-internal class CityDialogAdapter(private val cityList: ArrayList<CityData>) :
+internal class CityDialogAdapter(private val cityList: ArrayList<CityData>, private val onClickCity: CityDialogFragment.OnClickCity) :
     RecyclerView.Adapter<CityDialogAdapter.CityViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CityViewHolder {
@@ -23,8 +23,11 @@ internal class CityDialogAdapter(private val cityList: ArrayList<CityData>) :
 
     inner class CityViewHolder(private val itemCityBinding: ItemCityBinding) :
         RecyclerView.ViewHolder(itemCityBinding.root) {
-        fun bind(cityName: CityData) {
-            itemCityBinding.textViewCityName.text = cityName.cityName
+        fun bind(data: CityData) {
+            itemCityBinding.textViewCityName.text = data.cityName
+            itemView.setOnClickListener {
+                onClickCity.onClick(data)
+            }
         }
     }
 }

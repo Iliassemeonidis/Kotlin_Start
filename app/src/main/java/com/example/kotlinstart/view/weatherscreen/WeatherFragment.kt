@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
@@ -20,6 +19,9 @@ internal class WeatherFragment : Fragment() {
     private lateinit var viewModel: WeatherViewModel
     private var weatherBinding: FragmentWeatherBinding? = null
     private val binding get() = weatherBinding!!
+/*для реализации добавления новых эллементов из dialog fragment*/
+    private lateinit var adapter: WeatherAdapter
+    private lateinit var weatherList: ArrayList<Weather>
 
     private val onClickListItem: OnClickItem = object : OnClickItem {
         override fun onClick(weather: Weather) {
@@ -60,11 +62,9 @@ internal class WeatherFragment : Fragment() {
     private fun subscribeToSharedViewModel() {
         val sharedViewModel: SharedViewModel by activityViewModels()
         sharedViewModel.subscribe().observe(viewLifecycleOwner, {
-            Toast.makeText(
-                requireContext(),
-                it,
-                Toast.LENGTH_SHORT
-            ).show()
+            //TODO для реализации добавления новых эллементов из dialog fragment
+            weatherList.add(Weather(it))
+            adapter.setItemInList(weatherList)
         })
     }
 
@@ -75,7 +75,11 @@ internal class WeatherFragment : Fragment() {
     }
 
     private fun renderData(weatherList: ArrayList<Weather>) {
-        binding.recyclerViewMain.adapter = WeatherAdapter(weatherList, onClickListItem)
+        //TODO для реализации добавления новых эллементов из dialog fragment
+        adapter = WeatherAdapter(weatherList, onClickListItem)
+        this.weatherList=weatherList
+
+        binding.recyclerViewMain.adapter = adapter
     }
 
     override fun onDestroyView() {

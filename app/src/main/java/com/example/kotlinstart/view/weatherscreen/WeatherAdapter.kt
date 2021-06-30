@@ -1,5 +1,6 @@
 package com.example.kotlinstart.view.weatherscreen
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.Nullable
@@ -23,6 +24,12 @@ internal class WeatherAdapter(
 
     override fun onBindViewHolder(holder: WeatherViewHolder, position: Int) {
         holder.bind(weatherList[position])
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun setItemInList(weatherList: ArrayList<Weather>) {
+        this.weatherList = weatherList
+        notifyDataSetChanged()
     }
 
     inner class WeatherViewHolder(private val itemWeatherBinding: ItemCityWeatherBinding) :

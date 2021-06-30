@@ -16,13 +16,13 @@
             android:id="@+id/text_view_city_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginStart="@dimen/margin_start_city_search"
+            android:layout_marginTop="@dimen/margin_top_city_search"
             android:textColor="@color/black"
-            android:textSize="20sp"
+            android:textSize="@dimen/size_of_city_search"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Москва" />
+            tools:text="@string/city_name" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

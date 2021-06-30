@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="text_size_region">15sp</dimen>
+    <dimen name="text_size_temp">25sp</dimen>
+    <dimen name="margin_icon">10sp</dimen>
+    <dimen name="bottom_icon">10sp</dimen>
+    <dimen name="size_of_city_search">20sp</dimen>
+    <dimen name="margin_start_city_search">10dp</dimen>
+    <dimen name="margin_top_city_search">10dp</dimen>
+    <dimen name="margin_float">16sp</dimen>
+    <dimen name="margin_end_float">16dp</dimen>
+    <dimen name="margin_bottom_float">16dp</dimen>
+    <dimen name="max_size_float">60dp</dimen>
+    <dimen name="margin_degrees">25sp</dimen>
+    <dimen name="text_size_degrees">70sp</dimen>
+</resources>
