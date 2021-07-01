@@ -5,7 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.kotlinstart.explore.Loader
+import com.example.kotlinstart.loading.Loader
 import com.example.kotlinstart.model.WeatherData
 import com.example.kotlinstart.repository.detailsrepository.RepositoryImplDetails
 
