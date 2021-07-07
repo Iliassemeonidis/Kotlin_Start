@@ -10,14 +10,13 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.kotlinstart.databinding.FragmentDetailsBinding
-import com.example.kotlinstart.model.WeatherData
+import com.example.kotlinstart.model.AppState
 
 internal class DetailsFragment : Fragment() {
 
     private lateinit var detailsViewModel: DetailsViewModel
     private var detailsBinding: FragmentDetailsBinding? = null
     private val binding get() = detailsBinding!!
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,20 +36,26 @@ internal class DetailsFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.detailsConstraint.visibility = View.GONE
-        binding.loadingLayout.visibility = View.VISIBLE
-        detailsViewModel.subscribe().observe(viewLifecycleOwner, { renderData(it) })
-        detailsViewModel.getWeatherDataByCityName()
+        detailsViewModel.getLiveData().observe(viewLifecycleOwner, { renderData(it) })
+        detailsViewModel.getWeatherData()
     }
 
-    private fun renderData(data: WeatherData?) {
-        data?.let {
-            binding.textViewCityName.text = it.city
-            binding.degrees.text = it.degrees
-            binding.weatherCondition.text = it.weatherCondition
-            binding.textViewFeelsLike.text = it.textViewFeelsLike
-            binding.detailsConstraint.visibility = View.VISIBLE
-            binding.loadingLayout.visibility = View.GONE
+    private fun renderData(appState: AppState) {
+        when (appState) {
+            is AppState.Success -> {
+                binding.loadingLayout.visibility = View.GONE
+                binding.textViewCityName.text = appState.weatherData.city
+                binding.degrees.text = appState.weatherData.degrees
+                binding.weatherCondition.text = appState.weatherData.weatherCondition
+                binding.textViewFeelsLike.text = appState.weatherData.textViewFeelsLike
+            }
+          is  AppState.Loading -> {
+                binding.loadingLayout.visibility = View.VISIBLE
+            }
+            is AppState.Error -> {
+                binding.loadingLayout.visibility = View.GONE
+                // TODO: 06.07.2021 create alert message
+            }
         }
     }
 

@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.kotlinstart.model.CityData
-import com.example.kotlinstart.repository.dialogrepository.RepositoryImplDialog
+import com.example.kotlinstart.repository.dialogrepository.RepositoryDialogImpl
 
 internal class CityDialogViewModel(
     private val liveDataForObservation: MutableLiveData<ArrayList<CityData>> = MutableLiveData(),
-    private val repositoryImpl: RepositoryImplDialog = RepositoryImplDialog()
+    private val repositoryImpl: RepositoryDialogImpl = RepositoryDialogImpl()
 ) : ViewModel() {
 
     fun subscribe(): LiveData<ArrayList<CityData>> {

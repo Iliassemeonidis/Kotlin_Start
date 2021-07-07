@@ -1,5 +1,12 @@
 package com.example.kotlinstart.model
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+import com.example.kotlinstart.dto.WeatherDTO
+import com.example.kotlinstart.repository.loading.Loader
+import com.example.kotlinstart.repository.loading.Loader.loadWeather
+import java.net.ConnectException
+
 data class WeatherData(
     val city: String = "Moscow",
     var degrees: String = "27°",
@@ -8,6 +15,22 @@ data class WeatherData(
     val lat: Double = 1.0,
     val lon: Double = 1.0
 )
+
+lateinit var weathers: WeatherData
+
+private val onLoaderListener: Loader.OnWeatherListener =
+    object : Loader.OnWeatherListener {
+
+        @RequiresApi(Build.VERSION_CODES.N)
+        override fun onLoaded(weatherDTO: WeatherDTO) {
+            displayWeather(weatherDTO)
+        }
+
+        override fun onFulled(error: Throwable) {
+            throw ConnectException(error.message)
+        }
+
+    }
 
 fun getDetailWeather(city: String = "Москва") = when (city) {
     "Москва" -> WeatherData(
@@ -68,5 +91,29 @@ fun getDetailWeather(city: String = "Москва") = when (city) {
     )
     else -> WeatherData(city)
 }
+
+@RequiresApi(Build.VERSION_CODES.N)
+fun displayWeather(
+    weatherDTO: WeatherDTO,
+) {
+    weathers.textViewFeelsLike = "Ощущается как ${weatherDTO.fact?.feels_like.toString()}°C"
+    weathers.weatherCondition = weatherDTO.fact?.condition.toString()
+    weathers.degrees = "${weatherDTO.fact?.temp.toString()}°C"
+}
+
+@RequiresApi(Build.VERSION_CODES.N)
+fun getWeatherFromServer(city: String): WeatherData {
+    weathers = getDetailWeather(city)
+    loadWeather(onLoaderListener, weathers.lat, weathers.lon)
+    return weathers
+}
+
+
+
+
+
+
+
+
 
 

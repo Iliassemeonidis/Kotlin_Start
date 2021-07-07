@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.kotlinstart.model.Weather
-import com.example.kotlinstart.repository.weatherrepository.RepositoryImplWeather
+import com.example.kotlinstart.repository.weatherrepository.RepositoryWeatherImpl
 
 internal class WeatherViewModel(
     private val liveDataForObservation: MutableLiveData<ArrayList<Weather>> = MutableLiveData(),
-    private val repositoryImpl: RepositoryImplWeather = RepositoryImplWeather()
+    private val repositoryImpl: RepositoryWeatherImpl = RepositoryWeatherImpl()
 ) : ViewModel() {
 
     fun subscribe(): LiveData<ArrayList<Weather>> {

@@ -13,13 +13,22 @@ import com.example.kotlinstart.model.Weather
 import com.example.kotlinstart.view.detailsscreen.DetailsFragment
 import com.example.kotlinstart.view.search.CityDialogFragment
 import com.example.kotlinstart.view.shared.SharedViewModel
+/*по ДЗ:
+- сохранить ключ разработчика в отдельном файле+
+- реализовать notifyItemInserted+
+- разобраться что такое синглтон
+и со способами его создания https://www.journaldev.com/1377/java-singleton-design-pattern-best-practices-examples
+
+- перевести приложение на AppState (sealed class)
+- перенести Loader в Репозиторий и возвращать данные через коллбек-интерфейс
+* */
+
 
 internal class WeatherFragment : Fragment() {
 
     private lateinit var viewModel: WeatherViewModel
     private var weatherBinding: FragmentWeatherBinding? = null
     private val binding get() = weatherBinding!!
-/*для реализации добавления новых эллементов из dialog fragment*/
     private lateinit var adapter: WeatherAdapter
     private lateinit var weatherList: ArrayList<Weather>
 
@@ -62,9 +71,7 @@ internal class WeatherFragment : Fragment() {
     private fun subscribeToSharedViewModel() {
         val sharedViewModel: SharedViewModel by activityViewModels()
         sharedViewModel.subscribe().observe(viewLifecycleOwner, {
-            //TODO для реализации добавления новых эллементов из dialog fragment
-            weatherList.add(Weather(it))
-            adapter.setItemInList(weatherList)
+            adapter.setItemInList(Weather(it))
         })
     }
 
@@ -75,9 +82,8 @@ internal class WeatherFragment : Fragment() {
     }
 
     private fun renderData(weatherList: ArrayList<Weather>) {
-        //TODO для реализации добавления новых эллементов из dialog fragment
         adapter = WeatherAdapter(weatherList, onClickListItem)
-        this.weatherList=weatherList
+        this.weatherList = weatherList
 
         binding.recyclerViewMain.adapter = adapter
     }

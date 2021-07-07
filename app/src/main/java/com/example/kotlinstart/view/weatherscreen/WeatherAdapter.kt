@@ -27,9 +27,8 @@ internal class WeatherAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setItemInList(weatherList: ArrayList<Weather>) {
-        this.weatherList = weatherList
-        notifyDataSetChanged()
+    fun setItemInList(weather: Weather) {
+        notifyItemChanged(weatherList.size-1, weatherList.add(weather))
     }
 
     inner class WeatherViewHolder(private val itemWeatherBinding: ItemCityWeatherBinding) :
