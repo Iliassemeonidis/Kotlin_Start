@@ -23,5 +23,3 @@ android/gen/
 *.ap_
 # files for the dex VM *.dex
 # Local configuration file (sdk path, etc) local.properties
-project.properties
-apikey.properties
