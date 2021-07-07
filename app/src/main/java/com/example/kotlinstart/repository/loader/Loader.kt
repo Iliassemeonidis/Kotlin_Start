@@ -1,15 +1,12 @@
-package com.example.kotlinstart.repository.loading
+package com.example.kotlinstart.repository.loader
 
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.MutableLiveData
 import com.example.kotlinstart.BuildConfig
 import com.example.kotlinstart.dto.WeatherDTO
-import com.example.kotlinstart.model.WeatherData
-import com.example.kotlinstart.repository.detailsrepository.RepositoryDetailsImpl
 import com.google.gson.Gson
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -26,12 +23,12 @@ object Loader {
         lat: Double,
         lon: Double,
     ) {
+        val handler = Handler()
         try {
             val uri =
                 URL("https://api.weather.yandex.ru/v2/informers?lat=${lat}&lon=${lon}&lang=ru_RU")
             Thread {
-                Looper.prepare()
-                val handler = Handler()
+
                 val urlConnection: HttpsURLConnection
                 try {
                     urlConnection = uri.openConnection() as HttpsURLConnection
@@ -49,12 +46,13 @@ object Loader {
                 } catch (e: Exception) {
                     Log.e("ConnectException", e.message, e)
                     e.printStackTrace()
+                    handler.post { listener.onFailed(Throwable(e.message)) }
                 }
-                Looper.loop()
             }.start()
         } catch (e: MalformedURLException) {
             Log.e("URLException", e.message, e)
             e.printStackTrace()
+            handler.post { listener.onFailed(Throwable(e.message)) }
         }
     }
 
@@ -65,6 +63,6 @@ object Loader {
 
     interface OnWeatherListener {
         fun onLoaded(weatherDTO: WeatherDTO)
-        fun onFulled(error: Throwable)
+        fun onFailed(error: Throwable)
     }
 }

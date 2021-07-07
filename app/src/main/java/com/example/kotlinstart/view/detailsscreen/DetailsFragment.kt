@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -30,14 +31,13 @@ internal class DetailsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         detailsViewModel = ViewModelProvider(this).get(DetailsViewModel::class.java)
-        detailsViewModel.setCityData(arguments?.getString(CITY_EXTRA) ?: DEFAULT_CITY)
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         detailsViewModel.getLiveData().observe(viewLifecycleOwner, { renderData(it) })
-        detailsViewModel.getWeatherData()
+        detailsViewModel.getWeatherData(arguments?.getString(CITY_EXTRA) ?: DEFAULT_CITY)
     }
 
     private fun renderData(appState: AppState) {
@@ -49,11 +49,12 @@ internal class DetailsFragment : Fragment() {
                 binding.weatherCondition.text = appState.weatherData.weatherCondition
                 binding.textViewFeelsLike.text = appState.weatherData.textViewFeelsLike
             }
-          is  AppState.Loading -> {
+            is AppState.Loading -> {
                 binding.loadingLayout.visibility = View.VISIBLE
             }
             is AppState.Error -> {
                 binding.loadingLayout.visibility = View.GONE
+                Toast.makeText(requireContext(), appState.error.message, Toast.LENGTH_SHORT).show()
                 // TODO: 06.07.2021 create alert message
             }
         }

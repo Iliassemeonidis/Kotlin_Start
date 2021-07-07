@@ -14,13 +14,7 @@ import com.example.kotlinstart.view.detailsscreen.DetailsFragment
 import com.example.kotlinstart.view.search.CityDialogFragment
 import com.example.kotlinstart.view.shared.SharedViewModel
 /*по ДЗ:
-- сохранить ключ разработчика в отдельном файле+
-- реализовать notifyItemInserted+
-- разобраться что такое синглтон
-и со способами его создания https://www.journaldev.com/1377/java-singleton-design-pattern-best-practices-examples
-
-- перевести приложение на AppState (sealed class)
-- перенести Loader в Репозиторий и возвращать данные через коллбек-интерфейс
+- разделить работу Репозитория на два метода для локал и ремоте
 * */
 
 
