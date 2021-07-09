@@ -55,7 +55,6 @@ internal class DetailsFragment : Fragment() {
             is AppState.Error -> {
                 binding.loadingLayout.visibility = View.GONE
                 Toast.makeText(requireContext(), appState.error.message, Toast.LENGTH_SHORT).show()
-                // TODO: 06.07.2021 create alert message
             }
         }
     }

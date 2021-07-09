@@ -1,6 +1,7 @@
 package com.example.kotlinstart.view.weatherscreen
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.Nullable
@@ -8,11 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlinstart.databinding.ItemCityWeatherBinding
 import com.example.kotlinstart.model.Weather
 
-internal class WeatherAdapter(
+class WeatherAdapter(
     @Nullable
     private var weatherList: ArrayList<Weather>,
     private val onClickItem: WeatherFragment.OnClickItem
-) : RecyclerView.Adapter<WeatherAdapter.WeatherViewHolder>() {
+) : RecyclerView.Adapter<WeatherAdapter.WeatherViewHolder>(), ItemTouchHelperAdapter {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -29,16 +30,36 @@ internal class WeatherAdapter(
     @SuppressLint("NotifyDataSetChanged")
     fun setItemInList(weather: Weather) {
         weatherList.add(weather)
-        notifyItemChanged(weatherList.size - 1)
+        notifyItemInserted(weatherList.size - 1)
+    }
+
+    override fun onItemMove(fromPosition: Int, toPosition: Int) {
+        weatherList.removeAt(fromPosition).apply {
+            weatherList.add(if (toPosition>fromPosition) toPosition - 1 else toPosition,this)
+        }
+        notifyItemMoved(fromPosition, toPosition)
+    }
+
+    override fun onItemDismiss(position: Int) {
+        weatherList.removeAt(position)
+        notifyItemRemoved(position)
     }
 
     inner class WeatherViewHolder(private val itemWeatherBinding: ItemCityWeatherBinding) :
-        RecyclerView.ViewHolder(itemWeatherBinding.root) {
+        RecyclerView.ViewHolder(itemWeatherBinding.root),ItemTouchHelperViewHolder {
         fun bind(weather: Weather) {
             itemWeatherBinding.textViewCity.text = weather.cityName
             itemWeatherBinding.textViewRegion.text = weather.region
             itemWeatherBinding.temperature.text = weather.temperature
             itemView.setOnClickListener { onClickItem.onClick(weatherList[adapterPosition]) }
+        }
+
+        override fun onItemSelected() {
+            itemView.setBackgroundColor(Color.GRAY)
+        }
+
+        override fun onItemClear() {
+            itemView.setBackgroundColor(0)
         }
     }
 }

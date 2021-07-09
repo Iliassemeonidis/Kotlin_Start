@@ -35,6 +35,6 @@ internal class DetailsViewModel(
     fun getWeatherData(city: String) {
         this.city = city
         liveDataForObservation.value = AppState.Loading
-        repositoryImpl.getWeatherDataFromLocalStorage(city, onLoaderListener)
+        repositoryImpl.getWeatherDataFromServer(city, onLoaderListener)
     }
 }

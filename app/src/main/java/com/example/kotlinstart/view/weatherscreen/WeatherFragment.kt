@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.FragmentWeatherBinding
 import com.example.kotlinstart.model.Weather
@@ -18,7 +19,7 @@ import com.example.kotlinstart.view.shared.SharedViewModel
 * */
 
 
-internal class WeatherFragment : Fragment() {
+ class WeatherFragment : Fragment() {
 
     private lateinit var viewModel: WeatherViewModel
     private var weatherBinding: FragmentWeatherBinding? = null
@@ -80,6 +81,8 @@ internal class WeatherFragment : Fragment() {
         this.weatherList = weatherList
 
         binding.recyclerViewMain.adapter = adapter
+        ItemTouchHelper(ItemTouchHelperCallback(adapter))
+            .attachToRecyclerView(binding.recyclerViewMain)
     }
 
     override fun onDestroyView() {
