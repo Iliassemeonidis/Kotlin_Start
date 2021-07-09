@@ -1,14 +1,16 @@
 package com.example.kotlinstart.view.detailsscreen
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.kotlinstart.dto.WeatherDTO
 import com.example.kotlinstart.model.AppState
 import com.example.kotlinstart.repository.detailsrepository.RepositoryDetailsImpl
-import com.example.kotlinstart.repository.loader.Loader
 import com.example.kotlinstart.repository.loader.displayWeather
+import com.google.gson.Gson
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.Response
+import java.io.IOException
 
 internal class DetailsViewModel(
     private val liveDataForObservation: MutableLiveData<AppState> = MutableLiveData(),
@@ -16,25 +18,45 @@ internal class DetailsViewModel(
 ) : ViewModel() {
 
     private lateinit var city: String
-    private val onLoaderListener: Loader.OnWeatherListener =
-        object : Loader.OnWeatherListener {
+    private val callback =
+        object : Callback {
 
-            @RequiresApi(Build.VERSION_CODES.N)
-            override fun onLoaded(weatherDTO: WeatherDTO) {
-                liveDataForObservation.value = AppState.Success(displayWeather(weatherDTO))
+            override fun onResponse(call: Call, response: Response) {
+                val serverResponse: String? = response.body()?.string()
+                if (response.isSuccessful && serverResponse != null) {
+                    /*try {*/
+                    liveDataForObservation.postValue(
+                        AppState.Success(
+                            displayWeather(
+                                Gson().fromJson(
+                                    serverResponse,
+                                    WeatherDTO::class.java
+                                )
+                            )
+                        )
+                    )
+                    /*} catch () {
+                    liveDataForObservation.value = AppState.Error(error)
+                    }*/
+                } else {
+                    liveDataForObservation.//value = AppState.Error(Throwable("Ответ неуспешен"))
+                }
             }
 
-            override fun onFailed(error: Throwable) {
-                liveDataForObservation.value = AppState.Error(error)
+            override fun onFailure(call: Call, e: IOException) {
+                liveDataForObservation.//value = AppState.Error(Throwable(e.message))
             }
         }
 
     fun getLiveData() = liveDataForObservation
 
-    @RequiresApi(Build.VERSION_CODES.N)
-    fun getWeatherData(city: String) {
+    fun getWeatherData(city: String, isOnline: Boolean = true) {
         this.city = city
         liveDataForObservation.value = AppState.Loading
-        repositoryImpl.getWeatherDataFromServer(city, onLoaderListener)
+        if (isOnline) {
+            repositoryImpl.getWeatherDataFromServer(city, callback)
+        } else {
+            repositoryImpl.getWeatherDataFromLocalStorage(city /*onLoaderListener*/)
+        }
     }
 }

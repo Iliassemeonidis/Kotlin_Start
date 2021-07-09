@@ -14,12 +14,14 @@ import com.example.kotlinstart.model.Weather
 import com.example.kotlinstart.view.detailsscreen.DetailsFragment
 import com.example.kotlinstart.view.search.CityDialogFragment
 import com.example.kotlinstart.view.shared.SharedViewModel
+
 /*по ДЗ:
-- разделить работу Репозитория на два метода для локал и ремоте
+- почитать про SOLID
+- долделать список
+- перевести приложение на Retrofit
 * */
 
-
- class WeatherFragment : Fragment() {
+class WeatherFragment : Fragment() {
 
     private lateinit var viewModel: WeatherViewModel
     private var weatherBinding: FragmentWeatherBinding? = null

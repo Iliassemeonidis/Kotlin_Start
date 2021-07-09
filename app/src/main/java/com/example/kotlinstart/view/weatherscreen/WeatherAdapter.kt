@@ -4,13 +4,11 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.annotation.Nullable
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlinstart.databinding.ItemCityWeatherBinding
 import com.example.kotlinstart.model.Weather
 
 class WeatherAdapter(
-    @Nullable
     private var weatherList: ArrayList<Weather>,
     private val onClickItem: WeatherFragment.OnClickItem
 ) : RecyclerView.Adapter<WeatherAdapter.WeatherViewHolder>(), ItemTouchHelperAdapter {
@@ -35,7 +33,7 @@ class WeatherAdapter(
 
     override fun onItemMove(fromPosition: Int, toPosition: Int) {
         weatherList.removeAt(fromPosition).apply {
-            weatherList.add(if (toPosition>fromPosition) toPosition - 1 else toPosition,this)
+            weatherList.add(if (toPosition > fromPosition) toPosition - 1 else toPosition, this)
         }
         notifyItemMoved(fromPosition, toPosition)
     }
@@ -46,7 +44,7 @@ class WeatherAdapter(
     }
 
     inner class WeatherViewHolder(private val itemWeatherBinding: ItemCityWeatherBinding) :
-        RecyclerView.ViewHolder(itemWeatherBinding.root),ItemTouchHelperViewHolder {
+        RecyclerView.ViewHolder(itemWeatherBinding.root), ItemTouchHelperViewHolder {
         fun bind(weather: Weather) {
             itemWeatherBinding.textViewCity.text = weather.cityName
             itemWeatherBinding.textViewRegion.text = weather.region

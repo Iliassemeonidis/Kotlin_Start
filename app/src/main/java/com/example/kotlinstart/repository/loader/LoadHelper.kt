@@ -1,9 +1,8 @@
 package com.example.kotlinstart.repository.loader
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.example.kotlinstart.dto.WeatherDTO
 import com.example.kotlinstart.model.WeatherData
+import okhttp3.Callback
 
 lateinit var weathers: WeatherData
 
@@ -67,7 +66,6 @@ fun getDetailWeather(city: String = "Москва") = when (city) {
     else -> WeatherData(city)
 }
 
-@RequiresApi(Build.VERSION_CODES.N)
 fun displayWeather(
     weatherDTO: WeatherDTO,
 ) = weathers.apply {
@@ -76,8 +74,7 @@ fun displayWeather(
     degrees = "${weatherDTO.fact?.temp.toString()}°C"
 }
 
-@RequiresApi(Build.VERSION_CODES.N)
-fun getWeatherFromServer(city: String, listener: Loader.OnWeatherListener) {
+fun getWeatherFromServer(city: String, callback: Callback) {
     weathers = getDetailWeather(city)
-    Loader.loadWeather(listener, weathers.lat, weathers.lon)
+    Loader.loadWeather(callback, weathers.lat, weathers.lon)
 }
