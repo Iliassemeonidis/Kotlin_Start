@@ -12,6 +12,4 @@ interface RepositoryDetails {
     )
 
     fun getWeatherDataFromLocalStorage(city: String): WeatherData
-
-
 }

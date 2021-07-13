@@ -1,6 +1,5 @@
 package com.example.kotlinstart.model
 
-
 fun getDetailWeather(city: String = "Москва") = when (city) {
     "Москва" -> WeatherData(
         city,

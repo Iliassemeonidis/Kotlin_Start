@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import coil.api.load
 import com.example.kotlinstart.databinding.FragmentDetailsBinding
 import com.example.kotlinstart.model.AppState
 import com.example.kotlinstart.model.getDetailWeather
@@ -34,7 +35,7 @@ internal class DetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val weather = getDetailWeather( arguments?.getString(CITY_EXTRA) ?:DEFAULT_CITY)
+        val weather = getDetailWeather(arguments?.getString(CITY_EXTRA) ?: DEFAULT_CITY)
         detailsViewModel.setNewCity(weather.city)
         detailsViewModel.getLiveData().observe(viewLifecycleOwner, { renderData(it) })
         detailsViewModel.getWeatherFromRemoteSource(weather.lat, weather.lon)
@@ -44,10 +45,13 @@ internal class DetailsFragment : Fragment() {
         when (appState) {
             is AppState.Success -> {
                 binding.loadingLayout.visibility = View.GONE
-                binding.textViewCityName.text = appState.weatherData.city
+                val weatherData = appState.weatherData
+                binding.textViewCityName.text = weatherData.city
                 binding.degrees.text = appState.weatherData.degrees
                 binding.weatherCondition.text = appState.weatherData.weatherCondition
                 binding.textViewFeelsLike.text = appState.weatherData.textViewFeelsLike
+                binding.imageView.load("https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/d9b043f6-c6b3-4949-ba57-42e064d37ac5/d2pmhr3-ee361858-8935-457b-b4e4-4edb3bc4da4c.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2Q5YjA0M2Y2LWM2YjMtNDk0OS1iYTU3LTQyZTA2NGQzN2FjNVwvZDJwbWhyMy1lZTM2MTg1OC04OTM1LTQ1N2ItYjRlNC00ZWRiM2JjNGRhNGMuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.ZSVPyRieDEHjTrNTcVNy6Tqkx83FHCQK9s9z20LJHEI")
+                //binding.imageView.load("https://yastatic.net/weather/i/icons/blueye/color/svg/${weatherData.icon}.svg")
             }
             is AppState.Loading -> {
                 binding.loadingLayout.visibility = View.VISIBLE

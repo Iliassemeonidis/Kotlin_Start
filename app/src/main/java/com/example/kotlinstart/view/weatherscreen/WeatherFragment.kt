@@ -16,9 +16,9 @@ import com.example.kotlinstart.view.search.CityDialogFragment
 import com.example.kotlinstart.view.shared.SharedViewModel
 
 /*по ДЗ:
-- почитать про SOLID
-- долделать список +
-- перевести приложение на Retrofit +
+- Сформировать отдельные классы DTO для получения данных из разных источников. WeatherData оставить только для View
+- Загружать png для каждого города
+- Загружать иконку в svg для погоды
 * */
 
 class WeatherFragment : Fragment() {
