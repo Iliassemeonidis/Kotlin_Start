@@ -1,10 +1,5 @@
-package com.example.kotlinstart.repository.loader
+package com.example.kotlinstart.model
 
-import com.example.kotlinstart.dto.WeatherDTO
-import com.example.kotlinstart.model.WeatherData
-import okhttp3.Callback
-
-lateinit var weathers: WeatherData
 
 fun getDetailWeather(city: String = "Москва") = when (city) {
     "Москва" -> WeatherData(
@@ -64,17 +59,4 @@ fun getDetailWeather(city: String = "Москва") = when (city) {
         lon = 94.485730
     )
     else -> WeatherData(city)
-}
-
-fun displayWeather(
-    weatherDTO: WeatherDTO,
-) = weathers.apply {
-    textViewFeelsLike = "Ощущается как ${weatherDTO.fact?.feels_like.toString()}°C"
-    weatherCondition = weatherDTO.fact?.condition.toString()
-    degrees = "${weatherDTO.fact?.temp.toString()}°C"
-}
-
-fun getWeatherFromServer(city: String, callback: Callback) {
-    weathers = getDetailWeather(city)
-    Loader.loadWeather(callback, weathers.lat, weathers.lon)
 }

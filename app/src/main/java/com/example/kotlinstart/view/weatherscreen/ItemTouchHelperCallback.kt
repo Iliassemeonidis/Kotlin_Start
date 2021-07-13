@@ -19,6 +19,7 @@ class ItemTouchHelperCallback(private val adapter: ItemTouchHelperAdapter) : Ite
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
+         adapter.onItemMove(viewHolder.adapterPosition,target.adapterPosition)
         return true
     }
 

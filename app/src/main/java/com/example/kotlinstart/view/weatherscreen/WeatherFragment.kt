@@ -17,8 +17,8 @@ import com.example.kotlinstart.view.shared.SharedViewModel
 
 /*по ДЗ:
 - почитать про SOLID
-- долделать список
-- перевести приложение на Retrofit
+- долделать список +
+- перевести приложение на Retrofit +
 * */
 
 class WeatherFragment : Fragment() {

@@ -1,17 +1,16 @@
 package com.example.kotlinstart.view.detailsscreen
 
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.kotlinstart.databinding.FragmentDetailsBinding
 import com.example.kotlinstart.model.AppState
+import com.example.kotlinstart.model.getDetailWeather
 
 internal class DetailsFragment : Fragment() {
 
@@ -33,11 +32,12 @@ internal class DetailsFragment : Fragment() {
         detailsViewModel = ViewModelProvider(this).get(DetailsViewModel::class.java)
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val weather = getDetailWeather( arguments?.getString(CITY_EXTRA) ?:DEFAULT_CITY)
+        detailsViewModel.setNewCity(weather.city)
         detailsViewModel.getLiveData().observe(viewLifecycleOwner, { renderData(it) })
-        detailsViewModel.getWeatherData(arguments?.getString(CITY_EXTRA) ?: DEFAULT_CITY)
+        detailsViewModel.getWeatherFromRemoteSource(weather.lat, weather.lon)
     }
 
     private fun renderData(appState: AppState) {

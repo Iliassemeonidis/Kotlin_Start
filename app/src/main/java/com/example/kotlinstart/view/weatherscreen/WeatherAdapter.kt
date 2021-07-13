@@ -53,11 +53,11 @@ class WeatherAdapter(
         }
 
         override fun onItemSelected() {
-            itemView.setBackgroundColor(Color.GRAY)
+            itemView.setBackgroundColor(Color.GREEN)
         }
 
         override fun onItemClear() {
-            itemView.setBackgroundColor(0)
+            itemView.setBackgroundColor(Color.RED)
         }
     }
 }
