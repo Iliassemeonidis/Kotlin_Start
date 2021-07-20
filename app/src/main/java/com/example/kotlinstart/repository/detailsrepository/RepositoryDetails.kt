@@ -1,7 +1,6 @@
 package com.example.kotlinstart.repository.detailsrepository
 
 import com.example.kotlinstart.dto.WeatherDTO
-import com.example.kotlinstart.model.WeatherData
 
 interface RepositoryDetails {
 

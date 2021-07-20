@@ -47,13 +47,13 @@ internal class DetailsFragment : Fragment() {
         when (appState) {
             is AppState.Success -> {
                 binding.loadingLayout.visibility = View.GONE
-                val weatherData = appState.weatherData
+                val weatherData = appState.weatherParams
                 binding.textViewCityName.text = weatherData.city
-                binding.degrees.text = "${appState.weatherData.degrees}°"
-                binding.weatherCondition.text = appState.weatherData.weatherCondition
-                binding.textViewFeelsLike.text = "Ощущается как ${appState.weatherData.textViewFeelsLike}°"
-                binding.imageView.load(appState.weatherData.icon)
-                binding.imageView.load(appState.weatherData.cityIcon)
+                binding.degrees.text = "${appState.weatherParams.degrees}°"
+                binding.weatherCondition.text = appState.weatherParams.weatherCondition
+                binding.textViewFeelsLike.text = "Ощущается как ${appState.weatherParams.textViewFeelsLike}°"
+                binding.iconCondition.load(appState.weatherParams.icon)
+                binding.imageView.load(appState.weatherParams.cityIcon)
             }
             is AppState.Loading -> {
                 binding.loadingLayout.visibility = View.VISIBLE

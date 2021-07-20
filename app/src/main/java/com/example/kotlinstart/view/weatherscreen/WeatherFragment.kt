@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.FragmentWeatherBinding
 import com.example.kotlinstart.model.Weather
+import com.example.kotlinstart.view.ThreadFragment
 import com.example.kotlinstart.view.detailsscreen.DetailsFragment
 import com.example.kotlinstart.view.search.CityDialogFragment
 import com.example.kotlinstart.view.shared.SharedViewModel
@@ -19,9 +20,10 @@ import com.example.kotlinstart.view.shared.SharedViewModel
 - Сформировать отдельные классы DTO
   для получения данных из разных источников.
    WeatherData оставить только для View
-- Загружать png для каждого города +
 - Загружать иконку в svg для погоды
 https://yastatic.net/weather/i/icons/blueye/color/svg/<значение из поля icon>.svg.
+- Имплементировать работу с Лупером
+- Разобраться с Сервисом
 * */
 
 class WeatherFragment : Fragment() {
@@ -77,7 +79,12 @@ class WeatherFragment : Fragment() {
 
     private fun initButtonAdd() {
         binding.floatingActionButton.setOnClickListener {
-            CityDialogFragment().show(requireActivity().supportFragmentManager, SEARCH_CITY_TAG)
+            requireActivity().supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.list_container, ThreadFragment.newInstance())
+                .addToBackStack(null)
+                .commitAllowingStateLoss()
+        //CityDialogFragment().show(requireActivity().supportFragmentManager, SEARCH_CITY_TAG)
         }
     }
 

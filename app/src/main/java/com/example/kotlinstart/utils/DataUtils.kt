@@ -34,9 +34,9 @@ internal fun checkResponse(city: String, serverResponse: WeatherDTO?): AppState 
     } else AppState.Success(convertDtoToWeatherData(city, serverResponse))
 }
 
-private fun convertDtoToWeatherData(city: String, weatherDTO: WeatherDTO): WeatherData {
+private fun convertDtoToWeatherData(city: String, weatherDTO: WeatherDTO): WeatherParams {
     val fact: FactDTO = weatherDTO.fact!!
-    return WeatherData(
+    return WeatherParams(
         city,
         fact.temp!!.toString(),
         fact.condition!!,

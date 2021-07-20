@@ -13,4 +13,6 @@
     <dimen name="max_size_float">60dp</dimen>
     <dimen name="margin_degrees">25sp</dimen>
     <dimen name="text_size_degrees">70sp</dimen>
+
+    <dimen name="main_container_text_size">10sp</dimen>
 </resources>

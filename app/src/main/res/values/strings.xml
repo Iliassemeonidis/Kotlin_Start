@@ -25,6 +25,20 @@
     <string name="detail_information_text">Дитальная информация о погоде на неделю и в течении дня</string>
     <string name="image_weather_condition">Изображение состояние погоды</string>
 
+    <string name="threads">Threads</string>
+    <string name="in_main_thread">В главном потоке</string>
+    <string name="from_thread">Из потока %d</string>
+    <string name="in_thread">Выводим в потоке %s</string>
+    <string name="calculate_in_thread">Считаем в потоке %s</string>
+    <string name="my_handler_thread">My_Handler_Thread</string>
+    <string name="hello_from_thread_fragment">Hello from ThreadsFragment</string>
+    <string name="calculate">Расчёт</string>
+    <string name="default_number">1</string>
+    <string name="calc_in_thread">Расчёт в потоке</string>
+    <string name="handler_thread">Handler_Thread</string>
+    <string name="service">Service</string>
+    <string name="service_broadcast">Service + Broadcast</string>
+
     <string-array name="city">
         <item>Москва</item>
         <item>Калифорния</item>
@@ -40,5 +54,7 @@
         <item>Краснодарский край</item>
         <item>Республика Северная Осетия-Алания</item>
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

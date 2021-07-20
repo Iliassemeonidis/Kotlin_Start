@@ -1,6 +1,6 @@
 package com.example.kotlinstart.model
 
-data class WeatherData(
+data class WeatherParams(
     val city: String = "Moscow",
     var degrees: String = "27°",
     var weatherCondition: String = "Солнечно",
