@@ -11,5 +11,5 @@ interface RepositoryDetails {
         callback: retrofit2.Callback<WeatherDTO>
     )
 
-    fun getWeatherDataFromLocalStorage(city: String): WeatherData
+//    fun getWeatherDataFromLocalStorage(city: String): WeatherData
 }

@@ -16,9 +16,12 @@ import com.example.kotlinstart.view.search.CityDialogFragment
 import com.example.kotlinstart.view.shared.SharedViewModel
 
 /*по ДЗ:
-- Сформировать отдельные классы DTO для получения данных из разных источников. WeatherData оставить только для View
-- Загружать png для каждого города
+- Сформировать отдельные классы DTO
+  для получения данных из разных источников.
+   WeatherData оставить только для View
+- Загружать png для каждого города +
 - Загружать иконку в svg для погоды
+https://yastatic.net/weather/i/icons/blueye/color/svg/<значение из поля icon>.svg.
 * */
 
 class WeatherFragment : Fragment() {

@@ -1,7 +1,6 @@
 package com.example.kotlinstart.repository.detailsrepository
 
 import com.example.kotlinstart.dto.WeatherDTO
-import com.example.kotlinstart.model.getDetailWeather
 import com.example.kotlinstart.repository.loader.RemoteDataSource
 import retrofit2.Callback
 
@@ -15,5 +14,5 @@ class RepositoryDetailsImpl(private val remoteDataSource: RemoteDataSource) : Re
         remoteDataSource.getWeatherDetails(lat, lon, callback)
     }
 
-    override fun getWeatherDataFromLocalStorage(city: String) = getDetailWeather(city)
+//    override fun getWeatherDataFromLocalStorage(city: String) = getDetailWeather(city)
 }

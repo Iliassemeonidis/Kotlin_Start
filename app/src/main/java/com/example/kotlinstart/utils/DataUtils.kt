@@ -1,20 +1,14 @@
 package com.example.kotlinstart.utils
 
+import com.example.kotlinstart.constant.*
 import com.example.kotlinstart.dto.FactDTO
 import com.example.kotlinstart.dto.WeatherDTO
-import com.example.kotlinstart.model.AppState
-import com.example.kotlinstart.model.WeatherData
+import com.example.kotlinstart.model.*
 import retrofit2.Response
-import java.text.SimpleDateFormat
-import java.util.*
 
 private const val CORRUPTED_DATA = "Неполные данные"
 private const val SERVER_ERROR = "Ошибка сервера"
 private const val REQUEST_ERROR = "Ошибка запроса на сервер"
-
-fun Date.myFormat(): String {
-    return SimpleDateFormat("yyyy.dd.MMM mm:HH", Locale.getDefault()).format(this)
-}
 
 internal fun getStateOnResponse(city: String, response: Response<WeatherDTO>): AppState {
     val serverResponse: WeatherDTO? = response.body()
@@ -44,8 +38,20 @@ private fun convertDtoToWeatherData(city: String, weatherDTO: WeatherDTO): Weath
     val fact: FactDTO = weatherDTO.fact!!
     return WeatherData(
         city,
-        "${fact.temp!!}°C",
+        fact.temp!!.toString(),
         fact.condition!!,
-        "Ощущается как ${fact.feels_like!!}°",
+        fact.feels_like!!.toString(),
+        cityIcon = getIconByCity(city),
+        icon = "https://yastatic.net/weather/i/icons/blueye/color/svg/${fact.icon!!}.svg"
     )
+}
+
+private fun getIconByCity(city: String) = when (city) {
+    "Москва" -> MOSCOW
+    "Афины" -> ATHENS
+    "Сочи" -> SOCHI
+    "Лос-Анджелес" -> LOS_ANGELES
+    "Владикавказ" -> VLADIKAVKAZ
+    "Таймырский" -> TAIMIR
+    else -> ""
 }

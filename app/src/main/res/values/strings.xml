@@ -23,6 +23,7 @@
     <string name="fills_like_text">Ощущается как 27°</string>
     <string name="weather_condition">Солнечно</string>
     <string name="detail_information_text">Дитальная информация о погоде на неделю и в течении дня</string>
+    <string name="image_weather_condition">Изображение состояние погоды</string>
 
     <string-array name="city">
         <item>Москва</item>
