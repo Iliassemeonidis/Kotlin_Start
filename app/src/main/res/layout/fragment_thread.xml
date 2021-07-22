@@ -55,5 +55,21 @@
             android:layout_height="wrap_content"
             android:text="@string/calc_in_thread"
             />
+
+        <Button
+            android:id="@+id/calcThreadHandler"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/handler_thread"
+            />
+
+        <Button
+            android:id="@+id/serviceButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/service"
+            />
     </LinearLayout>
 </ScrollView>

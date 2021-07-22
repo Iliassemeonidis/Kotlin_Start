@@ -17,6 +17,8 @@
         <TextView
             android:id="@+id/text_view_city"
             style="@style/MainCityItemStyle"
+            android:textColorHighlight="@color/black"
+            android:textColor="@color/white"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="@string/city_name" />

@@ -10,6 +10,7 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.14719202898550723" />
         <entry key="app/src/main/res/layout/fragment_city_dialog.xml" value="0.14719202898550723" />
         <entry key="app/src/main/res/layout/fragment_details.xml" value="0.1644021739130435" />
+        <entry key="app/src/main/res/layout/fragment_thread.xml" value="0.16576086956521738" />
         <entry key="app/src/main/res/layout/fragment_weather.xml" value="0.1793478260869565" />
         <entry key="app/src/main/res/layout/item_city.xml" value="0.1793478260869565" />
         <entry key="app/src/main/res/layout/item_city_weather.xml" value="0.1644021739130435" />
@@ -20,7 +21,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

@@ -1,7 +1,9 @@
-package com.example.kotlinstart.view
+package com.example.kotlinstart.view.experiments
 
-import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.HandlerThread
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,7 +53,46 @@ class ThreadFragment : Fragment() {
                 }
             }.start()
         }
+
+        val handlerThread = HandlerThread(getString(R.string.my_handler_thread))
+        handlerThread.start()
+
+        val handler = Handler(handlerThread.looper)
+        binding.calcThreadHandler.setOnClickListener{
+            binding.mainContainer.addView(AppCompatTextView(it.context).apply {
+                text = String.format(
+                    getString(R.string.calculate_in_thread),
+                    handlerThread.name )
+                textSize = resources.getDimension(R.dimen.main_container_text_size)
+            })
+
+            handler.post{
+                startCalculations(binding.editText.text.toString().toInt())
+                mainContainer.post{
+                   binding.mainContainer.addView(AppCompatTextView(it.context).apply {
+                       text = String.format(getString(R.string.calculate_in_thread), Thread.currentThread().name)
+                       textSize = resources.getDimension(R.dimen.main_container_text_size)
+                    })
+                }
+            }
+        }
+        initServiceButton()
+
     }
+
+    private fun initServiceButton() {
+        binding.serviceButton.setOnClickListener{
+            context?.let {
+                it.startService(Intent(it,MainService::class.java).apply {
+                    putExtra(
+                        MAIN_SERVICE_STRING_EXTRA, getString(R.string.hello_from_thread_fragment)
+                    )
+                })
+            }
+        }
+    }
+
+
 
     private fun startCalculations(seconds: Int): String {
         val date = Date()

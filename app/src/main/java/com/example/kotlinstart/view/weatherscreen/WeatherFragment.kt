@@ -11,19 +11,22 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.FragmentWeatherBinding
 import com.example.kotlinstart.model.Weather
-import com.example.kotlinstart.view.ThreadFragment
+import com.example.kotlinstart.view.experiments.ThreadFragment
 import com.example.kotlinstart.view.detailsscreen.DetailsFragment
-import com.example.kotlinstart.view.search.CityDialogFragment
 import com.example.kotlinstart.view.shared.SharedViewModel
 
 /*по ДЗ:
 - Сформировать отдельные классы DTO
   для получения данных из разных источников.
-   WeatherData оставить только для View
+   WeatherData оставить только для View +
+
 - Загружать иконку в svg для погоды
-https://yastatic.net/weather/i/icons/blueye/color/svg/<значение из поля icon>.svg.
-- Имплементировать работу с Лупером
-- Разобраться с Сервисом
+https://yastatic.net/weather/i/icons/blueye/color/svg/<значение из поля icon>.svg. +
+
+- Имплементировать работу с Лупером +
+
+- Разобраться с Сервисом +
+
 * */
 
 class WeatherFragment : Fragment() {
@@ -84,7 +87,7 @@ class WeatherFragment : Fragment() {
                 .replace(R.id.list_container, ThreadFragment.newInstance())
                 .addToBackStack(null)
                 .commitAllowingStateLoss()
-        //CityDialogFragment().show(requireActivity().supportFragmentManager, SEARCH_CITY_TAG)
+            //CityDialogFragment().show(requireActivity().supportFragmentManager, SEARCH_CITY_TAG)
         }
     }
 
@@ -100,10 +103,6 @@ class WeatherFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         weatherBinding = null
-    }
-
-    companion object {
-        private const val SEARCH_CITY_TAG = "SEARCH_CITY_TAG"
     }
 
     interface OnClickItem {

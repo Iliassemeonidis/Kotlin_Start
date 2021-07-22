@@ -4,6 +4,7 @@ import com.example.kotlinstart.constant.*
 import com.example.kotlinstart.dto.FactDTO
 import com.example.kotlinstart.dto.WeatherDTO
 import com.example.kotlinstart.model.*
+import com.example.kotlinstart.view.detailsscreen.WeatherDetailsData
 import retrofit2.Response
 
 private const val CORRUPTED_DATA = "Неполные данные"
@@ -34,14 +35,14 @@ internal fun checkResponse(city: String, serverResponse: WeatherDTO?): AppState 
     } else AppState.Success(convertDtoToWeatherData(city, serverResponse))
 }
 
-private fun convertDtoToWeatherData(city: String, weatherDTO: WeatherDTO): WeatherParams {
+private fun convertDtoToWeatherData(city: String, weatherDTO: WeatherDTO): WeatherDetailsData {
     val fact: FactDTO = weatherDTO.fact!!
-    return WeatherParams(
+    return WeatherDetailsData(
         city,
         fact.temp!!.toString(),
         fact.condition!!,
         fact.feels_like!!.toString(),
-        cityIcon = getIconByCity(city),
+        cityIconURL = getIconByCity(city),
         icon = "https://yastatic.net/weather/i/icons/blueye/color/svg/${fact.icon!!}.svg"
     )
 }

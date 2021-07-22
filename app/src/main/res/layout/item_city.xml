@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_start_city_search"
             android:layout_marginTop="@dimen/margin_top_city_search"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="@dimen/size_of_city_search"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"

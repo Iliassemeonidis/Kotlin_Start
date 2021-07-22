@@ -1,6 +1,7 @@
 package com.example.kotlinstart.view.detailsscreen
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,9 +11,12 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import coil.api.load
+import com.bumptech.glide.Glide
 import com.example.kotlinstart.databinding.FragmentDetailsBinding
 import com.example.kotlinstart.model.AppState
 import com.example.kotlinstart.model.getDetailWeather
+import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou
+import kotlinx.android.synthetic.main.fragment_details.*
 
 internal class DetailsFragment : Fragment() {
 
@@ -47,13 +51,13 @@ internal class DetailsFragment : Fragment() {
         when (appState) {
             is AppState.Success -> {
                 binding.loadingLayout.visibility = View.GONE
-                val weatherData = appState.weatherParams
+                val weatherData = appState.weatherDetailsData
                 binding.textViewCityName.text = weatherData.city
-                binding.degrees.text = "${appState.weatherParams.degrees}°"
-                binding.weatherCondition.text = appState.weatherParams.weatherCondition
-                binding.textViewFeelsLike.text = "Ощущается как ${appState.weatherParams.textViewFeelsLike}°"
-                binding.iconCondition.load(appState.weatherParams.icon)
-                binding.imageView.load(appState.weatherParams.cityIcon)
+                binding.degrees.text = "${appState.weatherDetailsData.degrees}°"
+                binding.weatherCondition.text = appState.weatherDetailsData.condition
+                binding.textViewFeelsLike.text = "Ощущается как ${appState.weatherDetailsData.feelsLike}°"
+                GlideToVectorYou.justLoadImage(requireActivity(), Uri.parse(appState.weatherDetailsData.icon),icon_condition)
+                binding.imageView.load(appState.weatherDetailsData.cityIconURL)
             }
             is AppState.Loading -> {
                 binding.loadingLayout.visibility = View.VISIBLE
