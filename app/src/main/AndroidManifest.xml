@@ -19,5 +19,12 @@
         </activity>
 
         <service android:name=".view.experiments.MainService" />
+
+        <receiver android:name=".view.experiments.MainBroadcastReceiver">
+            <intent-filter>
+                <action android:name="sdfgsedfgsdf" />
+            </intent-filter>
+        </receiver>
+
     </application>
 </manifest>

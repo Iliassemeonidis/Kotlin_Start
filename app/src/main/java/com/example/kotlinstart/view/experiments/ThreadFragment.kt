@@ -1,6 +1,7 @@
 package com.example.kotlinstart.view.experiments
 
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
@@ -20,6 +21,7 @@ class ThreadFragment : Fragment() {
     private var _binding: FragmentThreadBinding? = null
     private val binding get() = _binding!!
     private var counterThread = 0
+    private val receiver = MainBroadcastReceiver()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,8 +32,22 @@ class ThreadFragment : Fragment() {
 
     }
 
+    override fun onStop() {
+        super.onStop()
+        requireActivity().unregisterReceiver(receiver)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        requireActivity().registerReceiver(
+            receiver,
+            IntentFilter("sdfgsedfgsdf")
+        )
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding.button.setOnClickListener {
             binding.textView.text = startCalculations(binding.editText.text.toString().toInt())
             binding.mainContainer.addView(AppCompatTextView(it.context).apply {
@@ -56,34 +72,39 @@ class ThreadFragment : Fragment() {
 
         val handlerThread = HandlerThread(getString(R.string.my_handler_thread))
         handlerThread.start()
-
         val handler = Handler(handlerThread.looper)
-        binding.calcThreadHandler.setOnClickListener{
+        binding.calcThreadHandler.setOnClickListener {
             binding.mainContainer.addView(AppCompatTextView(it.context).apply {
                 text = String.format(
                     getString(R.string.calculate_in_thread),
-                    handlerThread.name )
+                    handlerThread.name
+                )
                 textSize = resources.getDimension(R.dimen.main_container_text_size)
             })
 
-            handler.post{
-                startCalculations(binding.editText.text.toString().toInt())
-                mainContainer.post{
-                   binding.mainContainer.addView(AppCompatTextView(it.context).apply {
-                       text = String.format(getString(R.string.calculate_in_thread), Thread.currentThread().name)
-                       textSize = resources.getDimension(R.dimen.main_container_text_size)
-                    })
+            Thread {
+                val result = startCalculations(binding.editText.text.toString().toInt())
+                handler.post {
+                    mainContainer.post {
+                        binding.mainContainer.addView(AppCompatTextView(it.context).apply {
+                            text = String.format(
+                                getString(R.string.calculate_in_thread),
+                                Thread.currentThread().name + result
+                            )
+                            textSize = resources.getDimension(R.dimen.main_container_text_size)
+                        })
+                    }
                 }
-            }
+            }.start()
+
         }
         initServiceButton()
-
     }
 
     private fun initServiceButton() {
-        binding.serviceButton.setOnClickListener{
+        binding.serviceButton.setOnClickListener {
             context?.let {
-                it.startService(Intent(it,MainService::class.java).apply {
+                it.startService(Intent(it, MainService::class.java).apply {
                     putExtra(
                         MAIN_SERVICE_STRING_EXTRA, getString(R.string.hello_from_thread_fragment)
                     )
@@ -91,7 +112,6 @@ class ThreadFragment : Fragment() {
             }
         }
     }
-
 
 
     private fun startCalculations(seconds: Int): String {
