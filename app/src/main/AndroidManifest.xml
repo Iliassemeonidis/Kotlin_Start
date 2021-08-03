@@ -22,7 +22,7 @@
 
         <receiver android:name=".view.experiments.MainBroadcastReceiver">
             <intent-filter>
-                <action android:name="sdfgsedfgsdf" />
+                <action android:name="Receive weather info sdfghsrdfgh" />
             </intent-filter>
         </receiver>
 

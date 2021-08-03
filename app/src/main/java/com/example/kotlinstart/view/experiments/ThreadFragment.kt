@@ -103,13 +103,13 @@ class ThreadFragment : Fragment() {
 
     private fun initServiceButton() {
         binding.serviceButton.setOnClickListener {
-            context?.let {
+           /* context?.let {
                 it.startService(Intent(it, MainService::class.java).apply {
                     putExtra(
                         MAIN_SERVICE_STRING_EXTRA, getString(R.string.hello_from_thread_fragment)
                     )
                 })
-            }
+            }*/
         }
     }
 

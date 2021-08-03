@@ -1,9 +1,11 @@
 package com.example.kotlinstart.view.detailsscreen
 
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
 import android.content.IntentFilter
-import android.net.ConnectivityManager.CONNECTIVITY_ACTION
-import android.net.ConnectivityManager.EXTRA_NO_CONNECTIVITY
+import android.net.LocalServerSocket
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,15 +15,16 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import coil.api.load
 import com.example.kotlinstart.databinding.FragmentDetailsBinding
 import com.example.kotlinstart.model.AppState
 import com.example.kotlinstart.model.Weather
 import com.example.kotlinstart.model.getDetailWeather
-import com.example.kotlinstart.view.experiments.MainBroadcastReceiver
 import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou
 import kotlinx.android.synthetic.main.fragment_details.*
 
+const val ACTION = "Receive weather info sdfghsrdfgh"
 const val DETAILS_INTENT_FILTER = "DETAILS INTENT FILTER"
 const val DETAILS_LOAD_RESULT_EXTRA = "LOAD RESULT"
 const val DETAILS_INTENT_EMPTY_EXTRA = "INTENT IS EMPTY"
@@ -41,7 +44,28 @@ internal class DetailsFragment : Fragment() {
     private var detailsBinding: FragmentDetailsBinding? = null
     private val binding get() = detailsBinding!!
     private lateinit var weatherBundle: Weather
-    private val receiver = MainBroadcastReceiver()
+    private val receiver: BroadcastReceiver = object : BroadcastReceiver() {
+
+        @SuppressLint("SetTextI18n")
+        override fun onReceive(context: Context?, intent: Intent?) {
+            intent?.getParcelableExtra<WeatherDetailsData>(BROADCAST_WEATHER_DTO)?.let {
+                binding.loadingLayout.visibility = View.GONE
+                binding.textViewCityName.text = it.city
+                binding.degrees.text = "${it.degrees}°"
+                binding.weatherCondition.text = it.condition
+                binding.textViewFeelsLike.text =
+                    "Ощущается как ${it.feelsLike}°"
+                GlideToVectorYou.justLoadImage(
+                    requireActivity(),
+                    Uri.parse(it.icon),
+                    icon_condition
+                )
+                binding.imageView.load(it.cityIconURL)
+            }
+
+
+        }
+    }
 
 
     override fun onCreateView(
@@ -55,7 +79,9 @@ internal class DetailsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requireActivity().registerReceiver(receiver, IntentFilter(CONNECTIVITY_ACTION))
+        context?.let {
+            LocalBroadcastManager.getInstance(it).registerReceiver(receiver, IntentFilter(ACTION))
+        }
         detailsViewModel = ViewModelProvider(this).get(DetailsViewModel::class.java)
     }
 
@@ -65,7 +91,12 @@ internal class DetailsFragment : Fragment() {
         val weather = getDetailWeather(arguments?.getString(CITY_EXTRA) ?: DEFAULT_CITY)
         detailsViewModel.setNewCity(weather.city)
         detailsViewModel.getLiveData().observe(viewLifecycleOwner, { renderData(it) })
-        detailsViewModel.getWeatherFromRemoteSource(weather.lat, weather.lon)
+//        detailsViewModel.getWeatherFromRemoteSource(weather.lat, weather.lon)
+        requireActivity().startService(Intent(requireContext(), DetailsService::class.java).apply {
+            putExtra(DETAILS_SERVICE_STRING_EXTRA, weather.city)
+            putExtra(LATITUDE_EXTRA, weather.lat)
+            putExtra(LONGITUDE_EXTRA, weather.lon)
+        })
     }
 
     @SuppressLint("SetTextI18n")
@@ -97,7 +128,10 @@ internal class DetailsFragment : Fragment() {
     }
 
     override fun onDestroy() {
-        requireActivity().unregisterReceiver(receiver)
+        context?.let {
+            LocalBroadcastManager.getInstance(it).unregisterReceiver(receiver)
+        }
+
         detailsBinding = null
         super.onDestroy()
     }
