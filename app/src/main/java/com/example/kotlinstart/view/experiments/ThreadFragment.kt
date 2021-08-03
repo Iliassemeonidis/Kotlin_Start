@@ -32,17 +32,17 @@ class ThreadFragment : Fragment() {
 
     }
 
-    override fun onStop() {
-        super.onStop()
-        requireActivity().unregisterReceiver(receiver)
-    }
-
     override fun onStart() {
         super.onStart()
         requireActivity().registerReceiver(
             receiver,
             IntentFilter("sdfgsedfgsdf")
         )
+    }
+
+    override fun onStop() {
+        super.onStop()
+        requireActivity().unregisterReceiver(receiver)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

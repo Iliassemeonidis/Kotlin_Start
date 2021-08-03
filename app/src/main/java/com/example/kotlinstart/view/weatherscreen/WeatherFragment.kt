@@ -15,21 +15,20 @@ import com.example.kotlinstart.view.experiments.ThreadFragment
 import com.example.kotlinstart.view.detailsscreen.DetailsFragment
 import com.example.kotlinstart.view.shared.SharedViewModel
 
-/*по ДЗ:
-- Сформировать отдельные классы DTO
-  для получения данных из разных источников.
-   WeatherData оставить только для View +
+/*
+ДЗ будет много:
 
-- Загружать иконку в svg для погоды
-https://yastatic.net/weather/i/icons/blueye/color/svg/<значение из поля icon>.svg. +
+- перенести запрос в сеть из ВьюМодели в Сервис,
+  возвращать ответ сервера через LocalBroadcastManager
+  (код из Вьюмодели не удаляй, тебе нужно просто разобраться,
+   как отправлять запросы на сервер через Сервис)
 
-- Имплементировать работу с Лупером +
+- посмотри в факультативе как передаются сообщения между двумя разными приложениями и скопируй код,
+ запусти и убедись, что все работает как надо
 
-- Разобраться с Сервисом +
+*/
 
-* */
-
-class WeatherFragment : Fragment() {
+class  WeatherFragment : Fragment() {
 
     private lateinit var viewModel: WeatherViewModel
     private var weatherBinding: FragmentWeatherBinding? = null

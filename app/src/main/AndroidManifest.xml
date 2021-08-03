@@ -18,7 +18,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".view.experiments.MainService" />
+        <service android:name=".view.detailsscreen.DetailsService" />
 
         <receiver android:name=".view.experiments.MainBroadcastReceiver">
             <intent-filter>
