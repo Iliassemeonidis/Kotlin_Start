@@ -1,10 +1,12 @@
 package com.example.kotlinstart.repository.detailsrepository
 
 import com.example.kotlinstart.dto.WeatherDTO
-import com.example.kotlinstart.repository.loader.RemoteDataSource
+import com.example.kotlinstart.repository.detailsrepository.datasource.LocalDataSource
+import com.example.kotlinstart.repository.detailsrepository.datasource.RemoteDataSource
+import com.example.kotlinstart.room.HistoryEntity
 import retrofit2.Callback
 
-class RepositoryDetailsImpl (private val remoteDataSource: RemoteDataSource) : RepositoryDetails {
+class RepositoryDetailsImpl (private val remoteDataSource: RemoteDataSource, private val localDataSource: LocalDataSource) : RepositoryDetails {
 
     override fun getWeatherDataFromServers(
         lat: Double,
@@ -14,5 +16,7 @@ class RepositoryDetailsImpl (private val remoteDataSource: RemoteDataSource) : R
         remoteDataSource.getWeatherDetails(lat, lon, callback)
     }
 
-//    override fun getWeatherDataFromLocalStorage(city: String) = getDetailWeather(city)
+    override fun getWeatherDataFromLocalStorage(): List<HistoryEntity> {
+        TODO("Not yet implemented")
+    }
 }

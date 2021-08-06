@@ -1,4 +1,4 @@
-package com.example.kotlinstart.repository.loader
+package com.example.kotlinstart.repository.detailsrepository.datasource
 
 import com.example.kotlinstart.dto.WeatherDTO
 import retrofit2.Call

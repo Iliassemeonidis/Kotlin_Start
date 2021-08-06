@@ -8,7 +8,7 @@ import com.example.kotlinstart.constant.*
 import com.example.kotlinstart.dto.FactDTO
 import com.example.kotlinstart.dto.WeatherDTO
 import com.example.kotlinstart.repository.detailsrepository.RepositoryDetailsImpl
-import com.example.kotlinstart.repository.loader.RemoteDataSource
+import com.example.kotlinstart.repository.detailsrepository.datasource.RemoteDataSource
 import retrofit2.Call
 import retrofit2.Response
 

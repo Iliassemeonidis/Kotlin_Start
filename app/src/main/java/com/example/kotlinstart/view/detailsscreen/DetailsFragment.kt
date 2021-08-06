@@ -1,12 +1,10 @@
 package com.example.kotlinstart.view.detailsscreen
 
-import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager.CONNECTIVITY_ACTION
-import android.net.LocalServerSocket
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import coil.api.load
+import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.FragmentDetailsBinding
 import com.example.kotlinstart.model.AppState
 import com.example.kotlinstart.model.Weather
@@ -46,10 +45,9 @@ internal class DetailsFragment : Fragment() {
     private var detailsBinding: FragmentDetailsBinding? = null
     private val binding get() = detailsBinding!!
     private lateinit var weatherBundle: Weather
-    private val connectionReceiver : MainBroadcastReceiver = MainBroadcastReceiver()
+    private val connectionReceiver: MainBroadcastReceiver = MainBroadcastReceiver()
     private val receiver: BroadcastReceiver = object : BroadcastReceiver() {
 
-        @SuppressLint("SetTextI18n")
         override fun onReceive(context: Context?, intent: Intent?) {
             intent?.getParcelableExtra<WeatherDetailsData>(BROADCAST_WEATHER_DTO)?.let {
                 binding.loadingLayout.visibility = View.GONE
@@ -65,8 +63,6 @@ internal class DetailsFragment : Fragment() {
                 )
                 binding.imageView.load(it.cityIconURL)
             }
-
-
         }
     }
 
@@ -95,22 +91,24 @@ internal class DetailsFragment : Fragment() {
         val weather = getDetailWeather(arguments?.getString(CITY_EXTRA) ?: DEFAULT_CITY)
         detailsViewModel.setNewCity(weather.city)
         detailsViewModel.getLiveData().observe(viewLifecycleOwner, { renderData(it) })
-//        detailsViewModel.getWeatherFromRemoteSource(weather.lat, weather.lon)
-        requireActivity().startService(Intent(requireContext(), DetailsService::class.java).apply {
+        detailsViewModel.getWeatherFromRemoteSource(weather.lat, weather.lon)
+        /*requireActivity().startService(Intent(requireContext(), DetailsService::class.java).apply {
             putExtra(DETAILS_SERVICE_STRING_EXTRA, weather.city)
             putExtra(LATITUDE_EXTRA, weather.lat)
             putExtra(LONGITUDE_EXTRA, weather.lon)
-        })
+        })*/
     }
 
-    @SuppressLint("SetTextI18n")
     private fun renderData(appState: AppState) {
         when (appState) {
             is AppState.Success -> {
                 binding.loadingLayout.visibility = View.GONE
                 val weatherData = appState.weatherDetailsData
                 binding.textViewCityName.text = weatherData.city
-                binding.degrees.text = "${appState.weatherDetailsData.degrees}°"
+                binding.degrees.text = String.format(
+                    getString(R.string.degrees_text),
+                    appState.weatherDetailsData.degrees
+                )
                 binding.weatherCondition.text = appState.weatherDetailsData.condition
                 binding.textViewFeelsLike.text =
                     "Ощущается как ${appState.weatherDetailsData.feelsLike}°"

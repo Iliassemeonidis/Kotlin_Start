@@ -64,7 +64,7 @@ class ThreadFragment : Fragment() {
         binding.buttonCalcService.setOnClickListener {
             val seconds = Integer.parseInt(binding.editSeconds.text.toString())
             // todo WTF is CalculationService ???
-            CalculationService.startCalculationService(requireContext(),seconds)
+            //CalculationService.startCalculationService(requireContext(),seconds)
         }
         binding.buttonBindService.setOnClickListener {
             val intent = Intent(requireContext(), BoundService::class.java)
@@ -99,12 +99,12 @@ class ThreadFragment : Fragment() {
     private val calculationFinishedReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             // todo WTF is CalculationService ???
-            val result = intent?.getLongExtra(CalculationService.EXTRA_RESULT, 0)
+            //val result = intent?.getLongExtra(CalculationService.EXTRA_RESULT, 0)
 
             // Потокобезопасный вывод данных
             binding.textView.post{
                 run {
-                    binding.textView.text = result.toString()
+                    //binding.textView.text = result.toString()
                 }
             }
         }

@@ -1,6 +1,7 @@
 package com.example.kotlinstart.repository.detailsrepository
 
 import com.example.kotlinstart.dto.WeatherDTO
+import com.example.kotlinstart.room.HistoryEntity
 
 interface RepositoryDetails {
 
@@ -10,5 +11,5 @@ interface RepositoryDetails {
         callback: retrofit2.Callback<WeatherDTO>
     )
 
-//    fun getWeatherDataFromLocalStorage(city: String): WeatherData
+    fun getWeatherDataFromLocalStorage(): List<HistoryEntity>
 }

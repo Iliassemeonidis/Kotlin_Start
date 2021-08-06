@@ -1,21 +1,4 @@
 package com.example.kotlinstart.view.weatherscreen
-/*
-ДЗ будет много:
-
-по ДЗ будет много:
-- перенести запрос в сеть из ВьюМодели в Сервис, возвращать ответ сервера через LocalBroadcastManager
- (код из Вьюмодели не удаляй, тебе нужно просто разобраться, как отправлять запросы на сервер через Сервис)+
-- Подпишись на событие изменения связи (CONNECTIVITY_ACTION) и уведомляй пользователя,
- если связь пропала или появилась +
-- Прочитать начало методички +
-- остальные темы факультатива желательно прочитать+
-(можно даже без разбора кода, просто чтобы знать теорию и возможности)+
-
-- посмотри в факультативе как передаются сообщения между двумя разными приложениями и скопируй код,
- запусти и убедись, что все работает как надо
-
-- Материалы про ContentProvider
-*/
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -32,7 +15,15 @@ import com.example.kotlinstart.view.experiments.ThreadFragment
 import com.example.kotlinstart.view.detailsscreen.DetailsFragment
 import com.example.kotlinstart.view.shared.SharedViewModel
 
-
+/*
+по ДЗ:
+- Создать Фрагмент с Историей запросов
+- Имплементировать работу с БД через Репозиторий + Отправлять запросы в БД асинхронно
+- не отображать ConnectivityAction при переходе на DetailsFragment
+- Материалы про ContentProvider
+- Широковещательные сообщения между приложениями
+* Перести Retrofit в Application?
+*/
 
 class  WeatherFragment : Fragment() {
 
