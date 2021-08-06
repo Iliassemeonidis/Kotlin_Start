@@ -29,7 +29,17 @@
                 />
 
             <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/editText"
+                android:id="@+id/textResult"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="2"
+                android:gravity="center_horizontal"
+                android:inputType="number"
+                android:text="@string/default_number"
+                />
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/editSeconds"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -78,6 +88,44 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:text="Broadcast"
+            />
+
+        <Button
+            android:id="@+id/buttonBindService"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Bind Service"
+            />
+        <Button
+            android:id="@+id/buttonStartService"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Bind Service"
+            />
+
+        <Button
+            android:id="@+id/buttonNextFibo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Next Fibonacci"
+            />
+        <Button
+            android:id="@+id/buttonCalcService"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Next Fibonacci"
+            />
+
+        <TextView
+            android:id="@+id/textFibonacci"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="6"
+            android:textSize="20sp"
             />
     </LinearLayout>
 </ScrollView>

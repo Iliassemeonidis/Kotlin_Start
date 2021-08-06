@@ -29,14 +29,15 @@ class DetailsService(name: String = "DetailsService") : IntentService(name) {
         override fun onResponse(call: Call<WeatherDTO>, response: Response<WeatherDTO>) {
             if (response.isSuccessful) {
                 intent.putExtra(
-                    BROADCAST_WEATHER_DTO, convertDtoToWeatherData(city!!, response.body()!!))
-                          LocalBroadcastManager.getInstance(this@DetailsService).sendBroadcast (intent)
+                    BROADCAST_WEATHER_DTO, convertDtoToWeatherData(city!!, response.body()!!)
+                )
+                LocalBroadcastManager.getInstance(this@DetailsService).sendBroadcast(intent)
             }
         }
 
         override fun onFailure(call: Call<WeatherDTO>, t: Throwable) {
             intent.putExtra(BROADCAST_WEATHER_DTO_EXCEPTION, t.message)
-           LocalBroadcastManager.getInstance(this@DetailsService).sendBroadcast(intent)
+            LocalBroadcastManager.getInstance(this@DetailsService).sendBroadcast(intent)
         }
     }
 

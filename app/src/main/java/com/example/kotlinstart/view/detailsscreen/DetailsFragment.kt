@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.ConnectivityManager.CONNECTIVITY_ACTION
 import android.net.LocalServerSocket
 import android.net.Uri
 import android.os.Bundle
@@ -21,6 +22,7 @@ import com.example.kotlinstart.databinding.FragmentDetailsBinding
 import com.example.kotlinstart.model.AppState
 import com.example.kotlinstart.model.Weather
 import com.example.kotlinstart.model.getDetailWeather
+import com.example.kotlinstart.view.experiments.MainBroadcastReceiver
 import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou
 import kotlinx.android.synthetic.main.fragment_details.*
 
@@ -44,6 +46,7 @@ internal class DetailsFragment : Fragment() {
     private var detailsBinding: FragmentDetailsBinding? = null
     private val binding get() = detailsBinding!!
     private lateinit var weatherBundle: Weather
+    private val connectionReceiver : MainBroadcastReceiver = MainBroadcastReceiver()
     private val receiver: BroadcastReceiver = object : BroadcastReceiver() {
 
         @SuppressLint("SetTextI18n")
@@ -81,6 +84,7 @@ internal class DetailsFragment : Fragment() {
         super.onCreate(savedInstanceState)
         context?.let {
             LocalBroadcastManager.getInstance(it).registerReceiver(receiver, IntentFilter(ACTION))
+            it.registerReceiver(connectionReceiver, IntentFilter(CONNECTIVITY_ACTION))
         }
         detailsViewModel = ViewModelProvider(this).get(DetailsViewModel::class.java)
     }
@@ -130,8 +134,8 @@ internal class DetailsFragment : Fragment() {
     override fun onDestroy() {
         context?.let {
             LocalBroadcastManager.getInstance(it).unregisterReceiver(receiver)
+            it.unregisterReceiver(connectionReceiver)
         }
-
         detailsBinding = null
         super.onDestroy()
     }

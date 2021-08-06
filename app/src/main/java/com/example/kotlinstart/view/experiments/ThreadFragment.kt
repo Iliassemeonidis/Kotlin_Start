@@ -1,20 +1,24 @@
 package com.example.kotlinstart.view.experiments
 
-import android.content.Intent
-import android.content.IntentFilter
-import android.os.Bundle
-import android.os.Handler
-import android.os.HandlerThread
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.*
+import android.content.Context.BIND_AUTO_CREATE
+import android.content.Context.NOTIFICATION_SERVICE
+import android.os.*
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
-import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.FragmentThreadBinding
+import com.example.kotlinstart.view.experiments.BoundService.ServiceBinder
 import kotlinx.android.synthetic.main.fragment_thread.*
 import java.util.*
-import java.util.concurrent.TimeUnit
+
+
+const val BROADCAST_ACTION_CALCFINISHED = "ru.geekbrains.service.calculationfinished"
+private var isBound: Boolean = false
+private var boundService: ServiceBinder? = null
 
 class ThreadFragment : Fragment() {
 
@@ -35,8 +39,8 @@ class ThreadFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         requireActivity().registerReceiver(
-            receiver,
-            IntentFilter("sdfgsedfgsdf")
+            calculationFinishedReceiver,
+            IntentFilter(BROADCAST_ACTION_CALCFINISHED)
         )
     }
 
@@ -47,91 +51,85 @@ class ThreadFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initView();
+        initNotificationChannel();
+    }
 
-        binding.button.setOnClickListener {
-            binding.textView.text = startCalculations(binding.editText.text.toString().toInt())
-            binding.mainContainer.addView(AppCompatTextView(it.context).apply {
-                text = getString(R.string.in_main_thread)
-                textSize = resources.getDimension(R.dimen.main_container_text_size)
-            })
+
+    private fun initView() {
+        binding.buttonStartService.setOnClickListener {
+            requireContext().startService(Intent(requireContext(),MainService::class.java))
+
         }
+        binding.buttonCalcService.setOnClickListener {
+            val seconds = Integer.parseInt(binding.editSeconds.text.toString())
+            // todo WTF is CalculationService ???
+            CalculationService.startCalculationService(requireContext(),seconds)
+        }
+        binding.buttonBindService.setOnClickListener {
+            val intent = Intent(requireContext(), BoundService::class.java)
+            requireContext().bindService(intent,boundServiceConnection, BIND_AUTO_CREATE)
 
-        binding.calcThreadBtn.setOnClickListener {
-            Thread {
-                counterThread++
-                val calculatedText = startCalculations(editText.text.toString().toInt())
-                requireActivity().runOnUiThread {
-                    binding.textView.text = calculatedText
-                    binding.mainContainer.addView(AppCompatTextView(it.context).apply {
-                        text = String.format(getString(R.string.from_thread), counterThread)
-                        textSize = resources.getDimension(R.dimen.main_container_text_size)
-                    })
+        }
+        binding.buttonNextFibo.setOnClickListener {
+                if (boundService == null) {
+                    textFibonacci.text = "Unbound service";
+                } else {
+                    val fibo = boundService?.getNextFibonacci()
+                    textFibonacci.text = fibo.toString()
                 }
-            }.start()
+
         }
+    }
 
-        val handlerThread = HandlerThread(getString(R.string.my_handler_thread))
-        handlerThread.start()
-        val handler = Handler(handlerThread.looper)
-        binding.calcThreadHandler.setOnClickListener {
-            binding.mainContainer.addView(AppCompatTextView(it.context).apply {
-                text = String.format(
-                    getString(R.string.calculate_in_thread),
-                    handlerThread.name
-                )
-                textSize = resources.getDimension(R.dimen.main_container_text_size)
-            })
+    // На Android OS версии 2.6 и выше необходимо создать канал нотификации.
+    // На старых версиях канал создавать не надо
+    private fun initNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationManager: NotificationManager =
+                requireContext().getSystemService(NOTIFICATION_SERVICE) as NotificationManager;
+            val importance = NotificationManager.IMPORTANCE_LOW
+            val mChannel = NotificationChannel("2", "name", importance)
+            notificationManager.createNotificationChannel(mChannel)
+        }
+    }
 
-            Thread {
-                val result = startCalculations(binding.editText.text.toString().toInt())
-                handler.post {
-                    mainContainer.post {
-                        binding.mainContainer.addView(AppCompatTextView(it.context).apply {
-                            text = String.format(
-                                getString(R.string.calculate_in_thread),
-                                Thread.currentThread().name + result
-                            )
-                            textSize = resources.getDimension(R.dimen.main_container_text_size)
-                        })
-                    }
+
+    // Получатель широковещательного сообщения
+    private val calculationFinishedReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            // todo WTF is CalculationService ???
+            val result = intent?.getLongExtra(CalculationService.EXTRA_RESULT, 0)
+
+            // Потокобезопасный вывод данных
+            binding.textView.post{
+                run {
+                    binding.textView.text = result.toString()
                 }
-            }.start()
-
-        }
-        initServiceButton()
-    }
-
-    private fun initServiceButton() {
-        binding.serviceButton.setOnClickListener {
-           /* context?.let {
-                it.startService(Intent(it, MainService::class.java).apply {
-                    putExtra(
-                        MAIN_SERVICE_STRING_EXTRA, getString(R.string.hello_from_thread_fragment)
-                    )
-                })
-            }*/
+            }
         }
     }
 
+    // Обработка соединения с сервисом
+    private val boundServiceConnection: ServiceConnection = object : ServiceConnection {
+        // При соединении с сервисом
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            boundService = service as ServiceBinder?
+            isBound = boundService != null
+        }
 
-    private fun startCalculations(seconds: Int): String {
-        val date = Date()
-        var diffInSec: Long
-        do {
-            val currentDate = Date()
-            val diffInMs: Long = currentDate.time - date.time
-            diffInSec = TimeUnit.MILLISECONDS.toSeconds(diffInMs)
-        } while (diffInSec < seconds)
-        return diffInSec.toString()
+        // При разрыве соединения с сервисом
+        override fun onServiceDisconnected(name: ComponentName?) {
+            isBound = false;
+            boundService = null;
+        }
     }
-
 
     companion object {
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance() =
-            ThreadFragment().apply {
-
-            }
+        fun newInstance() = ThreadFragment().apply {}
     }
 }
+
+
