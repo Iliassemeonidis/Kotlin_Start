@@ -10,6 +10,4 @@ interface RepositoryDetails {
         lon: Double,
         callback: retrofit2.Callback<WeatherDTO>
     )
-
-    fun getWeatherDataFromLocalStorage(): List<HistoryEntity>
 }

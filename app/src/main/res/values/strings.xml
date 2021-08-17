@@ -20,7 +20,9 @@
     <string name="city_name">Москва</string>
     <string name="region_name">Москва</string>
     <string name="degrees_centigrade">27°C</string>
+    <string name="degrees">%s°</string>
     <string name="fills_like_text">Ощущается как 27°</string>
+    <string name="fills_like">Ощущается как %s°</string>
     <string name="weather_condition">Солнечно</string>
     <string name="detail_information_text">Дитальная информация о погоде на неделю и в течении дня</string>
     <string name="image_weather_condition">Изображение состояние погоды</string>

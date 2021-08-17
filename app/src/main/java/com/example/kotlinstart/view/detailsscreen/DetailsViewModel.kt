@@ -16,7 +16,7 @@ import retrofit2.Response
 
 internal class DetailsViewModel(
     private val detailsLiveData: MutableLiveData<AppState> = MutableLiveData(),
-    private val detailsRepository: RepositoryDetailsImpl = RepositoryDetailsImpl(RemoteDataSource(), LocalDataSource())
+    private val detailsRepository: RepositoryDetailsImpl = RepositoryDetailsImpl(RemoteDataSource())
 ) : ViewModel() {
 
     lateinit var city: String

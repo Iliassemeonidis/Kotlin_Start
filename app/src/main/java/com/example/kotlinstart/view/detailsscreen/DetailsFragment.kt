@@ -52,10 +52,9 @@ internal class DetailsFragment : Fragment() {
             intent?.getParcelableExtra<WeatherDetailsData>(BROADCAST_WEATHER_DTO)?.let {
                 binding.loadingLayout.visibility = View.GONE
                 binding.textViewCityName.text = it.city
-                binding.degrees.text = "${it.degrees}°"
+                binding.degrees.text = String.format("${R.string.degrees}",it.degrees)
                 binding.weatherCondition.text = it.condition
-                binding.textViewFeelsLike.text =
-                    "Ощущается как ${it.feelsLike}°"
+                binding.textViewFeelsLike.text =String.format("${R.string.fills_like}",it.feelsLike)
                 GlideToVectorYou.justLoadImage(
                     requireActivity(),
                     Uri.parse(it.icon),
@@ -80,7 +79,8 @@ internal class DetailsFragment : Fragment() {
         super.onCreate(savedInstanceState)
         context?.let {
             LocalBroadcastManager.getInstance(it).registerReceiver(receiver, IntentFilter(ACTION))
-            it.registerReceiver(connectionReceiver, IntentFilter(CONNECTIVITY_ACTION))
+                it.registerReceiver(connectionReceiver, IntentFilter(CONNECTIVITY_ACTION))
+
         }
         detailsViewModel = ViewModelProvider(this).get(DetailsViewModel::class.java)
     }

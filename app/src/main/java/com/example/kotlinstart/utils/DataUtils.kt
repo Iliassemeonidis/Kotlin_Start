@@ -56,3 +56,6 @@ private fun getIconByCity(city: String) = when (city) {
     "Таймырский" -> TAIMIR
     else -> ""
 }
+
+
+

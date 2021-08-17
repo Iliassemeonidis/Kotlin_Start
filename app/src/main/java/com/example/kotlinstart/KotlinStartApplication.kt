@@ -1,6 +1,8 @@
 package com.example.kotlinstart
 
 import android.app.Application
+import android.os.Handler
+import android.os.HandlerThread
 import androidx.room.Room
 import com.example.kotlinstart.room.HistoryDao
 import com.example.kotlinstart.room.HistoryDataBase
@@ -18,22 +20,22 @@ class KotlinStartApplication : Application() {
         private var db: HistoryDataBase? = null
         private const val DB_NAME = "History.db"
 
+
         fun getHistoryDao(): HistoryDao {
             if (db == null) {
                 synchronized(HistoryDataBase::class.java) {
                     if (db == null) {
                         if (appInstance == null) throw IllegalStateException("Application is null while creating DataBase")
-                        db = Room.databaseBuilder(
-                            appInstance!!.applicationContext,
-                            HistoryDataBase::class.java,
-                            DB_NAME
-                        )
-                            .allowMainThreadQueries()
-                            .build()
+                                db = Room.databaseBuilder(
+                                    appInstance!!.applicationContext,
+                                    HistoryDataBase::class.java,
+                                    DB_NAME
+                                )
+                                    .allowMainThreadQueries()
+                                    .build()
+                            }
                     }
                 }
-            }
-
             return db!!.historyDao()
         }
     }

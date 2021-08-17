@@ -6,7 +6,8 @@ import com.example.kotlinstart.repository.detailsrepository.datasource.RemoteDat
 import com.example.kotlinstart.room.HistoryEntity
 import retrofit2.Callback
 
-class RepositoryDetailsImpl (private val remoteDataSource: RemoteDataSource, private val localDataSource: LocalDataSource) : RepositoryDetails {
+class RepositoryDetailsImpl(private val remoteDataSource: RemoteDataSource) :
+    RepositoryDetails {
 
     override fun getWeatherDataFromServers(
         lat: Double,
@@ -16,7 +17,4 @@ class RepositoryDetailsImpl (private val remoteDataSource: RemoteDataSource, pri
         remoteDataSource.getWeatherDetails(lat, lon, callback)
     }
 
-    override fun getWeatherDataFromLocalStorage(): List<HistoryEntity> {
-        TODO("Not yet implemented")
-    }
 }

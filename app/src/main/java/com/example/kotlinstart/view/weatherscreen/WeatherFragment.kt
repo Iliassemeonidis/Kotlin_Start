@@ -11,20 +11,23 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.FragmentWeatherBinding
 import com.example.kotlinstart.model.Weather
-import com.example.kotlinstart.view.experiments.ThreadFragment
 import com.example.kotlinstart.view.detailsscreen.DetailsFragment
 import com.example.kotlinstart.view.shared.SharedViewModel
+import com.example.kotlinstart.view.weatherhistory.WeatherHistoryFragment
+
 
 /*
 по ДЗ:
-- Создать Фрагмент с Историей запросов
-- Имплементировать работу с БД через Репозиторий + Отправлять запросы в БД асинхронно
+- Создать Фрагмент с Историей запросов +
+- Имплементировать работу с БД через Репозиторий +
+
+- Отправлять запросы в БД асинхронно
 - не отображать ConnectivityAction при переходе на DetailsFragment
-- Материалы про ContentProvider
 - Широковещательные сообщения между приложениями
+
+- Материалы про ContentProvider
 * Перести Retrofit в Application?
 */
-
 class  WeatherFragment : Fragment() {
 
     private lateinit var viewModel: WeatherViewModel
@@ -80,7 +83,7 @@ class  WeatherFragment : Fragment() {
         binding.floatingActionButton.setOnClickListener {
             requireActivity().supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.list_container, ThreadFragment.newInstance())
+                .replace(R.id.list_container, WeatherHistoryFragment())
                 .addToBackStack(null)
                 .commitAllowingStateLoss()
             //CityDialogFragment().show(requireActivity().supportFragmentManager, SEARCH_CITY_TAG)
