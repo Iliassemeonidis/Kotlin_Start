@@ -20,12 +20,11 @@ import com.example.kotlinstart.view.weatherhistory.WeatherHistoryFragment
 по ДЗ:
 - Создать Фрагмент с Историей запросов +
 - Имплементировать работу с БД через Репозиторий +
+- Не отображать ConnectivityAction при переходе на DetailsFragment +
+- Материалы про ContentProvider+
 
 - Отправлять запросы в БД асинхронно
-- не отображать ConnectivityAction при переходе на DetailsFragment
 - Широковещательные сообщения между приложениями
-
-- Материалы про ContentProvider
 * Перести Retrofit в Application?
 */
 class  WeatherFragment : Fragment() {

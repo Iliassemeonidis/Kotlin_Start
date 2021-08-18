@@ -18,7 +18,9 @@ class KotlinStartApplication : Application() {
 
         private var appInstance: KotlinStartApplication? = null
         private var db: HistoryDataBase? = null
+        private var historyDao:HistoryDao?=null
         private const val DB_NAME = "History.db"
+        private val handlerThread = HandlerThread("Thread1")
 
 
         fun getHistoryDao(): HistoryDao {
@@ -26,18 +28,28 @@ class KotlinStartApplication : Application() {
                 synchronized(HistoryDataBase::class.java) {
                     if (db == null) {
                         if (appInstance == null) throw IllegalStateException("Application is null while creating DataBase")
+                        handlerThread.start()
+                        val handler = Handler(handlerThread.looper)
+                        Thread {
+                            handler.post {
                                 db = Room.databaseBuilder(
                                     appInstance!!.applicationContext,
                                     HistoryDataBase::class.java,
                                     DB_NAME
                                 )
-                                    .allowMainThreadQueries()
+//                                    .allowMainThreadQueries()
                                     .build()
+                               historyDao = db!!.historyDao()
                             }
+                        }.start()
                     }
                 }
+            }
             return db!!.historyDao()
         }
+
     }
+
+
 
 }
