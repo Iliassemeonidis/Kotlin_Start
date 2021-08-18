@@ -41,7 +41,6 @@ class WeatherHistoryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         weatherHistoryViewModel.subscribe().observe(viewLifecycleOwner, { renderData(it) })
         weatherHistoryViewModel.getCitiesList()
-
     }
 
     private fun renderData(weatherList: List<HistoryEntity>) {

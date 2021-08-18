@@ -4,8 +4,12 @@ import com.example.kotlinstart.KotlinStartApplication.Companion.getHistoryDao
 
 class LocalDataSource {
 
-    private val weatherHistoryDao = getHistoryDao()
+    /*fun getWeatherHistory(liveDataForObservation) {
+        Thread {
+            liveDataForObservation.post(getHistoryDao().all())
+        }.start()
+    }*/
 
-    fun getWeatherHistoryDao() = weatherHistoryDao.all()
+    fun getWeatherHistory() = getHistoryDao().all()
 
 }

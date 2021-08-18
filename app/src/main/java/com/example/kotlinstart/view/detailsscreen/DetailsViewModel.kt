@@ -1,14 +1,11 @@
 package com.example.kotlinstart.view.detailsscreen
 
-import android.os.Handler
-import android.os.HandlerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.kotlinstart.KotlinStartApplication.Companion.getHistoryDao
 import com.example.kotlinstart.dto.WeatherDTO
 import com.example.kotlinstart.model.AppState
 import com.example.kotlinstart.repository.detailsrepository.RepositoryDetailsImpl
-import com.example.kotlinstart.repository.detailsrepository.datasource.LocalDataSource
 import com.example.kotlinstart.repository.detailsrepository.datasource.RemoteDataSource
 import com.example.kotlinstart.room.HistoryEntity
 import com.example.kotlinstart.utils.getStateOnFailure
@@ -28,21 +25,16 @@ internal class DetailsViewModel(
             val stateSuccess = getStateOnResponse(city, response)
             if (stateSuccess is AppState.Success) {
                 val data = stateSuccess.weatherDetailsData
-                val handlerThread = HandlerThread("Rhewal")
-                handlerThread.start()
-                val handler = Handler(handlerThread.looper)
                 Thread {
-                    handler.post {
-                        getHistoryDao().insert(
-                            HistoryEntity(
-                                0,
-                                data.city,
-                                data.degrees,
-                                data.condition
-                            )
+                    getHistoryDao().insert(
+                        HistoryEntity(
+                            0,
+                            data.city,
+                            data.degrees,
+                            data.condition
                         )
-                    }
-                }
+                    )
+                }.start()
             }
             detailsLiveData.postValue(stateSuccess)
         }

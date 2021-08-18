@@ -15,19 +15,14 @@ import com.example.kotlinstart.view.detailsscreen.DetailsFragment
 import com.example.kotlinstart.view.shared.SharedViewModel
 import com.example.kotlinstart.view.weatherhistory.WeatherHistoryFragment
 
-
 /*
 по ДЗ:
-- Создать Фрагмент с Историей запросов +
-- Имплементировать работу с БД через Репозиторий +
-- Не отображать ConnectivityAction при переходе на DetailsFragment +
-- Материалы про ContentProvider+
-
-- Отправлять запросы в БД асинхронно
-- Широковещательные сообщения между приложениями
-* Перести Retrofit в Application?
+- сделать все через HandlerThread для закрепления
+- Перевести Retrofit в Application (DI)
+- Почитать про Dependency Injection https://www.journaldev.com/2394/java-dependency-injection-design-pattern-example-tutorial
 */
-class  WeatherFragment : Fragment() {
+
+class WeatherFragment : Fragment() {
 
     private lateinit var viewModel: WeatherViewModel
     private var weatherBinding: FragmentWeatherBinding? = null

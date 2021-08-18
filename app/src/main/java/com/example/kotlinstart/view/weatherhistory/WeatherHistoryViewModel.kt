@@ -23,6 +23,25 @@ class WeatherHistoryViewModel(
     }
 
     private fun createWeatherData() {
-        liveDataForObservation.value = repositoryWeatherHistoryImpl.getWeatherDataFromLocalStorage()
+        //val handler = Handler()
+        Thread {
+            //val data = repositoryWeatherHistoryImpl.getWeatherDataFromLocalStorage()
+            /*liveDataForObservation.postValue(repositoryWeatherHistoryImpl.getWeatherDataFromLocalStorage(
+                object : CallBack() {
+                    override fun call(list: List<HistoryEntity>) {
+                        liveDataForObservation.value = list
+                    }
+                }))*/
+            liveDataForObservation.postValue(repositoryWeatherHistoryImpl.getWeatherDataFromLocalStorage())
+            /*handler.post {
+                liveDataForObservation.value = data
+            }*/
+        }.start()
+
+        //liveDataForObservation.value = repositoryWeatherHistoryImpl.getWeatherDataFromLocalStorage()
+    }
+
+    interface CallBack{
+        fun call(list: List<HistoryEntity>)
     }
 }
