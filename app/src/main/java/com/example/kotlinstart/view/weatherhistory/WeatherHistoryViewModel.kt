@@ -25,10 +25,10 @@ class WeatherHistoryViewModel(
     }
 
     private fun createWeatherData() {
-    val handlerThread = HandlerThread("MyThread")
-    handlerThread.start()
-    val handler = Handler(handlerThread.looper)
-        handler.post{
+        val handlerThread = HandlerThread("MyThread")
+        handlerThread.start()
+        val handler = Handler(handlerThread.looper)
+        handler.post {
             liveDataForObservation.postValue(repositoryWeatherHistoryImpl.getWeatherDataFromLocalStorage())
         }
         Thread {
@@ -43,9 +43,9 @@ class WeatherHistoryViewModel(
             }*/
 
 
-        /* handler.post{
-                liveDataForObservation.value = repositoryWeatherHistoryImpl.getWeatherDataFromLocalStorage()
-            }*/
+            /* handler.post{
+                    liveDataForObservation.value = repositoryWeatherHistoryImpl.getWeatherDataFromLocalStorage()
+                }*/
 
 
 //            liveDataForObservation.postValue(repositoryWeatherHistoryImpl.getWeatherDataFromLocalStorage())
@@ -55,7 +55,7 @@ class WeatherHistoryViewModel(
 
     }
 
-    interface CallBack{
+    interface CallBack {
         fun call(list: List<HistoryEntity>)
     }
 }

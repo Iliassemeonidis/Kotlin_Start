@@ -27,11 +27,11 @@ internal class DetailsViewModel(
             val stateSuccess = getStateOnResponse(city, response)
             if (stateSuccess is AppState.Success) {
                 val data = stateSuccess.weatherDetailsData
-
+                //detailsRepository.saveData(data)
                 val handlerThread = HandlerThread("MyThread2")
                 handlerThread.start()
                 val handler = Handler(handlerThread.looper)
-                handler.post{
+                handler.post {
                     getHistoryDao().insert(
                         HistoryEntity(
                             0,

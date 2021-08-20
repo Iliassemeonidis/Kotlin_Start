@@ -1,5 +1,6 @@
 package com.example.kotlinstart.view.weatherscreen
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,9 +12,9 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.FragmentWeatherBinding
 import com.example.kotlinstart.model.Weather
+import com.example.kotlinstart.view.Contacts
 import com.example.kotlinstart.view.detailsscreen.DetailsFragment
 import com.example.kotlinstart.view.shared.SharedViewModel
-import com.example.kotlinstart.view.weatherhistory.WeatherHistoryFragment
 
 /*
 по ДЗ:
@@ -75,11 +76,13 @@ class WeatherFragment : Fragment() {
 
     private fun initButtonAdd() {
         binding.floatingActionButton.setOnClickListener {
-            requireActivity().supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.list_container, WeatherHistoryFragment())
-                .addToBackStack(null)
-                .commitAllowingStateLoss()
+            requireContext().startActivity(Intent(requireContext(), Contacts::class.java))
+
+            /*requireActivity().supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.list_container, WeatherHistoryFragment())
+                    .addToBackStack(null)
+                    .commitAllowingStateLoss()*/
             //CityDialogFragment().show(requireActivity().supportFragmentManager, SEARCH_CITY_TAG)
         }
     }
