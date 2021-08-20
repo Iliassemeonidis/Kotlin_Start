@@ -19,7 +19,6 @@ import java.util.*
 const val BROADCAST_ACTION_CALCFINISHED = "ru.geekbrains.service.calculationfinished"
 private var isBound: Boolean = false
 private var boundService: ServiceBinder? = null
-
 class ThreadFragment : Fragment() {
 
     private var _binding: FragmentThreadBinding? = null

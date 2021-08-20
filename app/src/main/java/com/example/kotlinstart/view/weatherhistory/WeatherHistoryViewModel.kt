@@ -1,5 +1,7 @@
 package com.example.kotlinstart.view.weatherhistory
 
+import android.os.Handler
+import android.os.HandlerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -23,7 +25,12 @@ class WeatherHistoryViewModel(
     }
 
     private fun createWeatherData() {
-        //val handler = Handler()
+    val handlerThread = HandlerThread("MyThread")
+    handlerThread.start()
+    val handler = Handler(handlerThread.looper)
+        handler.post{
+            liveDataForObservation.postValue(repositoryWeatherHistoryImpl.getWeatherDataFromLocalStorage())
+        }
         Thread {
             //val data = repositoryWeatherHistoryImpl.getWeatherDataFromLocalStorage()
             /*liveDataForObservation.postValue(repositoryWeatherHistoryImpl.getWeatherDataFromLocalStorage(
@@ -31,14 +38,21 @@ class WeatherHistoryViewModel(
                     override fun call(list: List<HistoryEntity>) {
                         liveDataForObservation.value = list
                     }
-                }))*/
-            liveDataForObservation.postValue(repositoryWeatherHistoryImpl.getWeatherDataFromLocalStorage())
-            /*handler.post {
+                      handler.post {
                 liveDataForObservation.value = data
             }*/
+
+
+        /* handler.post{
+                liveDataForObservation.value = repositoryWeatherHistoryImpl.getWeatherDataFromLocalStorage()
+            }*/
+
+
+//            liveDataForObservation.postValue(repositoryWeatherHistoryImpl.getWeatherDataFromLocalStorage())
+
         }.start()
 
-        //liveDataForObservation.value = repositoryWeatherHistoryImpl.getWeatherDataFromLocalStorage()
+
     }
 
     interface CallBack{

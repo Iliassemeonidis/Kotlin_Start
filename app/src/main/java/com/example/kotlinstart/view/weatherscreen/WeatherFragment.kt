@@ -17,8 +17,8 @@ import com.example.kotlinstart.view.weatherhistory.WeatherHistoryFragment
 
 /*
 по ДЗ:
-- сделать все через HandlerThread для закрепления
-- Перевести Retrofit в Application (DI)
+- сделать все через HandlerThread для закрепления +
+- Перевести Retrofit в Application (DI) +
 - Почитать про Dependency Injection https://www.journaldev.com/2394/java-dependency-injection-design-pattern-example-tutorial
 */
 
