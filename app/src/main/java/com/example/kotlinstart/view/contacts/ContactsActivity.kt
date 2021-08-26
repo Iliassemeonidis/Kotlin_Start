@@ -1,12 +1,15 @@
-package com.example.kotlinstart.view
+package com.example.kotlinstart.view.contacts
 
 import android.Manifest
 import android.content.ContentResolver
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
+import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.provider.Settings
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -17,12 +20,56 @@ import kotlinx.android.synthetic.main.activity_contacts.*
 
 const val REQUEST_CODE = 42
 
-class Contacts : AppCompatActivity() {
+class ContactsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_contacts)
         checkPermission()
+    }
+
+    // Обратный вызов после получения разрешений от пользователя
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            REQUEST_CODE -> {
+                // Проверяем, дано ли пользователем разрешение по нашему запросу
+                if ((grantResults.isNotEmpty() &&
+                            //если запросов на резрешение не один то нужно запускать цыкл для поиска нужного
+                            grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                ) {
+                    Toast.makeText(this, "Контакты", Toast.LENGTH_SHORT).show()
+                    //getContacts()
+                } else {
+                    // Поясните пользователю, что экран останется пустым,
+                    // потому что доступ к контактам не предоставлен
+                    AlertDialog.Builder(this)
+                        .setTitle("Доступ к контактам")
+                        .setMessage("Просто открой доступ к контактам и не тупи")
+                        .setNegativeButton("Закрыть") { dialog, _ ->
+                            //dialog.dismiss()
+                            ContextCompat.startActivity(
+                                this,
+                                Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                    data = Uri.fromParts("package", packageName, null)
+                                },
+                                null
+                            )
+                        }
+                        .create()
+                        .show()
+                }
+                return
+            }
+        }
+    }
+
+    private fun requestPermission() {
+        requestPermissions(arrayOf(Manifest.permission.READ_CONTACTS), REQUEST_CODE)
     }
 
     private fun checkPermission() {
@@ -52,41 +99,6 @@ class Contacts : AppCompatActivity() {
         }
     }
 
-    private fun requestPermission() {
-        requestPermissions(arrayOf(Manifest.permission.READ_CONTACTS), REQUEST_CODE)
-    }
-
-    // Обратный вызов после получения разрешений от пользователя
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            REQUEST_CODE -> {
-                // Проверяем, дано ли пользователем разрешение по нашему запросу
-                if ((grantResults.isNotEmpty() &&
-                            //если запросов на резрешение не один то нужно запускать цыкл для поиска нужного
-                            grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                ) {
-                    Toast.makeText(this, "Контакты", Toast.LENGTH_SHORT).show()
-                    //getContacts()
-                } else {
-                    // Поясните пользователю, что экран останется пустым,
-                    // потому что доступ к контактам не предоставлен
-                    AlertDialog.Builder(this)
-                        .setTitle("Доступ к контактам")
-                        .setMessage("Просто открой доступ к контактам и не тупи")
-                        .setNegativeButton("Закрыть") { dialog, _ -> dialog.dismiss() }
-                        .create()
-                        .show()
-                }
-                return
-            }
-        }
-    }
-
     private fun getContacts() {
         this.let {
             // Получаем ContentResolver у контекста
@@ -104,11 +116,13 @@ class Contacts : AppCompatActivity() {
                 for (i in 0..cursor.count) {
                     // Переходим на позицию в Cursor
                     if (cursor.moveToPosition(i)) {
-                    // Берём из Cursor столбец с именем
-                        val name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
+                        // Берём из Cursor столбец с именем
+                        val name =
+                            cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
 
                         // подумать как достать номер телефона
-                        val number = cursor.getInt(cursor.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY))
+                        val number =
+                            cursor.getInt(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))
 
                         addView(it, name/*,number*/)
                     }
@@ -123,10 +137,10 @@ class Contacts : AppCompatActivity() {
             text = textToShow
             textSize = resources.getDimension(R.dimen.main_container_text_size)
         })
-     /*   containerForContacts.addView(AppCompatTextView(context).apply {
-            text = number.toString()
-            textSize = resources.getDimension(R.dimen.main_container_text_size)
-        })*/
+        /*   containerForContacts.addView(AppCompatTextView(context).apply {
+               text = number.toString()
+               textSize = resources.getDimension(R.dimen.main_container_text_size)
+           })*/
     }
 
 }

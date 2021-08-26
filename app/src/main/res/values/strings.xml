@@ -41,24 +41,19 @@
     <string name="service">Service</string>
     <string name="service_broadcast">Service + Broadcast</string>
     <string name="degrees_text">%s°</string>
-
-    <string-array name="city">
-        <item>Москва</item>
-        <item>Калифорния</item>
-        <item>Афины</item>
-        <item>Сочи</item>
-        <item>Владикавказ</item>
-    </string-array>
-
-    <string-array name="region">
-        <item>Москва</item>
-        <item>Мериленд</item>
-        <item>Аттика</item>
-        <item>Краснодарский край</item>
-        <item>Республика Северная Осетия-Алания</item>
-    </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="tempeture">Температура</string>
 
+    <!--GPS-->
+    <string name="dialog_button_close">Закрыть</string>
+    <string name="dialog_title_no_gps">Доступ к геолокации закрыт</string>
+    <string name="dialog_message_no_gps">Разрешите доступ к геолокации, если хотите узнать погоду текущего места</string>
+    <string name="dialog_title_gps_turned_off">GPS отключён</string>
+    <string name="dialog_message_last_location_unknown">Местонахождение неизвестно. Включите GPS, если хотите получить погоду по текущему адресу</string>
+    <string name="dialog_message_last_known_location">Показана последняя известная локация. Включите GPS, если хотите обновить местонахождение</string>
+    <string name="dialog_rationale_title">Доступ к геолокации</string>
+    <string name="dialog_rationale_meaasge">Объяснение</string>
+    <string name="dialog_rationale_give_access">Предоставить доступ</string>
+    <string name="dialog_rationale_decline">Не надо</string>
+    <string name="dialog_address_title">Ваш адрес</string>
+    <string name="dialog_address_get_weather">Узнать погоду</string>
 </resources>

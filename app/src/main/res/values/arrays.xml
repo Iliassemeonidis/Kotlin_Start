@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="city">
+        <item>Москва</item>
+        <item>Калифорния</item>
+        <item>Афины</item>
+        <item>Сочи</item>
+        <item>Владикавказ</item>
+    </string-array>
+
+    <string-array name="region">
+        <item>Москва</item>
+        <item>Мериленд</item>
+        <item>Аттика</item>
+        <item>Краснодарский край</item>
+        <item>Республика Северная Осетия-Алания</item>
+    </string-array>
+</resources>
