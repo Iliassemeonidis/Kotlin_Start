@@ -15,12 +15,8 @@ import com.example.kotlinstart.model.Weather
 import com.example.kotlinstart.view.Contacts
 import com.example.kotlinstart.view.detailsscreen.DetailsFragment
 import com.example.kotlinstart.view.shared.SharedViewModel
-
 /*
-по ДЗ:
-- сделать все через HandlerThread для закрепления +
-- Перевести Retrofit в Application (DI) +
-- Почитать про Dependency Injection https://www.journaldev.com/2394/java-dependency-injection-design-pattern-example-tutorial
+по ДЗ - реализовать отображение контактов на отдельном экране
 */
 
 class WeatherFragment : Fragment() {
