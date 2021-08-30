@@ -24,6 +24,8 @@ private const val REQUEST_CODE = 102
 private const val REFRESH_PERIOD = 60000L
 private const val MINIMAL_DISTANCE = 100f
 
+//TODO Remove LC components from Constructor
+//TODO Remove dialogs
 class MyGeolocationHelper(
     private val context: Context,
     private val fragment: Fragment,
@@ -193,6 +195,7 @@ class MyGeolocationHelper(
         val handlerThread = HandlerThread("Geolocation")
         handlerThread.start()
         val handler = Handler(handlerThread.looper)
+        handler.postDelayed({ }, 3000)
         try {
             //getFromLocationName
             val addresses = geoCoder.getFromLocation(
@@ -200,16 +203,14 @@ class MyGeolocationHelper(
                 -122.0840,
                 1
             )
-            println(addresses)
-//                val addresses = geoCoder.getFromLocationName(cityName,5)
-
-            handler.post {
-                showAddressDialog(addresses[0].getAddressLine(0), location)
-            }
+            //val addresses = geoCoder.getFromLocationName("Москва ул. Открытое шоссе 24", 5)
+            handler.postDelayed(
+                { showAddressDialog(addresses[0].getAddressLine(0), location) },
+                3000
+            )
         } catch (e: IOException) {
             e.printStackTrace()
         }
-
     }
 
     private fun showAddressDialog(

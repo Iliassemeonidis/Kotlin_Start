@@ -25,13 +25,7 @@ internal class WeatherViewModel(
         createWeatherData()
     }
 
-    fun getGeolocationHelper(context: Context,fragment: Fragment,activity: Activity) : MyGeolocationHelper{
-        return repositoryGeolocationHelperImpl.getMyGeolocation(context, fragment, activity)
-    }
-
     private fun createWeatherData() {
         liveDataForObservation.value = repositoryImpl.getListCityWeatherFromLocalStorage()
     }
-
-
 }

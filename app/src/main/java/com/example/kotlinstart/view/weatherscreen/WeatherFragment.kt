@@ -16,21 +16,15 @@ import com.example.kotlinstart.view.contacts.ContactsActivity
 import com.example.kotlinstart.view.detailsscreen.DetailsFragment
 import com.example.kotlinstart.view.location.MyGeolocationHelper
 import com.example.kotlinstart.view.shared.SharedViewModel
+
 /*
 по ДЗ:
-- перенести весь код по формированию запроса для получения доступа к GPS в отдельный класс +
-- перенести код в Репозиторий +
-- a) получать геолокатор +
-- б) получать долгату и широту по городу -
-- открывать настройки приложения для разрешения Fine Location +
-- можно включить GPS программно? или открыть соответствующее окно настроек +
-
-- добавить функционал по поиску координат по адресу -
+- Рефактор MyGeolocationHelper: перенести код UI во фрагмент, прокинуть каллбэк, избавиться
+- добавить функционал по поиску координат по адресу
 - передавать в DetailsFragment координаты
 
-- проверить кейс: диалоговое окно с адресом не открывается при первом разрешении на GPS-?
+- проверить кейс: диалоговое окно с адресом не открывается при первом разрешении на GPS
 */
-
 
 class WeatherFragment : Fragment() {
 
@@ -41,8 +35,8 @@ class WeatherFragment : Fragment() {
     private lateinit var weatherList: ArrayList<Weather>
     private lateinit var myGeolocation: MyGeolocationHelper
 
-
     private val onClickListItem: OnClickItem = object : OnClickItem {
+
         override fun onClick(weather: Weather) {
             openWeatherDetails(weather)
         }
@@ -59,8 +53,7 @@ class WeatherFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
-        myGeolocation = viewModel.getGeolocationHelper(requireContext(), this, requireActivity())
-
+        myGeolocation = MyGeolocationHelper(requireContext(), this, requireActivity())
     }
 
     override fun onCreateView(
@@ -76,7 +69,7 @@ class WeatherFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.subscribe().observe(viewLifecycleOwner, { renderData(it) })
         viewModel.getCitiesList()
-        subscribeToSharedViewModel()
+        //subscribeToSharedViewModel()
         initButtonAdd()
         initButtonLocation()
     }
@@ -96,6 +89,12 @@ class WeatherFragment : Fragment() {
 
     private fun initButtonLocation() {
         binding.mainFragmentFABLocation.setOnClickListener {
+            /*requestPermissions(
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                REQUEST_CODE
+            )
+
+*/
             myGeolocation.checkPermission()
         }
     }
