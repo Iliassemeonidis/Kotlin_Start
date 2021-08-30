@@ -49,9 +49,8 @@ class ContactsActivity : AppCompatActivity() {
                     // потому что доступ к контактам не предоставлен
                     AlertDialog.Builder(this)
                         .setTitle("Доступ к контактам")
-                        .setMessage("Просто открой доступ к контактам и не тупи")
-                        .setNegativeButton("Закрыть") { dialog, _ ->
-                            //dialog.dismiss()
+                        .setMessage("Необходимо в настройках приложения, открыть доступ к контактам Вашего телефона")
+                        .setPositiveButton("ОК"){ _, _->
                             ContextCompat.startActivity(
                                 this,
                                 Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
@@ -59,6 +58,9 @@ class ContactsActivity : AppCompatActivity() {
                                 },
                                 null
                             )
+                        }
+                        .setNegativeButton("Закрыть") { dialog, _ ->
+                            dialog.dismiss()
                         }
                         .create()
                         .show()
