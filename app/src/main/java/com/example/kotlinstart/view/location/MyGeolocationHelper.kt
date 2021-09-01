@@ -14,62 +14,61 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
 import android.provider.Settings
+import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.kotlinstart.R
+import com.example.kotlinstart.model.WeatherParams
+import com.example.kotlinstart.view.weatherscreen.WeatherFragment
 import java.io.IOException
+import java.util.*
 
 private const val REQUEST_CODE = 102
 private const val REFRESH_PERIOD = 60000L
 private const val MINIMAL_DISTANCE = 100f
 
-//TODO Remove LC components from Constructor
-//TODO Remove dialogs
+//TODO Remove LC components from Constructor+
+//TODO Remove dialogs+
 class MyGeolocationHelper(
-    private val context: Context,
-    private val fragment: Fragment,
-    private val activity: Activity
+    private val callBackDialog: WeatherFragment.CallBackDialog
 ) {
-
-    private val onLocationListener = object : LocationListener {
-
-        override fun onLocationChanged(location: Location) {
-            getAddressAsync(location)
+    private val onLocationListener: LocationListener =
+        LocationListener { location ->
+            getAddressAsync(
+                callBackDialog.getContextFragment(),
+                location = location
+            )
         }
 
-        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
-        override fun onProviderEnabled(provider: String) {}
-        override fun onProviderDisabled(provider: String) {}
-    }
-
-    fun checkPermission() {
+    fun checkPermission(context: Context, fragment: Fragment) {
         context.let {
             when {
                 ContextCompat.checkSelfPermission(
                     it,
                     Manifest.permission.ACCESS_FINE_LOCATION
                 ) == PackageManager.PERMISSION_GRANTED -> {
-                    getLocation()
+                    getLocation(context, fragment)
                 }
                 fragment.shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) -> {
                     showRationaleDialog()
                 }
                 else -> {
-                    requestPermission()
+                    requestPermission(fragment)
                 }
             }
         }
     }
 
-    private fun requestPermission() {
-        activity.requestPermissions(
+    fun requestPermission(fragment: Fragment) {
+        fragment.requestPermissions(
             arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
             REQUEST_CODE
         )
     }
 
     fun checkPermissionsResult(
+        context: Context, fragment: Fragment,
         requestCode: Int,
         grantResults: IntArray
     ) {
@@ -81,20 +80,19 @@ class MyGeolocationHelper(
                         if (it == PackageManager.PERMISSION_GRANTED) grantedPermissions++
                     }
                     if (grantResults.size == grantedPermissions) {
-                        getLocation()
+                        getLocation(context, fragment)
                     } else {
-                        showDialog(
+                        callBackDialog.showDialog(
                             fragment.getString(R.string.dialog_title_no_gps),
                             fragment.getString(R.string.dialog_message_no_gps)
                         )
                     }
                 } else {
-                    showDialog(
+                    callBackDialog.showDialog(
                         fragment.getString(R.string.dialog_title_no_gps),
                         fragment.getString(R.string.dialog_message_no_gps)
                     )
                 }
-                return
             }
         }
     }
@@ -103,38 +101,14 @@ class MyGeolocationHelper(
         title: String,
         message: String
     ) {
-        context.let {
-            AlertDialog.Builder(it)
-                .setTitle(title)
-                .setMessage(message)
-                .setNegativeButton(fragment.getString(R.string.dialog_button_close)) { dialog, _ -> dialog.dismiss() }
-                .create()
-                .show()
-        }
+        callBackDialog.showDialog(title, message)
     }
 
     private fun showRationaleDialog() {
-        context.let {
-            AlertDialog.Builder(it)
-                .setTitle(fragment.getString(R.string.dialog_rationale_title))
-                .setMessage(fragment.getString(R.string.dialog_message_no_gps))
-                .setPositiveButton(fragment.getString(R.string.dialog_rationale_give_access)) { _, _ ->
-                    requestPermission()
-                    ContextCompat.startActivity(
-                        context,
-                        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                            data = Uri.fromParts("package", context.packageName, null)
-                        },
-                        null
-                    )
-                }
-                .setNegativeButton(fragment.getString(R.string.dialog_rationale_decline)) { dialog, _ -> dialog.dismiss() }
-                .create()
-                .show()
-        }
+        callBackDialog.showRationaleDialog()
     }
 
-    private fun getLocation() {
+    private fun getLocation(context: Context, fragment: Fragment) {
         context.let {
             if (ContextCompat.checkSelfPermission(
                     context,
@@ -161,23 +135,10 @@ class MyGeolocationHelper(
                         locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
                     if (location == null) {
                         context.let {
-                            AlertDialog.Builder(it)
-                                .setTitle(fragment.getString(R.string.dialog_title_gps_turned_off))
-                                .setMessage(fragment.getString(R.string.dialog_message_last_location_unknown))
-                                .setPositiveButton("OK") { _, _ ->
-                                    ContextCompat.startActivity(
-                                        context,
-                                        Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),
-                                        null
-                                    )
-                                }
-                                .setNegativeButton(fragment.getString(R.string.dialog_button_close)) { dialog, _ -> dialog.dismiss() }
-                                .create()
-                                .show()
+                            callBackDialog.alertDialog()
                         }
-
                     } else {
-                        getAddressAsync(location)
+                        getAddressAsync(context, location)
                         showDialog(
                             fragment.getString(R.string.dialog_title_gps_turned_off),
                             fragment.getString(R.string.dialog_message_last_known_location)
@@ -190,24 +151,17 @@ class MyGeolocationHelper(
         }
     }
 
-    private fun getAddressAsync(location: Location) {
+    private fun getAddressAsync(context: Context, location: Location) {
         val geoCoder = Geocoder(context)
-        val handlerThread = HandlerThread("Geolocation")
-        handlerThread.start()
-        val handler = Handler(handlerThread.looper)
-        handler.postDelayed({ }, 3000)
         try {
-            //getFromLocationName
-            val addresses = geoCoder.getFromLocation(
-                37.4220,
-                -122.0840,
-                1
-            )
-            //val addresses = geoCoder.getFromLocationName("Москва ул. Открытое шоссе 24", 5)
-            handler.postDelayed(
-                { showAddressDialog(addresses[0].getAddressLine(0), location) },
-                3000
-            )
+            val addresses = geoCoder.getFromLocationName("Москва", 5)
+            if (addresses.isNotEmpty()) {
+                // TODO реализовать передачу обьекта WeatherParams
+                showAddressDialog(addresses[0].getAddressLine(0), location)
+            } else {
+                Log.i("ADDRESS", "Список адресов пустой")
+            }
+
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -216,18 +170,9 @@ class MyGeolocationHelper(
     private fun showAddressDialog(
         address: String,
         location: Location,
+//        weatherParams: WeatherParams
     ) {
-        context.let {
-            AlertDialog.Builder(it)
-                .setTitle(fragment.getString(R.string.dialog_address_title))
-                .setMessage(address)
-                .setPositiveButton(fragment.getString(R.string.dialog_address_get_weather)) { _, _ ->
-                    //openDetailsScreen(location)
-                }
-                .setNegativeButton(fragment.getString(R.string.dialog_button_close)) { dialog, _ -> dialog.dismiss() }
-                .create()
-                .show()
-        }
+        WeatherParams(address, lat = location.latitude, lon = location.longitude)
+        callBackDialog.showAddressDialog(address)
     }
-
 }

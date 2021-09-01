@@ -1,5 +1,9 @@
 package com.example.kotlinstart.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 data class WeatherParams(
     val city: String = "Moscow",
     var degrees: String = "27°",
@@ -9,7 +13,7 @@ data class WeatherParams(
     var cityIcon: String = "",
     val lat: Double = 1.0,
     val lon: Double = 1.0
-)
+) : Parcelable
 
 
 

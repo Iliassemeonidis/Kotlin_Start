@@ -7,6 +7,6 @@ import com.example.kotlinstart.model.WeatherParams
 import com.example.kotlinstart.view.location.MyGeolocationHelper
 
 interface RepositoryGeolocation {
-    fun getMyGeolocation(context: Context,fragment: Fragment,activity: Activity):MyGeolocationHelper
+//    fun getMyGeolocation(context: Context,fragment: Fragment,activity: Activity):MyGeolocationHelper
     fun gatWeatherCoordinatesByCityName():WeatherParams
 }
