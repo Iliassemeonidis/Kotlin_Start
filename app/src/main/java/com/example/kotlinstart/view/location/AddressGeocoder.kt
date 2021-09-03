@@ -30,6 +30,5 @@ internal class AddressGeocoder(private val callBackDialog: CityDialogFragment.Ca
         } catch (e: IOException) {
             e.printStackTrace()
         }
-
     }
 }

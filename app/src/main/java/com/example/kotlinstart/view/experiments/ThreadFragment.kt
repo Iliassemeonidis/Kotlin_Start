@@ -5,7 +5,9 @@ import android.app.NotificationManager
 import android.content.*
 import android.content.Context.BIND_AUTO_CREATE
 import android.content.Context.NOTIFICATION_SERVICE
-import android.os.*
+import android.os.Build
+import android.os.Bundle
+import android.os.IBinder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +15,6 @@ import androidx.fragment.app.Fragment
 import com.example.kotlinstart.databinding.FragmentThreadBinding
 import com.example.kotlinstart.view.experiments.BoundService.ServiceBinder
 import kotlinx.android.synthetic.main.fragment_thread.*
-import java.util.*
 
 
 const val BROADCAST_ACTION_CALCFINISHED = "ru.geekbrains.service.calculationfinished"
@@ -62,7 +63,6 @@ class ThreadFragment : Fragment() {
         }
         binding.buttonCalcService.setOnClickListener {
             val seconds = Integer.parseInt(binding.editSeconds.text.toString())
-            // todo WTF is CalculationService ???
             //CalculationService.startCalculationService(requireContext(),seconds)
         }
         binding.buttonBindService.setOnClickListener {
@@ -97,7 +97,6 @@ class ThreadFragment : Fragment() {
     // Получатель широковещательного сообщения
     private val calculationFinishedReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            // todo WTF is CalculationService ???
             //val result = intent?.getLongExtra(CalculationService.EXTRA_RESULT, 0)
 
             // Потокобезопасный вывод данных
@@ -125,7 +124,6 @@ class ThreadFragment : Fragment() {
     }
 
     companion object {
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance() = ThreadFragment().apply {}
     }

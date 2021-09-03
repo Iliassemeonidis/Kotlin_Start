@@ -1,42 +1,34 @@
 package com.example.kotlinstart.view.location
 
 import android.Manifest
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
-import android.net.Uri
-import android.os.Bundle
-import android.os.Handler
-import android.os.HandlerThread
-import android.provider.Settings
 import android.util.Log
-import androidx.appcompat.app.AlertDialog
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.kotlinstart.R
 import com.example.kotlinstart.model.WeatherParams
+import com.example.kotlinstart.view.search.CityDialogFragment
 import com.example.kotlinstart.view.weatherscreen.WeatherFragment
 import java.io.IOException
-import java.util.*
 
-private const val REQUEST_CODE = 102
+const val REQUEST_CODE = 102
 private const val REFRESH_PERIOD = 60000L
 private const val MINIMAL_DISTANCE = 100f
 
-//TODO Remove LC components from Constructor+
-//TODO Remove dialogs+
-class MyGeolocationHelper(
-    private val callBackDialog: WeatherFragment.CallBackDialog
+class GeolocationHelper(
+    private val dialogCallBack: WeatherFragment.DialogCallBack
 ) {
+
     private val onLocationListener: LocationListener =
         LocationListener { location ->
-            getAddressAsync(
-                callBackDialog.getContextFragment(),
+            getAddressByLocation(
+                dialogCallBack.getContextFragment(),
                 location = location
             )
         }
@@ -82,13 +74,14 @@ class MyGeolocationHelper(
                     if (grantResults.size == grantedPermissions) {
                         getLocation(context, fragment)
                     } else {
-                        callBackDialog.showDialog(
+                        //TODO Не передавать ресурсы
+                        dialogCallBack.showDialog(
                             fragment.getString(R.string.dialog_title_no_gps),
                             fragment.getString(R.string.dialog_message_no_gps)
                         )
                     }
                 } else {
-                    callBackDialog.showDialog(
+                    dialogCallBack.showDialog(
                         fragment.getString(R.string.dialog_title_no_gps),
                         fragment.getString(R.string.dialog_message_no_gps)
                     )
@@ -101,11 +94,11 @@ class MyGeolocationHelper(
         title: String,
         message: String
     ) {
-        callBackDialog.showDialog(title, message)
+        dialogCallBack.showDialog(title, message)
     }
 
     private fun showRationaleDialog() {
-        callBackDialog.showRationaleDialog()
+        dialogCallBack.showRationaleDialog()
     }
 
     private fun getLocation(context: Context, fragment: Fragment) {
@@ -135,10 +128,10 @@ class MyGeolocationHelper(
                         locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
                     if (location == null) {
                         context.let {
-                            callBackDialog.alertDialog()
+                            dialogCallBack.alertDialog()
                         }
                     } else {
-                        getAddressAsync(context, location)
+                        getAddressByLocation(context, location)
                         showDialog(
                             fragment.getString(R.string.dialog_title_gps_turned_off),
                             fragment.getString(R.string.dialog_message_last_known_location)
@@ -151,7 +144,7 @@ class MyGeolocationHelper(
         }
     }
 
-    private fun getAddressAsync(context: Context, location: Location) {
+    private fun getAddressByLocation(context: Context, location: Location) {
         val geoCoder = Geocoder(context)
         try {
             // для примера указан город
@@ -161,7 +154,6 @@ class MyGeolocationHelper(
             } else {
                 Log.i("ADDRESS", "Список адресов пустой")
             }
-
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -171,6 +163,36 @@ class MyGeolocationHelper(
         address: String,
         location: Location,
     ) {
-        callBackDialog.showAddressDialog(address)
+        dialogCallBack.showAddressDialog(address)
+    }
+
+    companion object {
+
+        internal fun getAddressByCityName(
+            geoCoder: Geocoder,
+            city: String,
+            callBackDialog: CityDialogFragment.CallBackDialog
+        ) {
+            //val geoCoder = Geocoder(context)
+            try {
+                val addresses = geoCoder.getFromLocationName(city, 5)
+                if (addresses.isNotEmpty()) {
+                    callBackDialog.getWeatherParams(
+                        WeatherParams(
+                            city,
+                            lat = addresses[0].latitude,
+                            lon = addresses[0].longitude
+                        )
+                    )
+                    callBackDialog.showDialog()
+                } else {
+                    //TODO Use CityDialogFragment.CallBackDialog instead Toast + Context
+                    Toast.makeText(context, "Нет такого города", Toast.LENGTH_SHORT).show()
+                    Log.i("ADDRESS", "Список адресов пустой")
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
     }
 }

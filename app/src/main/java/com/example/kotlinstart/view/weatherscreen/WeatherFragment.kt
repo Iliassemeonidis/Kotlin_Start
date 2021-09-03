@@ -1,5 +1,6 @@
 package com.example.kotlinstart.view.weatherscreen
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -17,10 +18,8 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.FragmentWeatherBinding
 import com.example.kotlinstart.model.Weather
-import com.example.kotlinstart.model.WeatherParams
-import com.example.kotlinstart.view.contacts.ContactsActivity
-import com.example.kotlinstart.view.detailsscreen.DetailsFragment
-import com.example.kotlinstart.view.location.MyGeolocationHelper
+import com.example.kotlinstart.view.location.GeolocationHelper
+import com.example.kotlinstart.view.location.REQUEST_CODE
 import com.example.kotlinstart.view.search.CityDialogFragment
 import com.example.kotlinstart.view.shared.SharedViewModel
 
@@ -35,16 +34,16 @@ import com.example.kotlinstart.view.shared.SharedViewModel
 
 private const val SEARCH_CITY_TAG = "SEARCH_CITY_TAG"
 
-class WeatherFragment : Fragment() {
+class WeatherFragment : Fragment(), RequestPermission {
 
     private lateinit var viewModel: WeatherViewModel
     private var weatherBinding: FragmentWeatherBinding? = null
     private val binding get() = weatherBinding!!
     private lateinit var adapter: WeatherAdapter
     private lateinit var weatherList: ArrayList<Weather>
-    private lateinit var myGeolocation: MyGeolocationHelper
+    private lateinit var myGeolocation: GeolocationHelper
 
-    private val callBackDialog: CallBackDialog = object : CallBackDialog {
+    private val dialogCallBack: DialogCallBack = object : DialogCallBack {
         override fun showDialog(
             title: String,
             message: String
@@ -138,7 +137,7 @@ class WeatherFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
-        myGeolocation = MyGeolocationHelper(callBackDialog)
+        myGeolocation = GeolocationHelper(dialogCallBack)
     }
 
     override fun onCreateView(
@@ -204,11 +203,18 @@ class WeatherFragment : Fragment() {
         fun onClick(weather: Weather)
     }
 
-    interface CallBackDialog {
+    interface DialogCallBack {
         fun showDialog(title: String, message: String)
         fun showRationaleDialog()
         fun showAddressDialog(city: String)
         fun getContextFragment(): Context
         fun alertDialog()
+    }
+
+    override fun onRequestPermission() {
+        requestPermissions(
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+            REQUEST_CODE
+        )
     }
 }

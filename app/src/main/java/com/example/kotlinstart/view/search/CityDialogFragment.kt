@@ -17,6 +17,7 @@ import com.example.kotlinstart.view.location.AddressGeocoder
 import com.example.kotlinstart.view.shared.SharedViewModel
 import java.util.*
 
+//TODO Use GeolocationHelper
 internal class CityDialogFragment : DialogFragment() {
 
     private lateinit var cityDialogViewModel: CityDialogViewModel
