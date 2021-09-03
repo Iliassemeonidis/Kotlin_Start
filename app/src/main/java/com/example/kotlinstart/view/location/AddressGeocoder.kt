@@ -24,6 +24,7 @@ internal class AddressGeocoder(private val callBackDialog: CityDialogFragment.Ca
                 )
                 callBackDialog.showDialog()
             } else {
+                Toast.makeText(context, "Нет такого города", Toast.LENGTH_SHORT).show()
                 Log.i("ADDRESS", "Список адресов пустой")
             }
         } catch (e: IOException) {

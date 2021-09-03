@@ -154,9 +154,9 @@ class MyGeolocationHelper(
     private fun getAddressAsync(context: Context, location: Location) {
         val geoCoder = Geocoder(context)
         try {
+            // для примера указан город
             val addresses = geoCoder.getFromLocationName("Москва", 5)
             if (addresses.isNotEmpty()) {
-                // TODO реализовать передачу обьекта WeatherParams
                 showAddressDialog(addresses[0].getAddressLine(0), location)
             } else {
                 Log.i("ADDRESS", "Список адресов пустой")
@@ -170,9 +170,7 @@ class MyGeolocationHelper(
     private fun showAddressDialog(
         address: String,
         location: Location,
-//        weatherParams: WeatherParams
     ) {
-        WeatherParams(address, lat = location.latitude, lon = location.longitude)
         callBackDialog.showAddressDialog(address)
     }
 }

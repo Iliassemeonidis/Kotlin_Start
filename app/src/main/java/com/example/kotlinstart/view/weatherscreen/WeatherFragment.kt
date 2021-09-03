@@ -205,11 +205,7 @@ class WeatherFragment : Fragment() {
     }
 
     interface CallBackDialog {
-        fun showDialog(
-            title: String,
-            message: String
-        )
-
+        fun showDialog(title: String, message: String)
         fun showRationaleDialog()
         fun showAddressDialog(city: String)
         fun getContextFragment(): Context
