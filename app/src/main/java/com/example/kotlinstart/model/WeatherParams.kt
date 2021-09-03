@@ -5,7 +5,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class WeatherParams(
-    val city: String = "Moscow",
+    var city: String = "Moscow",
     var degrees: String = "27°",
     var weatherCondition: String = "Солнечно",
     var textViewFeelsLike: String = "Ощущается как 27°",

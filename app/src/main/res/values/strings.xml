@@ -15,7 +15,8 @@
     <string name="icon_sun">icon_sun</string>
     <string name="city_search">Выполните поиск города на текущем яыке</string>
     <string name="hint_city">Город</string>
-    <string name="add_your_place">Добавить текущее местоположение</string>
+    <string name="add_your_place">Поиск города</string>
+    <string name="write_city">Введите название города</string>
     <string name="exit">Для выхода нажмите еще раз</string>
     <string name="city_name">Москва</string>
     <string name="region_name">Москва</string>
@@ -56,4 +57,5 @@
     <string name="dialog_rationale_decline">Не надо</string>
     <string name="dialog_address_title">Ваш адрес</string>
     <string name="dialog_address_get_weather">Узнать погоду</string>
+    <string name="botton_search">Поиск</string>
 </resources>

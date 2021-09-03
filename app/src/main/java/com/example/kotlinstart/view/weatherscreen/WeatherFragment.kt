@@ -27,11 +27,13 @@ import com.example.kotlinstart.view.shared.SharedViewModel
 /*
 по ДЗ:
 - Рефактор MyGeolocationHelper: перенести код UI во фрагмент, прокинуть каллбэк, избавиться +
-- добавить функционал по поиску координат по адресу
-- передавать в DetailsFragment координаты
+- добавить функционал по поиску координат по адресу +
+- передавать в DetailsFragment координаты +
 
 - проверить кейс: диалоговое окно с адресом не открывается при первом разрешении на GPS
 */
+
+private const val SEARCH_CITY_TAG = "SEARCH_CITY_TAG"
 
 class WeatherFragment : Fragment() {
 
@@ -78,7 +80,7 @@ class WeatherFragment : Fragment() {
                     .setTitle(getString(R.string.dialog_address_title))
                     .setMessage(city)
                     .setPositiveButton(getString(R.string.dialog_address_get_weather)) { _, _ ->
-                        openWeatherDetails(Weather(city))
+                        //openWeatherDetails(Weather(city))
                     }
                     .setNegativeButton(getString(R.string.dialog_button_close)) { dialog, _ -> dialog.dismiss() }
                     .create()
@@ -121,17 +123,17 @@ class WeatherFragment : Fragment() {
     private val onClickListItem: OnClickItem = object : OnClickItem {
 
         override fun onClick(weather: Weather) {
-            openWeatherDetails(weather)
+           // openWeatherDetails(weather)
         }
     }
 
-    fun openWeatherDetails(weather: Weather) {
-        requireActivity().supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.list_container, DetailsFragment.newInstance(weather.cityName))
-            .addToBackStack(null)
-            .commitAllowingStateLoss()
-    }
+//    fun openWeatherDetails(weather: Weather) {
+//        requireActivity().supportFragmentManager
+//            .beginTransaction()
+//            .replace(R.id.list_container, DetailsFragment.newInstance(weather.cityName))
+//            .addToBackStack(null)
+//            .commitAllowingStateLoss()
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -167,10 +169,7 @@ class WeatherFragment : Fragment() {
     private fun initButtonAdd() {
         binding.floatingActionButton.setOnClickListener {
 //            requireContext().startActivity(Intent(requireContext(), ContactsActivity::class.java))
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.list_container, CityDialogFragment())
-                .addToBackStack(null)
-                .commitAllowingStateLoss()
+            CityDialogFragment().show(requireActivity().supportFragmentManager, SEARCH_CITY_TAG)
         }
     }
 
@@ -179,7 +178,6 @@ class WeatherFragment : Fragment() {
             myGeolocation.checkPermission(requireContext(), this)
         }
     }
-
 
     override fun onRequestPermissionsResult(
         requestCode: Int,

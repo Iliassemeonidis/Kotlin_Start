@@ -20,6 +20,7 @@ import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.FragmentDetailsBinding
 import com.example.kotlinstart.model.AppState
 import com.example.kotlinstart.model.Weather
+import com.example.kotlinstart.model.WeatherParams
 import com.example.kotlinstart.model.getDetailWeather
 import com.example.kotlinstart.view.experiments.MainBroadcastReceiver
 import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou
@@ -44,7 +45,7 @@ internal class DetailsFragment : Fragment() {
     private lateinit var detailsViewModel: DetailsViewModel
     private var detailsBinding: FragmentDetailsBinding? = null
     private val binding get() = detailsBinding!!
-    private lateinit var weatherBundle: Weather
+    private lateinit var weatherBundle: WeatherParams
     private val connectionReceiver: MainBroadcastReceiver = MainBroadcastReceiver()
     private val receiver: BroadcastReceiver = object : BroadcastReceiver() {
 
@@ -87,8 +88,9 @@ internal class DetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        weatherBundle = arguments?.getParcelable(CITY_EXTRA) ?: Weather()
-        val weather = getDetailWeather(arguments?.getString(CITY_EXTRA) ?: DEFAULT_CITY)
+        weatherBundle = arguments?.getParcelable(CITY_EXTRA) ?: WeatherParams()
+//        val weather = getDetailWeather(arguments?.getString(CITY_EXTRA) ?: DEFAULT_CITY)
+        val weather :WeatherParams = arguments?.getParcelable(CITY_EXTRA) ?: WeatherParams()
         detailsViewModel.setNewCity(weather.city)
         detailsViewModel.getLiveData().observe(viewLifecycleOwner, { renderData(it) })
         detailsViewModel.getWeatherFromRemoteSource(weather.lat, weather.lon)
@@ -144,7 +146,7 @@ internal class DetailsFragment : Fragment() {
         const val DEFAULT_CITY: String = "DEFAULT_CITY"
 
         @JvmStatic
-        fun newInstance(city: String) =
+        fun newInstance(city: WeatherParams) =
             DetailsFragment().apply { arguments = bundleOf(CITY_EXTRA to city) }
     }
 }
