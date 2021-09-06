@@ -5,7 +5,9 @@ import android.app.NotificationManager
 import android.content.*
 import android.content.Context.BIND_AUTO_CREATE
 import android.content.Context.NOTIFICATION_SERVICE
-import android.os.*
+import android.os.Build
+import android.os.Bundle
+import android.os.IBinder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +15,6 @@ import androidx.fragment.app.Fragment
 import com.example.kotlinstart.databinding.FragmentThreadBinding
 import com.example.kotlinstart.view.experiments.BoundService.ServiceBinder
 import kotlinx.android.synthetic.main.fragment_thread.*
-import java.util.*
 
 
 const val BROADCAST_ACTION_CALCFINISHED = "ru.geekbrains.service.calculationfinished"
