@@ -1,5 +1,6 @@
 package com.example.kotlinstart.view.weatherscreen
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -17,42 +18,41 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.FragmentWeatherBinding
 import com.example.kotlinstart.model.Weather
-import com.example.kotlinstart.model.WeatherParams
-import com.example.kotlinstart.view.contacts.ContactsActivity
-import com.example.kotlinstart.view.detailsscreen.DetailsFragment
-import com.example.kotlinstart.view.location.MyGeolocationHelper
+import com.example.kotlinstart.view.location.GeolocationHelper
+import com.example.kotlinstart.view.location.REQUEST_CODE
+import com.example.kotlinstart.view.location.RequestPermission
 import com.example.kotlinstart.view.search.CityDialogFragment
 import com.example.kotlinstart.view.shared.SharedViewModel
 
-/*
-по ДЗ:
-- Рефактор MyGeolocationHelper: перенести код UI во фрагмент, прокинуть каллбэк, избавиться +
-- добавить функционал по поиску координат по адресу +
-- передавать в DetailsFragment координаты +
-
-- проверить кейс: диалоговое окно с адресом не открывается при первом разрешении на GPS
-*/
 
 private const val SEARCH_CITY_TAG = "SEARCH_CITY_TAG"
 
-class WeatherFragment : Fragment() {
+class WeatherFragment : Fragment(), RequestPermission {
 
     private lateinit var viewModel: WeatherViewModel
     private var weatherBinding: FragmentWeatherBinding? = null
     private val binding get() = weatherBinding!!
     private lateinit var adapter: WeatherAdapter
     private lateinit var weatherList: ArrayList<Weather>
-    private lateinit var myGeolocation: MyGeolocationHelper
+    private lateinit var myGeolocation: GeolocationHelper
 
     private val callBackDialog: CallBackDialog = object : CallBackDialog {
-        override fun showDialog(
-            title: String,
-            message: String
-        ) {
-            context?.let {
+        override fun showDialogGeolocationIsClosed() {
+            requireContext().let {
                 AlertDialog.Builder(it)
-                    .setTitle(title)
-                    .setMessage(message)
+                    .setTitle(getString(R.string.dialog_title_no_gps))
+                    .setMessage(getString(R.string.dialog_message_no_gps))
+                    .setNegativeButton(getString(R.string.dialog_button_close)) { dialog, _ -> dialog.dismiss() }
+                    .create()
+                    .show()
+            }
+        }
+
+        override fun showDialogGeolocationIsDisabled() {
+            requireContext().let {
+                AlertDialog.Builder(it)
+                    .setTitle(getString(R.string.dialog_title_gps_turned_off))
+                    .setMessage(getString(R.string.dialog_message_last_known_location))
                     .setNegativeButton(getString(R.string.dialog_button_close)) { dialog, _ -> dialog.dismiss() }
                     .create()
                     .show()
@@ -108,6 +108,9 @@ class WeatherFragment : Fragment() {
                 .show()
         }
 
+        override fun getRequestPermissionRationale() =
+            shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
+
     }
 
     private fun openAppSettingsPermission(it: Context) {
@@ -123,7 +126,7 @@ class WeatherFragment : Fragment() {
     private val onClickListItem: OnClickItem = object : OnClickItem {
 
         override fun onClick(weather: Weather) {
-           // openWeatherDetails(weather)
+            // openWeatherDetails(weather)
         }
     }
 
@@ -138,7 +141,7 @@ class WeatherFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
-        myGeolocation = MyGeolocationHelper(callBackDialog)
+        myGeolocation = GeolocationHelper(callBackDialog)
     }
 
     override fun onCreateView(
@@ -183,7 +186,7 @@ class WeatherFragment : Fragment() {
         requestCode: Int,
         permissions: Array<String>, grantResults: IntArray
     ) {
-        myGeolocation.checkPermissionsResult(requireContext(), this, requestCode, grantResults)
+        myGeolocation.checkPermissionsResult(requireContext(), requestCode, grantResults)
     }
 
     private fun renderData(weatherList: ArrayList<Weather>) {
@@ -205,10 +208,19 @@ class WeatherFragment : Fragment() {
     }
 
     interface CallBackDialog {
-        fun showDialog(title: String, message: String)
+        fun showDialogGeolocationIsClosed()
+        fun showDialogGeolocationIsDisabled()
         fun showRationaleDialog()
         fun showAddressDialog(city: String)
         fun getContextFragment(): Context
         fun alertDialog()
+        fun getRequestPermissionRationale():Boolean
+    }
+
+    override fun requestPermission() {
+        requireActivity().requestPermissions(
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+            REQUEST_CODE
+        )
     }
 }

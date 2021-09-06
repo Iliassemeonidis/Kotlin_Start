@@ -1,36 +1,25 @@
 package com.example.kotlinstart.view.location
 
 import android.Manifest
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
-import android.net.Uri
-import android.os.Bundle
-import android.os.Handler
-import android.os.HandlerThread
-import android.provider.Settings
 import android.util.Log
-import androidx.appcompat.app.AlertDialog
+import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
-import com.example.kotlinstart.R
 import com.example.kotlinstart.model.WeatherParams
+import com.example.kotlinstart.view.search.CityDialogFragment
 import com.example.kotlinstart.view.weatherscreen.WeatherFragment
 import java.io.IOException
-import java.util.*
 
-private const val REQUEST_CODE = 102
+const val REQUEST_CODE = 102
 private const val REFRESH_PERIOD = 60000L
 private const val MINIMAL_DISTANCE = 100f
 
-//TODO Remove LC components from Constructor+
-//TODO Remove dialogs+
-class MyGeolocationHelper(
+class GeolocationHelper(
     private val callBackDialog: WeatherFragment.CallBackDialog
 ) {
     private val onLocationListener: LocationListener =
@@ -41,34 +30,31 @@ class MyGeolocationHelper(
             )
         }
 
-    fun checkPermission(context: Context, fragment: Fragment) {
+    fun checkPermission(context: Context, requestPermission: RequestPermission) {
         context.let {
             when {
                 ContextCompat.checkSelfPermission(
                     it,
                     Manifest.permission.ACCESS_FINE_LOCATION
                 ) == PackageManager.PERMISSION_GRANTED -> {
-                    getLocation(context, fragment)
+                    getLocation(context)
                 }
-                fragment.shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) -> {
-                    showRationaleDialog()
+               callBackDialog.getRequestPermissionRationale() -> {
+                    callBackDialog.showRationaleDialog()
                 }
                 else -> {
-                    requestPermission(fragment)
+                    requestPermission(requestPermission)
                 }
             }
         }
     }
 
-    fun requestPermission(fragment: Fragment) {
-        fragment.requestPermissions(
-            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-            REQUEST_CODE
-        )
+    fun requestPermission(requestPermission: RequestPermission) {
+        requestPermission.requestPermission()
     }
 
     fun checkPermissionsResult(
-        context: Context, fragment: Fragment,
+        context: Context,
         requestCode: Int,
         grantResults: IntArray
     ) {
@@ -80,35 +66,18 @@ class MyGeolocationHelper(
                         if (it == PackageManager.PERMISSION_GRANTED) grantedPermissions++
                     }
                     if (grantResults.size == grantedPermissions) {
-                        getLocation(context, fragment)
+                        getLocation(context)
                     } else {
-                        callBackDialog.showDialog(
-                            fragment.getString(R.string.dialog_title_no_gps),
-                            fragment.getString(R.string.dialog_message_no_gps)
-                        )
+                        callBackDialog.showDialogGeolocationIsClosed()
                     }
                 } else {
-                    callBackDialog.showDialog(
-                        fragment.getString(R.string.dialog_title_no_gps),
-                        fragment.getString(R.string.dialog_message_no_gps)
-                    )
+                    callBackDialog.showDialogGeolocationIsClosed()
                 }
             }
         }
     }
 
-    private fun showDialog(
-        title: String,
-        message: String
-    ) {
-        callBackDialog.showDialog(title, message)
-    }
-
-    private fun showRationaleDialog() {
-        callBackDialog.showRationaleDialog()
-    }
-
-    private fun getLocation(context: Context, fragment: Fragment) {
+    private fun getLocation(context: Context) {
         context.let {
             if (ContextCompat.checkSelfPermission(
                     context,
@@ -139,15 +108,11 @@ class MyGeolocationHelper(
                         }
                     } else {
                         getAddressAsync(context, location)
-                        showDialog(
-                            fragment.getString(R.string.dialog_title_gps_turned_off),
-                            fragment.getString(R.string.dialog_message_last_known_location)
-                        )
+                       callBackDialog.showDialogGeolocationIsDisabled()
                     }
                 }
             } else {
-                showRationaleDialog()
-            }
+                callBackDialog.showRationaleDialog()            }
         }
     }
 
@@ -173,4 +138,31 @@ class MyGeolocationHelper(
     ) {
         callBackDialog.showAddressDialog(address)
     }
+
+    companion object{
+
+        fun getAddressAsync(callBackDialog: CityDialogFragment.CallBackDialog, city: String) {
+            val geoCoder = Geocoder(callBackDialog.getContext())
+            try {
+                val addresses = geoCoder.getFromLocationName(city, 5)
+                if (addresses.isNotEmpty()) {
+                    callBackDialog.getWeatherParams(
+                        WeatherParams(
+                            city,
+                            lat = addresses[0].latitude,
+                            lon = addresses[0].longitude
+                        )
+                    )
+                    callBackDialog.showDialog()
+                } else {
+                    Toast.makeText(callBackDialog.getContext(), "Нет такого города", Toast.LENGTH_SHORT).show()
+                    Log.i("ADDRESS", "Список адресов пустой")
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+
+        }
+    }
+
 }

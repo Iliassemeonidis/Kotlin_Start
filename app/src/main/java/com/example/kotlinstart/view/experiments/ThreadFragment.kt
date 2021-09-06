@@ -62,7 +62,6 @@ class ThreadFragment : Fragment() {
         }
         binding.buttonCalcService.setOnClickListener {
             val seconds = Integer.parseInt(binding.editSeconds.text.toString())
-            // todo WTF is CalculationService ???
             //CalculationService.startCalculationService(requireContext(),seconds)
         }
         binding.buttonBindService.setOnClickListener {
@@ -97,7 +96,6 @@ class ThreadFragment : Fragment() {
     // Получатель широковещательного сообщения
     private val calculationFinishedReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            // todo WTF is CalculationService ???
             //val result = intent?.getLongExtra(CalculationService.EXTRA_RESULT, 0)
 
             // Потокобезопасный вывод данных
@@ -125,7 +123,6 @@ class ThreadFragment : Fragment() {
     }
 
     companion object {
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance() = ThreadFragment().apply {}
     }

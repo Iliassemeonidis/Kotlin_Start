@@ -1,5 +1,6 @@
 package com.example.kotlinstart.view.search
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,17 +14,16 @@ import com.example.kotlinstart.databinding.FragmentCityDialogBinding
 import com.example.kotlinstart.model.CityData
 import com.example.kotlinstart.model.WeatherParams
 import com.example.kotlinstart.view.detailsscreen.DetailsFragment
-import com.example.kotlinstart.view.location.AddressGeocoder
+import com.example.kotlinstart.view.location.GeolocationHelper
 import com.example.kotlinstart.view.shared.SharedViewModel
 import java.util.*
 
-internal class CityDialogFragment : DialogFragment() {
+class CityDialogFragment : DialogFragment() {
 
     private lateinit var cityDialogViewModel: CityDialogViewModel
     private var cityDialogBinding: FragmentCityDialogBinding? = null
     private val binding get() = cityDialogBinding!!
     private var weatherParams: WeatherParams = WeatherParams()
-    private lateinit var addressGeocoder: AddressGeocoder
 
     private val callBackDialog: CallBackDialog = object : CallBackDialog {
         override fun getWeatherParams(weather: WeatherParams) {
@@ -51,6 +51,10 @@ internal class CityDialogFragment : DialogFragment() {
                     .show()
             }
         }
+
+        override fun getContext(): Context {
+            return requireContext()
+        }
     }
 
     private val onClickCity: OnClickCity = object : OnClickCity {
@@ -70,7 +74,6 @@ internal class CityDialogFragment : DialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         cityDialogViewModel = ViewModelProvider(this).get(CityDialogViewModel::class.java)
-        addressGeocoder = AddressGeocoder(callBackDialog)
 
     }
 
@@ -105,13 +108,14 @@ internal class CityDialogFragment : DialogFragment() {
 
     private fun initButtonSearch() {
         binding.buttonSearch.setOnClickListener {
-            addressGeocoder.getAddressAsync(requireContext(), binding.searchCity.text.toString())
+            GeolocationHelper.getAddressAsync(callBackDialog, binding.searchCity.text.toString())
         }
     }
 
     interface CallBackDialog {
         fun getWeatherParams(weather: WeatherParams)
         fun showDialog()
+        fun getContext(): Context
     }
 }
 
