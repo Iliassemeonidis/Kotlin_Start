@@ -18,9 +18,10 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.FragmentWeatherBinding
 import com.example.kotlinstart.model.Weather
-import com.example.kotlinstart.view.location.GeolocationHelper
-import com.example.kotlinstart.view.location.REQUEST_CODE
-import com.example.kotlinstart.view.location.RequestPermission
+import com.example.kotlinstart.location.GeolocationHelper
+import com.example.kotlinstart.location.REQUEST_CODE
+import com.example.kotlinstart.location.RequestPermission
+import com.example.kotlinstart.view.map.GoogleMapsFragment
 import com.example.kotlinstart.view.search.CityDialogFragment
 import com.example.kotlinstart.view.shared.SharedViewModel
 
@@ -172,7 +173,16 @@ class WeatherFragment : Fragment(), RequestPermission {
     private fun initButtonAdd() {
         binding.floatingActionButton.setOnClickListener {
 //            requireContext().startActivity(Intent(requireContext(), ContactsActivity::class.java))
-            CityDialogFragment().show(requireActivity().supportFragmentManager, SEARCH_CITY_TAG)
+
+            // open city search fragment
+//            CityDialogFragment().show(requireActivity().supportFragmentManager, SEARCH_CITY_TAG)
+
+            // open google maps
+            requireActivity().supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.list_container, GoogleMapsFragment())
+            .addToBackStack(null)
+            .commitAllowingStateLoss()
         }
     }
 

@@ -1,4 +1,4 @@
-package com.example.kotlinstart.view.location
+package com.example.kotlinstart.location
 
 import android.Manifest
 import android.content.Context

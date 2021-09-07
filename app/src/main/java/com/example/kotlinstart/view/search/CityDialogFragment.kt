@@ -14,7 +14,7 @@ import com.example.kotlinstart.databinding.FragmentCityDialogBinding
 import com.example.kotlinstart.model.CityData
 import com.example.kotlinstart.model.WeatherParams
 import com.example.kotlinstart.view.detailsscreen.DetailsFragment
-import com.example.kotlinstart.view.location.GeolocationHelper
+import com.example.kotlinstart.location.GeolocationHelper
 import com.example.kotlinstart.view.shared.SharedViewModel
 import java.util.*
 
