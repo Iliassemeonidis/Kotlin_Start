@@ -8,11 +8,13 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.util.Log
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.example.kotlinstart.model.WeatherParams
 import com.example.kotlinstart.view.search.CityDialogFragment
 import com.example.kotlinstart.view.weatherscreen.WeatherFragment
+import com.google.android.gms.maps.model.LatLng
 import java.io.IOException
 
 const val REQUEST_CODE = 102
@@ -39,7 +41,7 @@ class GeolocationHelper(
                 ) == PackageManager.PERMISSION_GRANTED -> {
                     getLocation(context)
                 }
-               callBackDialog.getRequestPermissionRationale() -> {
+                callBackDialog.getRequestPermissionRationale() -> {
                     callBackDialog.showRationaleDialog()
                 }
                 else -> {
@@ -108,11 +110,12 @@ class GeolocationHelper(
                         }
                     } else {
                         getAddressAsync(context, location)
-                       callBackDialog.showDialogGeolocationIsDisabled()
+                        callBackDialog.showDialogGeolocationIsDisabled()
                     }
                 }
             } else {
-                callBackDialog.showRationaleDialog()            }
+                callBackDialog.showRationaleDialog()
+            }
         }
     }
 
@@ -139,7 +142,7 @@ class GeolocationHelper(
         callBackDialog.showAddressDialog(address)
     }
 
-    companion object{
+    companion object {
 
         fun getAddressAsync(callBackDialog: CityDialogFragment.CallBackDialog, city: String) {
             val geoCoder = Geocoder(callBackDialog.getContext())
@@ -153,9 +156,13 @@ class GeolocationHelper(
                             lon = addresses[0].longitude
                         )
                     )
-                    callBackDialog.showDialog()
+                    callBackDialog.openDetalisationOfCity()
                 } else {
-                    Toast.makeText(callBackDialog.getContext(), "Нет такого города", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        callBackDialog.getContext(),
+                        "Нет такого города",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     Log.i("ADDRESS", "Список адресов пустой")
                 }
             } catch (e: IOException) {
@@ -163,6 +170,21 @@ class GeolocationHelper(
             }
 
         }
+
+        fun getAddressAsync(context: Context, location: LatLng,textView: TextView) {
+            context.let {
+                val geoCoder = Geocoder(it)
+                    try {
+                        val addresses = geoCoder.getFromLocation(location.latitude, location.longitude, 1)
+                        textView.text = addresses[0].getAddressLine(0)
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+
+            }
+        }
     }
+
+
 
 }

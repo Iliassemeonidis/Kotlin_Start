@@ -15,6 +15,7 @@ import com.example.kotlinstart.model.CityData
 import com.example.kotlinstart.model.WeatherParams
 import com.example.kotlinstart.view.detailsscreen.DetailsFragment
 import com.example.kotlinstart.location.GeolocationHelper
+import com.example.kotlinstart.view.map.GoogleMapsFragment
 import com.example.kotlinstart.view.shared.SharedViewModel
 import java.util.*
 
@@ -30,26 +31,16 @@ class CityDialogFragment : DialogFragment() {
             weatherParams = weather
         }
 
-        override fun showDialog() {
-            context?.let {
-                AlertDialog.Builder(it)
-                    .setTitle("Поиск подходящего адресса")
-                    .setMessage("Показать детализацию по запрошенному адрессу")
-                    .setPositiveButton("OK") { _, _ ->
-                        requireActivity().supportFragmentManager
-                            .beginTransaction()
-                            .replace(
-                                R.id.list_container,
-                                DetailsFragment.newInstance(weatherParams)
-                            )
-                            .addToBackStack(null)
-                            .commitAllowingStateLoss()
-                        closeDialogFragment()
-                    }
-                    .setNegativeButton(getString(R.string.dialog_button_close)) { dialog, _ -> dialog.dismiss() }
-                    .create()
-                    .show()
-            }
+        override fun openDetalisationOfCity() {
+            requireActivity().supportFragmentManager
+                .beginTransaction()
+                .replace(
+                    R.id.list_container,
+                    GoogleMapsFragment.newInstance(weatherParams)
+                )
+                .addToBackStack(null)
+                .commitAllowingStateLoss()
+            closeDialogFragment()
         }
 
         override fun getContext(): Context {
@@ -114,7 +105,7 @@ class CityDialogFragment : DialogFragment() {
 
     interface CallBackDialog {
         fun getWeatherParams(weather: WeatherParams)
-        fun showDialog()
+        fun openDetalisationOfCity()
         fun getContext(): Context
     }
 }

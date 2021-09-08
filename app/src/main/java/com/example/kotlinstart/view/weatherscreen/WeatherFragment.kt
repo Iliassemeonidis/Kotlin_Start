@@ -175,14 +175,9 @@ class WeatherFragment : Fragment(), RequestPermission {
 //            requireContext().startActivity(Intent(requireContext(), ContactsActivity::class.java))
 
             // open city search fragment
-//            CityDialogFragment().show(requireActivity().supportFragmentManager, SEARCH_CITY_TAG)
-
+            CityDialogFragment().show(requireActivity().supportFragmentManager, SEARCH_CITY_TAG)
             // open google maps
-            requireActivity().supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.list_container, GoogleMapsFragment())
-            .addToBackStack(null)
-            .commitAllowingStateLoss()
+
         }
     }
 
