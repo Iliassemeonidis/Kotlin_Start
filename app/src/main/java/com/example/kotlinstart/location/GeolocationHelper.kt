@@ -168,23 +168,6 @@ class GeolocationHelper(
             } catch (e: IOException) {
                 e.printStackTrace()
             }
-
-        }
-
-        fun getAddressAsync(context: Context, location: LatLng,textView: TextView) {
-            context.let {
-                val geoCoder = Geocoder(it)
-                    try {
-                        val addresses = geoCoder.getFromLocation(location.latitude, location.longitude, 1)
-                        textView.text = addresses[0].getAddressLine(0)
-                    } catch (e: IOException) {
-                        e.printStackTrace()
-                    }
-
-            }
         }
     }
-
-
-
 }
