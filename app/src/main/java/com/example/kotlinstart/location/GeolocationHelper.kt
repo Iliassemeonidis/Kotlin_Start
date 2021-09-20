@@ -8,14 +8,12 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.util.Log
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import com.example.kotlinstart.MyInterface
 import com.example.kotlinstart.model.WeatherParams
 import com.example.kotlinstart.view.detailsscreen.DetailsFragment
 import com.example.kotlinstart.view.search.CityDialogFragment
-import com.example.kotlinstart.view.weatherscreen.WeatherFragment
-import com.google.android.gms.maps.model.LatLng
 import java.io.IOException
 
 const val REQUEST_CODE = 102
@@ -23,8 +21,13 @@ private const val REFRESH_PERIOD = 60000L
 private const val MINIMAL_DISTANCE = 100f
 
 class GeolocationHelper(
-    private val callBackDialog: DetailsFragment.CallBackDialog
+    private var callBackDialog: DetailsFragment.CallBackDialog
+    //private context
 ) {
+
+
+    internal var listener: MyInterface? = null
+
     private val onLocationListener: LocationListener =
         LocationListener { location ->
             getAddressAsync(

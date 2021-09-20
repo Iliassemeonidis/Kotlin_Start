@@ -2,6 +2,7 @@ package com.example.kotlinstart
 
 import android.app.Application
 import androidx.room.Room
+import com.example.kotlinstart.location.GeolocationHelper
 import com.example.kotlinstart.repository.detailsrepository.datasource.WeatherAPI
 import com.example.kotlinstart.room.HistoryDao
 import com.example.kotlinstart.room.HistoryDataBase
@@ -15,9 +16,11 @@ import java.io.IOException
 
 class KotlinStartApplication : Application() {
 
+
     override fun onCreate() {
         super.onCreate()
         appInstance = this
+
     }
 
     companion object {
@@ -26,6 +29,7 @@ class KotlinStartApplication : Application() {
         private var db: HistoryDataBase? = null
         private const val DB_NAME = "History.db"
         private var retrofit: Retrofit? = null
+        private var geolocationHelper: GeolocationHelper? = null
 
         fun getHistoryDao(): HistoryDao {
             if (db == null) {
@@ -63,6 +67,10 @@ class KotlinStartApplication : Application() {
             }
             return retrofit!!.create(WeatherAPI::class.java)
         }
+/*
+        fun getGeolocationHelper() : GeolocationHelper{
+            return GeolocationHelper(this)
+        }*/
 
         private fun createOkHttpClient(interceptor: Interceptor): OkHttpClient {
             val httpClient = OkHttpClient.Builder()

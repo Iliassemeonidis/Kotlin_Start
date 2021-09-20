@@ -5,16 +5,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import com.example.kotlinstart.MyInterface
 import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.FragmentCityDialogBinding
+import com.example.kotlinstart.location.GeolocationHelper
 import com.example.kotlinstart.model.CityData
 import com.example.kotlinstart.model.WeatherParams
-import com.example.kotlinstart.view.detailsscreen.DetailsFragment
-import com.example.kotlinstart.location.GeolocationHelper
 import com.example.kotlinstart.view.map.GoogleMapsFragment
 import com.example.kotlinstart.view.shared.SharedViewModel
 import java.util.*
@@ -99,11 +98,13 @@ class CityDialogFragment : DialogFragment() {
 
     private fun initButtonSearch() {
         binding.buttonSearch.setOnClickListener {
+            /*val helper = getGeolocationHelper()
+            helper.listener = callBackDialog*/
             GeolocationHelper.getAddressAsync(callBackDialog, binding.searchCity.text.toString())
         }
     }
 
-    interface CallBackDialog {
+    interface CallBackDialog: MyInterface {
         fun getWeatherParams(weather: WeatherParams)
         fun openDetalisationOfCity()
         fun getContext(): Context

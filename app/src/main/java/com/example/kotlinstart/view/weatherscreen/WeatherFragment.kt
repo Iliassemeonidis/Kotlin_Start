@@ -1,34 +1,24 @@
 package com.example.kotlinstart.view.weatherscreen
 
-import android.Manifest
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
-import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.FragmentWeatherBinding
-import com.example.kotlinstart.model.Weather
 import com.example.kotlinstart.location.GeolocationHelper
-import com.example.kotlinstart.location.REQUEST_CODE
-import com.example.kotlinstart.location.RequestPermission
-import com.example.kotlinstart.view.map.GoogleMapsFragment
+import com.example.kotlinstart.model.Weather
 import com.example.kotlinstart.view.search.CityDialogFragment
 import com.example.kotlinstart.view.shared.SharedViewModel
 
 //По ДЗ:
-//- Почитать про жизненный цикл View и методы ЖЦ
-//- Прочитать методички из базового курса
-//- Использовать полученные знания для улучшения UI/UX погодного приложения
+//- Ненавязчивый запрос на геолокацию
+//- Менять какашку обратно на +
+//- Создавать GeolocationHelper на уровне Application + убрать интерфейс из конструктора
+//- Примените автоматическую тёмную тему для девайсов на 10+ Android
 
 private const val SEARCH_CITY_TAG = "SEARCH_CITY_TAG"
 

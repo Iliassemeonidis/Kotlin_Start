@@ -14,6 +14,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import coil.api.load
+import com.example.kotlinstart.MyInterface
 import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.FragmentDetailsBinding
 import com.example.kotlinstart.location.GeolocationHelper
@@ -35,6 +36,140 @@ class DetailsFragment : Fragment(),
     private var detailsBinding: FragmentDetailsBinding? = null
     private val binding get() = detailsBinding!!
     private lateinit var myGeolocation: GeolocationHelper
+
+    override fun requestPermission() {
+        requestPermissions(
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+            REQUEST_CODE
+        )
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>, grantResults: IntArray
+    ) {
+        myGeolocation.checkPermissionsResult(requireContext(), requestCode, grantResults)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        detailsBinding = FragmentDetailsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        detailsViewModel = ViewModelProvider(this).get(DetailsViewModel::class.java)
+        myGeolocation = GeolocationHelper(callBackDialog)
+        /*val helper = KotlinStartApplication.getGeolocationHelper()
+        helper.listener = callBackDialog*/
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setParamsInModel()
+        setBottomAppBar(view)
+        checkPermissions()
+    }
+
+    override fun onDestroy() {
+        detailsBinding = null
+        super.onDestroy()
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_bottom_bar, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.app_bar_fav ->
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.list_container, WeatherFragment())
+                    .commitAllowingStateLoss()
+            R.id.app_bar_settings -> Toast.makeText(context, "Settings", Toast.LENGTH_SHORT).show()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun setBottomAppBar(view: View) {
+        val context = activity as MainActivity
+        context.setSupportActionBar(view.findViewById(R.id.bottom_app_bar))
+        setHasOptionsMenu(true)
+        binding.fab.setOnClickListener {
+            if (isMain) {
+                isMain = false
+                binding.bottomAppBar.navigationIcon = null
+                binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
+                binding.fab.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.ic_back_fab
+                    )
+                )
+                binding.bottomAppBar.replaceMenu(R.menu.search_menu)
+            } else {
+                isMain = true
+                binding.bottomAppBar.navigationIcon =
+                    ContextCompat.getDrawable(context, R.drawable.ic_hamburger_menu_bottom_bar)
+                binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
+                binding.fab.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.ic_plus
+                    )
+                )
+                binding.bottomAppBar.replaceMenu(R.menu.menu_bottom_bar)
+            }
+
+        }
+    }
+
+    private fun checkPermissions() {
+        myGeolocation.checkPermission(requireContext(), this)
+    }
+
+
+    private fun setParamsInModel(weatherParams: WeatherParams = WeatherParams("Москва")) {
+        detailsViewModel.setNewCity(weatherParams.city)
+        detailsViewModel.getLiveData().observe(viewLifecycleOwner, { renderData(it) })
+        detailsViewModel.getWeatherFromRemoteSource(weatherParams.lat, weatherParams.lon)
+    }
+
+    private fun renderData(appState: AppState) {
+        when (appState) {
+            is AppState.Success -> {
+                binding.loadingLayout.visibility = View.GONE
+                val weatherData = appState.weatherDetailsData
+                binding.textViewCityName.text = weatherData.city
+                binding.degrees.text = String.format(
+                    getString(R.string.degrees_text),
+                    appState.weatherDetailsData.degrees
+                )
+                binding.weatherCondition.text = appState.weatherDetailsData.condition
+                binding.textViewFeelsLike.text =
+                    "Ощущается как ${appState.weatherDetailsData.feelsLike}°"
+                GlideToVectorYou.justLoadImage(
+                    requireActivity(),
+                    Uri.parse(appState.weatherDetailsData.icon),
+                    binding.iconCondition
+                )
+                binding.imageView.load(appState.weatherDetailsData.cityIconURL)
+            }
+            is AppState.Loading -> {
+                binding.loadingLayout.visibility = View.VISIBLE
+            }
+            is AppState.Error -> {
+                binding.loadingLayout.visibility = View.GONE
+                Toast.makeText(requireContext(), appState.error.message, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     private val callBackDialog: CallBackDialog = object :
         CallBackDialog {
@@ -119,139 +254,6 @@ class DetailsFragment : Fragment(),
 
     }
 
-    override fun requestPermission() {
-        requireActivity().requestPermissions(
-            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-            REQUEST_CODE
-        )
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>, grantResults: IntArray
-    ) {
-        myGeolocation.checkPermissionsResult(requireContext(), requestCode, grantResults)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        detailsBinding = FragmentDetailsBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        detailsViewModel = ViewModelProvider(this).get(DetailsViewModel::class.java)
-        myGeolocation = GeolocationHelper(callBackDialog)
-
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setParamsInModel()
-        setBottomAppBar(view)
-        checkPermissions()
-    }
-
-
-    override fun onDestroy() {
-        detailsBinding = null
-        super.onDestroy()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.menu_bottom_bar, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.app_bar_fav ->
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.list_container, WeatherFragment())
-                    .commitAllowingStateLoss()
-            R.id.app_bar_settings -> Toast.makeText(context, "Settings", Toast.LENGTH_SHORT).show()
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    private fun setBottomAppBar(view: View) {
-        val context = activity as MainActivity
-        context.setSupportActionBar(view.findViewById(R.id.bottom_app_bar))
-        setHasOptionsMenu(true)
-        binding.fab.setOnClickListener {
-            if (isMain) {
-                isMain = false
-                binding.bottomAppBar.navigationIcon = null
-                binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
-                binding.fab.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        context,
-                        R.drawable.ic_back_fab
-                    )
-                )
-                binding.bottomAppBar.replaceMenu(R.menu.search_menu)
-            } else {
-                isMain = true
-                binding.bottomAppBar.navigationIcon =
-                    ContextCompat.getDrawable(context, R.drawable.ic_hamburger_menu_bottom_bar)
-                binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
-                binding.fab.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        context,
-                        R.drawable.ic_plus
-                    )
-                )
-                binding.bottomAppBar.replaceMenu(R.menu.menu_bottom_bar)
-            }
-
-        }
-    }
-
-
-    private fun checkPermissions() {
-        myGeolocation.checkPermission(requireContext(), this)
-    }
-
-    private fun setParamsInModel(weatherParams: WeatherParams = WeatherParams("Москва")) {
-        detailsViewModel.setNewCity(weatherParams.city)
-        detailsViewModel.getLiveData().observe(viewLifecycleOwner, { renderData(it) })
-        detailsViewModel.getWeatherFromRemoteSource(weatherParams.lat, weatherParams.lon)
-    }
-
-    private fun renderData(appState: AppState) {
-        when (appState) {
-            is AppState.Success -> {
-                binding.loadingLayout.visibility = View.GONE
-                val weatherData = appState.weatherDetailsData
-                binding.textViewCityName.text = weatherData.city
-                binding.degrees.text = String.format(
-                    getString(R.string.degrees_text),
-                    appState.weatherDetailsData.degrees
-                )
-                binding.weatherCondition.text = appState.weatherDetailsData.condition
-                binding.textViewFeelsLike.text =
-                    "Ощущается как ${appState.weatherDetailsData.feelsLike}°"
-                GlideToVectorYou.justLoadImage(
-                    requireActivity(),
-                    Uri.parse(appState.weatherDetailsData.icon),
-                    binding.iconCondition
-                )
-                binding.imageView.load(appState.weatherDetailsData.cityIconURL)
-            }
-            is AppState.Loading -> {
-                binding.loadingLayout.visibility = View.VISIBLE
-            }
-            is AppState.Error -> {
-                binding.loadingLayout.visibility = View.GONE
-                Toast.makeText(requireContext(), appState.error.message, Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
     companion object {
 
         const val CITY_EXTRA = "CITY_EXTRA"
@@ -263,7 +265,7 @@ class DetailsFragment : Fragment(),
             DetailsFragment().apply { arguments = bundleOf(CITY_EXTRA to city) }
     }
 
-    interface CallBackDialog {
+    interface CallBackDialog : MyInterface {
         fun showDialogGeolocationIsClosed()
         fun showDialogGeolocationIsDisabled()
         fun showRationaleDialog()
