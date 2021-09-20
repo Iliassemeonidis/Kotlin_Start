@@ -129,7 +129,7 @@
         android:backgroundTint="@color/colorPrimaryDark"
         android:contentDescription="@string/add_new_city"
         app:layout_anchor="@id/bottom_app_bar"
-        app:srcCompat="@android:drawable/ic_input_add"
+        app:srcCompat="@drawable/ic_plus_cross"
         app:tint="#FFFFFF"
         />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

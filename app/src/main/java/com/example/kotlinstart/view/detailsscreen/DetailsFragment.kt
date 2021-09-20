@@ -121,7 +121,7 @@ class DetailsFragment : Fragment(),
                 binding.fab.setImageDrawable(
                     ContextCompat.getDrawable(
                         context,
-                        R.drawable.ic_plus
+                        R.drawable.ic_plus_cross
                     )
                 )
                 binding.bottomAppBar.replaceMenu(R.menu.menu_bottom_bar)
@@ -256,8 +256,7 @@ class DetailsFragment : Fragment(),
 
     companion object {
 
-        const val CITY_EXTRA = "CITY_EXTRA"
-        const val DEFAULT_CITY: String = "DEFAULT_CITY"
+        private const val CITY_EXTRA = "CITY_EXTRA"
         private var isMain = true
 
         @JvmStatic

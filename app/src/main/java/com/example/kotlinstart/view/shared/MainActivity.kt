@@ -11,13 +11,6 @@ import com.example.kotlinstart.view.weatherscreen.WeatherFragment
 import java.io.BufferedReader
 import java.util.stream.Collectors
 
-/*
-по ДЗ:
--прочитать 4 методичку
--перенести запросы в Репозиторий
--прочитать 5 методичку и сделать свой браузер в Погодном приложении
-* */
-
 internal class MainActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.N)
