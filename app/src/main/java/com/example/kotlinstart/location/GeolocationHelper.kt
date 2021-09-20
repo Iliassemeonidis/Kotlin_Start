@@ -12,6 +12,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.example.kotlinstart.model.WeatherParams
+import com.example.kotlinstart.view.detailsscreen.DetailsFragment
 import com.example.kotlinstart.view.search.CityDialogFragment
 import com.example.kotlinstart.view.weatherscreen.WeatherFragment
 import com.google.android.gms.maps.model.LatLng
@@ -22,7 +23,7 @@ private const val REFRESH_PERIOD = 60000L
 private const val MINIMAL_DISTANCE = 100f
 
 class GeolocationHelper(
-    private val callBackDialog: WeatherFragment.CallBackDialog
+    private val callBackDialog: DetailsFragment.CallBackDialog
 ) {
     private val onLocationListener: LocationListener =
         LocationListener { location ->
@@ -119,13 +120,16 @@ class GeolocationHelper(
         }
     }
 
-    private fun getAddressAsync(context: Context, location: Location) {
+     private fun getAddressAsync(context: Context, location: Location) {
         val geoCoder = Geocoder(context)
         try {
             // для примера указан город
-            val addresses = geoCoder.getFromLocationName("Москва", 5)
+            val addresses = geoCoder.getFromLocation(location.latitude,location.longitude,1)
             if (addresses.isNotEmpty()) {
-                showAddressDialog(addresses[0].getAddressLine(0), location)
+//                println(addresses[0].locality)
+//                println(location)
+//                showAddressDialog(addresses[0].getAddressLine(0), location)
+                callBackDialog.getWeatherParamsFromUserLocation(WeatherParams(addresses[0].locality,lat = location.latitude,lon = location.longitude))
             } else {
                 Log.i("ADDRESS", "Список адресов пустой")
             }

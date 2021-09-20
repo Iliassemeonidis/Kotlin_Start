@@ -20,7 +20,7 @@
     <string name="exit">Для выхода нажмите еще раз</string>
     <string name="city_name">Москва</string>
     <string name="region_name">Москва</string>
-    <string name="degrees_centigrade">27°C</string>
+    <string name="degrees_centigrade">27°</string>
     <string name="degrees">%s°</string>
     <string name="fills_like_text">Ощущается как 27°</string>
     <string name="fills_like">Ощущается как %s°</string>
@@ -63,4 +63,7 @@
     <string name="default_address">Red Square, 1, Moscow</string>
     <string name="button_search_map">Search</string>
     <string name="marker_start">Start</string>
+    <string name="favourite">favourite</string>
+    <string name="settings">settings</string>
+    <string name="search">search</string>
 </resources>

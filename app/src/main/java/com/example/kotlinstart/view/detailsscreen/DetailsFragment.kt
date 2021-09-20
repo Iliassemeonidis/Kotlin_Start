@@ -1,71 +1,137 @@
 package com.example.kotlinstart.view.detailsscreen
 
-import android.content.BroadcastReceiver
+import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
-import android.net.ConnectivityManager.CONNECTIVITY_ACTION
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.provider.Settings
+import android.view.*
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import coil.api.load
 import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.FragmentDetailsBinding
+import com.example.kotlinstart.location.GeolocationHelper
+import com.example.kotlinstart.location.REQUEST_CODE
 import com.example.kotlinstart.model.AppState
-import com.example.kotlinstart.model.Weather
 import com.example.kotlinstart.model.WeatherParams
-import com.example.kotlinstart.model.getDetailWeather
-import com.example.kotlinstart.view.experiments.MainBroadcastReceiver
+import com.example.kotlinstart.view.shared.MainActivity
+import com.example.kotlinstart.view.weatherscreen.WeatherFragment
 import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou
+import com.google.android.material.bottomappbar.BottomAppBar
 import kotlinx.android.synthetic.main.fragment_details.*
 
-const val ACTION = "Receive weather info sdfghsrdfgh"
-const val DETAILS_INTENT_FILTER = "DETAILS INTENT FILTER"
-const val DETAILS_LOAD_RESULT_EXTRA = "LOAD RESULT"
-const val DETAILS_INTENT_EMPTY_EXTRA = "INTENT IS EMPTY"
-const val DETAILS_DATA_EMPTY_EXTRA = "DATA IS EMPTY"
-const val DETAILS_RESPONSE_EMPTY_EXTRA = "RESPONSE IS EMPTY"
-const val DETAILS_REQUEST_ERROR_EXTRA = "REQUEST ERROR"
-const val DETAILS_REQUEST_ERROR_MESSAGE_EXTRA = "REQUEST ERROR MESSAGE"
-const val DETAILS_URL_MALFORMED_EXTRA = "URL MALFORMED"
-const val DETAILS_RESPONSE_SUCCESS_EXTRA = "RESPONSE SUCCESS"
-const val DETAILS_TEMP_EXTRA = "TEMPERATURE"
-const val DETAILS_FEELS_LIKE_EXTRA = "FEELS LIKE"
-const val DETAILS_CONDITION_EXTRA = "CONDITION"
+const val ACTION = "Receive"
 
-internal class DetailsFragment : Fragment() {
+class DetailsFragment : Fragment(),
+    com.example.kotlinstart.location.RequestPermission {
 
     private lateinit var detailsViewModel: DetailsViewModel
     private var detailsBinding: FragmentDetailsBinding? = null
     private val binding get() = detailsBinding!!
-    private lateinit var weatherBundle: WeatherParams
-    private val connectionReceiver: MainBroadcastReceiver = MainBroadcastReceiver()
-    private val receiver: BroadcastReceiver = object : BroadcastReceiver() {
+    private lateinit var myGeolocation: GeolocationHelper
 
-        override fun onReceive(context: Context?, intent: Intent?) {
-            intent?.getParcelableExtra<WeatherDetailsData>(BROADCAST_WEATHER_DTO)?.let {
-                binding.loadingLayout.visibility = View.GONE
-                binding.textViewCityName.text = it.city
-                binding.degrees.text = String.format("${R.string.degrees}",it.degrees)
-                binding.weatherCondition.text = it.condition
-                binding.textViewFeelsLike.text =String.format("${R.string.fills_like}",it.feelsLike)
-                GlideToVectorYou.justLoadImage(
-                    requireActivity(),
-                    Uri.parse(it.icon),
-                    icon_condition
-                )
-                binding.imageView.load(it.cityIconURL)
+    private val callBackDialog: CallBackDialog = object :
+        CallBackDialog {
+
+        override fun showDialogGeolocationIsClosed() {
+            requireContext().let {
+                AlertDialog.Builder(it)
+                    .setTitle(getString(R.string.dialog_title_no_gps))
+                    .setMessage(getString(R.string.dialog_message_no_gps))
+                    .setNegativeButton(getString(R.string.dialog_button_close)) { dialog, _ -> dialog.dismiss() }
+                    .create()
+                    .show()
             }
         }
+
+        override fun showDialogGeolocationIsDisabled() {
+            requireContext().let {
+                AlertDialog.Builder(it)
+                    .setTitle(getString(R.string.dialog_title_gps_turned_off))
+                    .setMessage(getString(R.string.dialog_message_last_known_location))
+                    .setNegativeButton(getString(R.string.dialog_button_close)) { dialog, _ -> dialog.dismiss() }
+                    .create()
+                    .show()
+            }
+        }
+
+        override fun showRationaleDialog() {
+            context?.let {
+                AlertDialog.Builder(it)
+                    .setTitle(getString(R.string.dialog_rationale_title))
+                    .setMessage(getString(R.string.dialog_message_no_gps))
+                    .setPositiveButton(getString(R.string.dialog_rationale_give_access)) { _, _ ->
+                        myGeolocation.requestPermission(this@DetailsFragment)
+                        openAppSettingsPermission(it)
+                    }
+                    .setNegativeButton(getString(R.string.dialog_rationale_decline)) { dialog, _ -> dialog.dismiss() }
+                    .create()
+                    .show()
+            }
+        }
+
+        override fun showAddressDialog(city: String) {
+            context?.let {
+                AlertDialog.Builder(it)
+                    .setTitle(getString(R.string.dialog_address_title))
+                    .setMessage(city)
+                    .setPositiveButton(getString(R.string.dialog_address_get_weather)) { _, _ ->
+                        //openWeatherDetails(Weather(city))
+                    }
+                    .setNegativeButton(getString(R.string.dialog_button_close)) { dialog, _ -> dialog.dismiss() }
+                    .create()
+                    .show()
+            }
+        }
+
+        override fun getContextFragment(): Context {
+            return requireContext()
+        }
+
+        override fun alertDialog() {
+            AlertDialog.Builder(requireContext())
+                .setTitle(getString(R.string.dialog_title_gps_turned_off))
+                .setMessage(getString(R.string.dialog_message_last_location_unknown))
+                .setPositiveButton("OK") { _, _ ->
+                    ContextCompat.startActivity(
+                        requireContext(),
+                        Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),
+                        null
+                    )
+                }
+                .setNegativeButton(getString(R.string.dialog_button_close)) { dialog, _ -> dialog.dismiss() }
+                .create()
+                .show()
+        }
+
+        override fun getRequestPermissionRationale() =
+            shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
+
+        override fun getWeatherParamsFromUserLocation(params: WeatherParams) {
+            setParamsInModel(params)
+        }
+
     }
 
+    override fun requestPermission() {
+        requireActivity().requestPermissions(
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+            REQUEST_CODE
+        )
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>, grantResults: IntArray
+    ) {
+        myGeolocation.checkPermissionsResult(requireContext(), requestCode, grantResults)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -78,27 +144,82 @@ internal class DetailsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        context?.let {
-            LocalBroadcastManager.getInstance(it).registerReceiver(receiver, IntentFilter(ACTION))
-                it.registerReceiver(connectionReceiver, IntentFilter(CONNECTIVITY_ACTION))
-
-        }
         detailsViewModel = ViewModelProvider(this).get(DetailsViewModel::class.java)
+        myGeolocation = GeolocationHelper(callBackDialog)
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        weatherBundle = arguments?.getParcelable(CITY_EXTRA) ?: WeatherParams()
-//        val weather = getDetailWeather(arguments?.getString(CITY_EXTRA) ?: DEFAULT_CITY)
-        val weather :WeatherParams = arguments?.getParcelable(CITY_EXTRA) ?: WeatherParams()
-        detailsViewModel.setNewCity(weather.city)
+        setParamsInModel()
+        setBottomAppBar(view)
+        checkPermissions()
+    }
+
+
+    override fun onDestroy() {
+        detailsBinding = null
+        super.onDestroy()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_bottom_bar, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.app_bar_fav ->
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.list_container, WeatherFragment())
+                    .commitAllowingStateLoss()
+            R.id.app_bar_settings -> Toast.makeText(context, "Settings", Toast.LENGTH_SHORT).show()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun setBottomAppBar(view: View) {
+        val context = activity as MainActivity
+        context.setSupportActionBar(view.findViewById(R.id.bottom_app_bar))
+        setHasOptionsMenu(true)
+        binding.fab.setOnClickListener {
+            if (isMain) {
+                isMain = false
+                binding.bottomAppBar.navigationIcon = null
+                binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
+                binding.fab.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.ic_back_fab
+                    )
+                )
+                binding.bottomAppBar.replaceMenu(R.menu.search_menu)
+            } else {
+                isMain = true
+                binding.bottomAppBar.navigationIcon =
+                    ContextCompat.getDrawable(context, R.drawable.ic_hamburger_menu_bottom_bar)
+                binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
+                binding.fab.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.ic_plus
+                    )
+                )
+                binding.bottomAppBar.replaceMenu(R.menu.menu_bottom_bar)
+            }
+
+        }
+    }
+
+
+    private fun checkPermissions() {
+        myGeolocation.checkPermission(requireContext(), this)
+    }
+
+    private fun setParamsInModel(weatherParams: WeatherParams = WeatherParams("Москва")) {
+        detailsViewModel.setNewCity(weatherParams.city)
         detailsViewModel.getLiveData().observe(viewLifecycleOwner, { renderData(it) })
-        detailsViewModel.getWeatherFromRemoteSource(weather.lat, weather.lon)
-        /*requireActivity().startService(Intent(requireContext(), DetailsService::class.java).apply {
-            putExtra(DETAILS_SERVICE_STRING_EXTRA, weather.city)
-            putExtra(LATITUDE_EXTRA, weather.lat)
-            putExtra(LONGITUDE_EXTRA, weather.lon)
-        })*/
+        detailsViewModel.getWeatherFromRemoteSource(weatherParams.lat, weatherParams.lon)
     }
 
     private fun renderData(appState: AppState) {
@@ -117,7 +238,7 @@ internal class DetailsFragment : Fragment() {
                 GlideToVectorYou.justLoadImage(
                     requireActivity(),
                     Uri.parse(appState.weatherDetailsData.icon),
-                    icon_condition
+                    binding.iconCondition
                 )
                 binding.imageView.load(appState.weatherDetailsData.cityIconURL)
             }
@@ -131,23 +252,37 @@ internal class DetailsFragment : Fragment() {
         }
     }
 
-    override fun onDestroy() {
-        context?.let {
-            LocalBroadcastManager.getInstance(it).unregisterReceiver(receiver)
-            it.unregisterReceiver(connectionReceiver)
-        }
-        detailsBinding = null
-        super.onDestroy()
-    }
-
     companion object {
 
         const val CITY_EXTRA = "CITY_EXTRA"
         const val DEFAULT_CITY: String = "DEFAULT_CITY"
+        private var isMain = true
 
         @JvmStatic
         fun newInstance(city: WeatherParams) =
             DetailsFragment().apply { arguments = bundleOf(CITY_EXTRA to city) }
     }
+
+    interface CallBackDialog {
+        fun showDialogGeolocationIsClosed()
+        fun showDialogGeolocationIsDisabled()
+        fun showRationaleDialog()
+        fun showAddressDialog(city: String)
+        fun getContextFragment(): Context
+        fun alertDialog()
+        fun getRequestPermissionRationale(): Boolean
+        fun getWeatherParamsFromUserLocation(params: WeatherParams)
+    }
+
+    private fun openAppSettingsPermission(it: Context) {
+        ContextCompat.startActivity(
+            it,
+            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                data = Uri.fromParts("package", it.packageName, null)
+            },
+            null
+        )
+    }
+
 }
 

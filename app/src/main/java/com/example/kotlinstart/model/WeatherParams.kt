@@ -5,10 +5,10 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class WeatherParams(
-    var city: String = "Moscow",
-    var degrees: String = "27°",
-    var weatherCondition: String = "Солнечно",
-    var textViewFeelsLike: String = "Ощущается как 27°",
+    var city: String = "",
+    var degrees: String = "°",
+    var weatherCondition: String = "",
+    var textViewFeelsLike: String = "",
     var icon: String = "",
     var cityIcon: String = "",
     val lat: Double = 1.0,
