@@ -20,7 +20,6 @@ class KotlinStartApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         appInstance = this
-
     }
 
     companion object {
@@ -29,7 +28,6 @@ class KotlinStartApplication : Application() {
         private var db: HistoryDataBase? = null
         private const val DB_NAME = "History.db"
         private var retrofit: Retrofit? = null
-        private var geolocationHelper: GeolocationHelper? = null
 
         fun getHistoryDao(): HistoryDao {
             if (db == null) {
@@ -67,10 +65,11 @@ class KotlinStartApplication : Application() {
             }
             return retrofit!!.create(WeatherAPI::class.java)
         }
-/*
-        fun getGeolocationHelper() : GeolocationHelper{
-            return GeolocationHelper(this)
-        }*/
+
+        fun getGeolocationHelper(): GeolocationHelper {
+            if (appInstance == null) throw IllegalStateException("Application is null while creating Geolocation")
+            return GeolocationHelper(appInstance!!.applicationContext)
+        }
 
         private fun createOkHttpClient(interceptor: Interceptor): OkHttpClient {
             val httpClient = OkHttpClient.Builder()

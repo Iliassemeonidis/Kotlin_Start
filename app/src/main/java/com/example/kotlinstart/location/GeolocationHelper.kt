@@ -8,35 +8,29 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.util.Log
-import android.widget.Toast
 import androidx.core.content.ContextCompat
-import com.example.kotlinstart.MyInterface
 import com.example.kotlinstart.model.WeatherParams
-import com.example.kotlinstart.view.detailsscreen.DetailsFragment
-import com.example.kotlinstart.view.search.CityDialogFragment
-import java.io.IOException
+import com.example.kotlinstart.GeolocationInterface
+import java.lang.NullPointerException
+import  java.io.IOException
 
 const val REQUEST_CODE = 102
 private const val REFRESH_PERIOD = 60000L
 private const val MINIMAL_DISTANCE = 100f
 
-class GeolocationHelper(
-    private var callBackDialog: DetailsFragment.CallBackDialog
-    //private context
-) {
+class GeolocationHelper(context: Context) {
 
-
-    internal var listener: MyInterface? = null
+    var listener: GeolocationInterface? = null
 
     private val onLocationListener: LocationListener =
         LocationListener { location ->
             getAddressAsync(
-                callBackDialog.getContextFragment(),
+                context,
                 location = location
             )
         }
 
-    fun checkPermission(context: Context, requestPermission: RequestPermission) {
+    fun checkPermission(context: Context, permissionInterface: PermissionInterface) {
         context.let {
             when {
                 ContextCompat.checkSelfPermission(
@@ -45,18 +39,19 @@ class GeolocationHelper(
                 ) == PackageManager.PERMISSION_GRANTED -> {
                     getLocation(context)
                 }
-                callBackDialog.getRequestPermissionRationale() -> {
-                    callBackDialog.showRationaleDialog()
+                listener!!.getRequestPermissionRationale() -> {
+                    listener?.showRationaleDialog()
                 }
                 else -> {
-                    requestPermission(requestPermission)
+                    requestPermission(permissionInterface)
+
                 }
             }
         }
     }
 
-    fun requestPermission(requestPermission: RequestPermission) {
-        requestPermission.requestPermission()
+    fun requestPermission(permission: PermissionInterface) {
+        permission.requestPermission()
     }
 
     fun checkPermissionsResult(
@@ -74,10 +69,12 @@ class GeolocationHelper(
                     if (grantResults.size == grantedPermissions) {
                         getLocation(context)
                     } else {
-                        callBackDialog.showDialogGeolocationIsClosed()
+                        if (listener == null) throw NullPointerException("GeolocationInterface must be initialized")
+                        listener!!.showDialogGeolocationIsClosed()
                     }
                 } else {
-                    callBackDialog.showDialogGeolocationIsClosed()
+                    if (listener == null) throw NullPointerException("GeolocationInterface must be initialized")
+                    listener!!.showDialogGeolocationIsClosed()
                 }
             }
         }
@@ -110,29 +107,38 @@ class GeolocationHelper(
                         locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
                     if (location == null) {
                         context.let {
-                            callBackDialog.alertDialog()
+                            if (listener == null) throw NullPointerException("GeolocationInterface must be initialized")
+                            listener!!.alertDialog()
                         }
                     } else {
                         getAddressAsync(context, location)
-                        callBackDialog.showDialogGeolocationIsDisabled()
+                        if (listener == null) throw NullPointerException("GeolocationInterface must be initialized")
+                        listener!!.showDialogGeolocationIsDisabled()
                     }
                 }
             } else {
-                callBackDialog.showRationaleDialog()
+                listener!!.showRationaleDialog()
             }
         }
     }
 
-     private fun getAddressAsync(context: Context, location: Location) {
+    private fun getAddressAsync(context: Context, location: Location) {
         val geoCoder = Geocoder(context)
         try {
             // для примера указан город
-            val addresses = geoCoder.getFromLocation(location.latitude,location.longitude,1)
+            val addresses = geoCoder.getFromLocation(location.latitude, location.longitude, 1)
             if (addresses.isNotEmpty()) {
 //                println(addresses[0].locality)
 //                println(location)
 //                showAddressDialog(addresses[0].getAddressLine(0), location)
-                callBackDialog.getWeatherParamsFromUserLocation(WeatherParams(addresses[0].locality,lat = location.latitude,lon = location.longitude))
+                if (listener == null) throw NullPointerException("GeolocationInterface must be initialized")
+                listener!!.getWeatherParamsFromUserLocation(
+                    WeatherParams(
+                        addresses[0].locality,
+                        lat = location.latitude,
+                        lon = location.longitude
+                    )
+                )
             } else {
                 Log.i("ADDRESS", "Список адресов пустой")
             }
@@ -146,35 +152,7 @@ class GeolocationHelper(
         address: String,
         location: Location,
     ) {
-        callBackDialog.showAddressDialog(address)
-    }
-
-    companion object {
-
-        fun getAddressAsync(callBackDialog: CityDialogFragment.CallBackDialog, city: String) {
-            val geoCoder = Geocoder(callBackDialog.getContext())
-            try {
-                val addresses = geoCoder.getFromLocationName(city, 5)
-                if (addresses.isNotEmpty()) {
-                    callBackDialog.getWeatherParams(
-                        WeatherParams(
-                            city,
-                            lat = addresses[0].latitude,
-                            lon = addresses[0].longitude
-                        )
-                    )
-                    callBackDialog.openDetalisationOfCity()
-                } else {
-                    Toast.makeText(
-                        callBackDialog.getContext(),
-                        "Нет такого города",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    Log.i("ADDRESS", "Список адресов пустой")
-                }
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-        }
+        if (listener == null) throw NullPointerException("GeolocationInterface must be initialized")
+        listener!!.showAddressDialog(address)
     }
 }

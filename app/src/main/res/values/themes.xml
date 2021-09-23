@@ -36,11 +36,13 @@
         <item name="android:layout_margin">15sp</item>
     </style>
 
-    <style name="MainCityItemStyle">
+    <style name="MainCityItemStyle" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="android:layout_marginStart">10dp</item>
         <item name="android:layout_marginTop">10dp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="fontFamily">@font/aguafina_script</item>
+        <item name="android:fontFamily">@font/aguafina_script</item>
     </style>
 
     <style name="CityItem">

@@ -20,30 +20,4 @@
         tools:listitem="@layout/item_city_weather"
         />
 
-    <!--TODO Разобраться почему не отображается корректно иконка-->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floating_action_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_float"
-        android:layout_marginEnd="@dimen/margin_end_float"
-        android:layout_marginBottom="@dimen/margin_bottom_float"
-        android:contentDescription="@string/add_new_city"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:maxImageSize="@dimen/max_size_float"
-        app:srcCompat="@drawable/ic_plus"
-        />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/mainFragmentFABLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_float"
-        android:backgroundTint="@color/design_default_color_background"
-        android:src="@android:drawable/ic_dialog_map"
-        app:layout_constraintBottom_toTopOf="@+id/floating_action_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:maxImageSize="@dimen/fab_location_icon_size"
-        />
 </androidx.constraintlayout.widget.ConstraintLayout>

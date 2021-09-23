@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
-import com.example.kotlinstart.MyInterface
+import com.example.kotlinstart.DialogInterface
 import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.FragmentCityDialogBinding
 import com.example.kotlinstart.location.GeolocationHelper
@@ -25,27 +25,27 @@ class CityDialogFragment : DialogFragment() {
     private val binding get() = cityDialogBinding!!
     private var weatherParams: WeatherParams = WeatherParams()
 
-    private val callBackDialog: CallBackDialog = object : CallBackDialog {
-        override fun getWeatherParams(weather: WeatherParams) {
-            weatherParams = weather
-        }
-
-        override fun openDetalisationOfCity() {
-            requireActivity().supportFragmentManager
-                .beginTransaction()
-                .replace(
-                    R.id.list_container,
-                    GoogleMapsFragment.newInstance(weatherParams)
-                )
-                .addToBackStack(null)
-                .commitAllowingStateLoss()
-            closeDialogFragment()
-        }
-
-        override fun getContext(): Context {
-            return requireContext()
-        }
-    }
+//    private val callBackDialog: CallBackDialog = object : CallBackDialog {
+//        override fun getWeatherParams(weather: WeatherParams) {
+//            weatherParams = weather
+//        }
+//
+//        override fun openDetalisationOfCity() {
+//            requireActivity().supportFragmentManager
+//                .beginTransaction()
+//                .replace(
+//                    R.id.list_container,
+//                    GoogleMapsFragment.newInstance(weatherParams)
+//                )
+//                .addToBackStack(null)
+//                .commitAllowingStateLoss()
+//            closeDialogFragment()
+//        }
+//
+//        override fun getContext(): Context {
+//            return requireContext()
+//        }
+//    }
 
     private val onClickCity: OnClickCity = object : OnClickCity {
         override fun onClick(cityData: CityData) {
@@ -100,11 +100,11 @@ class CityDialogFragment : DialogFragment() {
         binding.buttonSearch.setOnClickListener {
             /*val helper = getGeolocationHelper()
             helper.listener = callBackDialog*/
-            GeolocationHelper.getAddressAsync(callBackDialog, binding.searchCity.text.toString())
+           // GeolocationHelper.getAddressAsync(callBackDialog, binding.searchCity.text.toString())
         }
     }
 
-    interface CallBackDialog: MyInterface {
+    interface CallBackDialog: DialogInterface {
         fun getWeatherParams(weather: WeatherParams)
         fun openDetalisationOfCity()
         fun getContext(): Context

@@ -8,19 +8,21 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
+import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.FragmentWeatherBinding
 import com.example.kotlinstart.location.GeolocationHelper
 import com.example.kotlinstart.model.Weather
-import com.example.kotlinstart.view.search.CityDialogFragment
+import com.example.kotlinstart.model.WeatherParams
+import com.example.kotlinstart.view.detailsscreen.DetailsFragment
 import com.example.kotlinstart.view.shared.SharedViewModel
 
 //По ДЗ:
-//- Ненавязчивый запрос на геолокацию
-//- Менять какашку обратно на
-//- Создавать GeolocationHelper на уровне Application + убрать интерфейс из конструктора
-//- Примените автоматическую тёмную тему для девайсов на 10+ Android
+//- Ненавязчивый запрос на геолокацию +
+//- Менять какашку обратно на +  +
+//- Создавать GeolocationHelper на уровне Application + убрать интерфейс из конструктора +
+//- Примените автоматическую тёмную тему для девайсов на 10+ Android -(надо переделать , работает криво)
+//- Прочесть методичку+
 
-private const val SEARCH_CITY_TAG = "SEARCH_CITY_TAG"
 
 class WeatherFragment : Fragment() {
 
@@ -32,11 +34,13 @@ class WeatherFragment : Fragment() {
     private lateinit var myGeolocation: GeolocationHelper
 
 
-
     private val onClickListItem: OnClickItem = object : OnClickItem {
 
         override fun onClick(weather: Weather) {
-            // openWeatherDetails(weather)
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.list_container, DetailsFragment.newInstance(WeatherParams(weather.cityName)))
+                .addToBackStack(null)
+                .commitAllowingStateLoss()
         }
     }
 
@@ -60,7 +64,6 @@ class WeatherFragment : Fragment() {
         viewModel.subscribe().observe(viewLifecycleOwner, { renderData(it) })
         viewModel.getCitiesList()
         subscribeToSharedViewModel()
-        initButtonAdd()
     }
 
     private fun subscribeToSharedViewModel() {
@@ -69,18 +72,6 @@ class WeatherFragment : Fragment() {
             adapter.setItemInList(Weather(it))
         })
     }
-
-    private fun initButtonAdd() {
-        binding.floatingActionButton.setOnClickListener {
-//            requireContext().startActivity(Intent(requireContext(), ContactsActivity::class.java))
-
-            // open city search fragment
-            CityDialogFragment().show(requireActivity().supportFragmentManager, SEARCH_CITY_TAG)
-            // open google maps
-
-        }
-    }
-
 
 
     override fun onRequestPermissionsResult(

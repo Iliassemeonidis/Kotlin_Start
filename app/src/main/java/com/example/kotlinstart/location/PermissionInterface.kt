@@ -1,5 +1,5 @@
 package com.example.kotlinstart.location
 
-interface RequestPermission {
+interface PermissionInterface {
     fun requestPermission()
 }

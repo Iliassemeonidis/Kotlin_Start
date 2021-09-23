@@ -1,15 +1,14 @@
 package com.example.kotlinstart.view.shared
 
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import com.example.kotlinstart.R
 import com.example.kotlinstart.view.detailsscreen.DetailsFragment
-import com.example.kotlinstart.view.weatherscreen.WeatherFragment
-import java.io.BufferedReader
-import java.util.stream.Collectors
 
 internal class MainActivity : AppCompatActivity() {
 
@@ -21,6 +20,18 @@ internal class MainActivity : AppCompatActivity() {
             .beginTransaction()
             .replace(R.id.list_container, DetailsFragment())
             .commitAllowingStateLoss()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        when (newConfig.uiMode) {
+            Configuration.UI_MODE_NIGHT_NO -> {  AppCompatDelegate.setDefaultNightMode(
+                AppCompatDelegate.MODE_NIGHT_NO)
+            }
+            Configuration.UI_MODE_NIGHT_YES -> { AppCompatDelegate.setDefaultNightMode(
+                AppCompatDelegate.MODE_NIGHT_YES)
+            }
+        }
     }
 
     override fun onBackPressed() {
