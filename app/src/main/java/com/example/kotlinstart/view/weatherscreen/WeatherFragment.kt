@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
+import com.example.kotlinstart.KotlinStartApplication.Companion.getGeolocationHelper
 import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.FragmentWeatherBinding
 import com.example.kotlinstart.location.GeolocationHelper
@@ -17,11 +18,9 @@ import com.example.kotlinstart.view.detailsscreen.DetailsFragment
 import com.example.kotlinstart.view.shared.SharedViewModel
 
 //По ДЗ:
-//- Ненавязчивый запрос на геолокацию +
-//- Менять какашку обратно на +  +
-//- Создавать GeolocationHelper на уровне Application + убрать интерфейс из конструктора +
-//- Примените автоматическую тёмную тему для девайсов на 10+ Android -(надо переделать , работает криво)
-//- Прочесть методичку+
+//- Создавать GeolocationHelper на уровне Application SINGLETON +
+//- Создать ViewPager погодой не только на сегодня, но и на три дня вперед и три дня назад
+//- Перелистывать ViewPager на середину списка
 
 
 class WeatherFragment : Fragment() {
@@ -31,7 +30,7 @@ class WeatherFragment : Fragment() {
     private val binding get() = weatherBinding!!
     private lateinit var adapter: WeatherAdapter
     private lateinit var weatherList: ArrayList<Weather>
-    private lateinit var myGeolocation: GeolocationHelper
+    private  val myGeolocation = getGeolocationHelper()
 
 
     private val onClickListItem: OnClickItem = object : OnClickItem {

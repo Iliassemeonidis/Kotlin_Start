@@ -69,12 +69,10 @@ class GeolocationHelper(context: Context) {
                     if (grantResults.size == grantedPermissions) {
                         getLocation(context)
                     } else {
-                        if (listener == null) throw NullPointerException("GeolocationInterface must be initialized")
-                        listener!!.showDialogGeolocationIsClosed()
+                        listener?.showDialogGeolocationIsClosed()
                     }
                 } else {
-                    if (listener == null) throw NullPointerException("GeolocationInterface must be initialized")
-                    listener!!.showDialogGeolocationIsClosed()
+                    listener?.showDialogGeolocationIsClosed()
                 }
             }
         }
@@ -107,13 +105,11 @@ class GeolocationHelper(context: Context) {
                         locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
                     if (location == null) {
                         context.let {
-                            if (listener == null) throw NullPointerException("GeolocationInterface must be initialized")
-                            listener!!.alertDialog()
+                            listener?.alertDialog()
                         }
                     } else {
                         getAddressAsync(context, location)
-                        if (listener == null) throw NullPointerException("GeolocationInterface must be initialized")
-                        listener!!.showDialogGeolocationIsDisabled()
+                        listener?.showDialogGeolocationIsDisabled()
                     }
                 }
             } else {
@@ -131,8 +127,7 @@ class GeolocationHelper(context: Context) {
 //                println(addresses[0].locality)
 //                println(location)
 //                showAddressDialog(addresses[0].getAddressLine(0), location)
-                if (listener == null) throw NullPointerException("GeolocationInterface must be initialized")
-                listener!!.getWeatherParamsFromUserLocation(
+                listener?.getWeatherParamsFromUserLocation(
                     WeatherParams(
                         addresses[0].locality,
                         lat = location.latitude,

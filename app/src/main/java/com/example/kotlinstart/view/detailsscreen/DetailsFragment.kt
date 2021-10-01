@@ -3,14 +3,12 @@ package com.example.kotlinstart.view.detailsscreen
 import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -20,7 +18,7 @@ import com.example.kotlinstart.GeolocationInterface
 import com.example.kotlinstart.KotlinStartApplication.Companion.getGeolocationHelper
 import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.FragmentDetailsBinding
-import com.example.kotlinstart.location.GeolocationHelper
+import com.example.kotlinstart.location.PermissionInterface
 import com.example.kotlinstart.location.REQUEST_CODE
 import com.example.kotlinstart.model.AppState
 import com.example.kotlinstart.model.WeatherParams
@@ -30,17 +28,16 @@ import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_details.*
-import com.example.kotlinstart.location.PermissionInterface
 
 const val ACTION = "Receive"
 
 class DetailsFragment : Fragment(),
- PermissionInterface, GeolocationInterface {
+    PermissionInterface, GeolocationInterface {
 
     private lateinit var detailsViewModel: DetailsViewModel
     private var detailsBinding: FragmentDetailsBinding? = null
     private val binding get() = detailsBinding!!
-    private lateinit var myGeolocation: GeolocationHelper
+    private val myGeolocation = getGeolocationHelper()
 
     override fun requestPermission() {
         requestPermissions(
@@ -68,7 +65,6 @@ class DetailsFragment : Fragment(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         detailsViewModel = ViewModelProvider(this).get(DetailsViewModel::class.java)
-        myGeolocation = getGeolocationHelper()
         myGeolocation.listener = this
     }
 
@@ -82,6 +78,7 @@ class DetailsFragment : Fragment(),
 
     override fun onDestroy() {
         detailsBinding = null
+        myGeolocation.listener = null
         super.onDestroy()
     }
 
@@ -250,16 +247,17 @@ class DetailsFragment : Fragment(),
             .show()
     }
 
-    override fun getRequestPermissionRationale() =
+    override fun getRequestPermissionRationale()=
         shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
 
+
     override fun getWeatherParamsFromUserLocation(params: WeatherParams) {
-            setParamsInModel(params)
+        setParamsInModel(params)
     }
 
     companion object {
 
-        private const val CITY_EXTRA = "CITY_EXTRA"
+         const val CITY_EXTRA = "CITY_EXTRA"
         private var isMain = true
         private var isLocation = true
 

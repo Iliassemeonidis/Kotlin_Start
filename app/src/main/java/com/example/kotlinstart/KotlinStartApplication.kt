@@ -28,6 +28,8 @@ class KotlinStartApplication : Application() {
         private var db: HistoryDataBase? = null
         private const val DB_NAME = "History.db"
         private var retrofit: Retrofit? = null
+        private var helper: GeolocationHelper? = null
+
 
         fun getHistoryDao(): HistoryDao {
             if (db == null) {
@@ -67,8 +69,15 @@ class KotlinStartApplication : Application() {
         }
 
         fun getGeolocationHelper(): GeolocationHelper {
-            if (appInstance == null) throw IllegalStateException("Application is null while creating Geolocation")
-            return GeolocationHelper(appInstance!!.applicationContext)
+            if (helper == null) {
+                synchronized(GeolocationHelper::class.java) {
+                    if (helper == null) {
+                        if (appInstance == null) throw IllegalStateException("Application is null while creating Geolocation")
+                        helper = GeolocationHelper(appInstance!!.applicationContext)
+                    }
+                }
+            }
+            return helper!!
         }
 
         private fun createOkHttpClient(interceptor: Interceptor): OkHttpClient {
