@@ -11,16 +11,18 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.kotlinstart.KotlinStartApplication.Companion.getGeolocationHelper
 import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.FragmentWeatherBinding
-import com.example.kotlinstart.location.GeolocationHelper
 import com.example.kotlinstart.model.Weather
 import com.example.kotlinstart.model.WeatherParams
 import com.example.kotlinstart.view.detailsscreen.DetailsFragment
+import com.example.kotlinstart.view.search.CityDialogFragment
 import com.example.kotlinstart.view.shared.SharedViewModel
 
 //По ДЗ:
-//- Создавать GeolocationHelper на уровне Application SINGLETON +
-//- Создать ViewPager погодой не только на сегодня, но и на три дня вперед и три дня назад
-//- Перелистывать ViewPager на середину списка
+//- Вынести BottomBar в MainActivity
+//- Имплементитровать выбор города через FAB
+//- Передавать данные из Диалога во Фрагмент
+//- Сохранять город в БД и формировать ViewPager из БД
+//- При выборе элемента списка использовать SharedViewModel для передачи позиции во ViewPager
 
 
 class WeatherFragment : Fragment() {
@@ -30,8 +32,7 @@ class WeatherFragment : Fragment() {
     private val binding get() = weatherBinding!!
     private lateinit var adapter: WeatherAdapter
     private lateinit var weatherList: ArrayList<Weather>
-    private  val myGeolocation = getGeolocationHelper()
-
+    private val myGeolocation = getGeolocationHelper()
 
     private val onClickListItem: OnClickItem = object : OnClickItem {
 
@@ -46,7 +47,6 @@ class WeatherFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
-
     }
 
     override fun onCreateView(
@@ -62,7 +62,13 @@ class WeatherFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.subscribe().observe(viewLifecycleOwner, { renderData(it) })
         viewModel.getCitiesList()
-        subscribeToSharedViewModel()
+        //subscribeToSharedViewModel()
+        val dialog = CityDialogFragment()
+        dialog.subscribe().observe(viewLifecycleOwner, {
+           // viewModel.saveCity(it)
+            // adapter.setItemInList(Weather(it))
+        })
+        //childFragmentManager.beginTransaction().add(dialog)
     }
 
     private fun subscribeToSharedViewModel() {

@@ -7,7 +7,6 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.fragment.app.FragmentActivity
 import com.example.kotlinstart.R
 import com.example.kotlinstart.model.WeatherParams
 import com.example.kotlinstart.view.detailsscreen.DetailsFragment
@@ -26,13 +25,11 @@ internal class MainActivity : AppCompatActivity() {
 //            .replace(R.id.list_container, DetailsFragment())
 //            .commitAllowingStateLoss()
 
-        //  todo прееделать, добавлять новые города через фб
+        //  todo прееделать, добавлять новые города через FAB
         val adapter = DetailsViewPagerAdapter(this,arrayListOf(DetailsFragment.newInstance(WeatherParams("Пенза")), DetailsFragment(), DetailsFragment.newInstance(WeatherParams("Уфа"))))
         pager.adapter = adapter
         pager.setCurrentItem(1,true)
     }
-
-
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)

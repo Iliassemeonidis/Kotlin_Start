@@ -75,13 +75,11 @@ class DetailsFragment : Fragment(),
         checkPermissions()
     }
 
-
     override fun onDestroy() {
         detailsBinding = null
         myGeolocation.listener = null
         super.onDestroy()
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
@@ -99,6 +97,8 @@ class DetailsFragment : Fragment(),
         }
         return super.onOptionsItemSelected(item)
     }
+
+
 
     private fun setBottomAppBar(view: View) {
         val context = activity as MainActivity
@@ -247,7 +247,7 @@ class DetailsFragment : Fragment(),
             .show()
     }
 
-    override fun getRequestPermissionRationale()=
+    override fun getRequestPermissionRationale() =
         shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
 
 
@@ -257,7 +257,7 @@ class DetailsFragment : Fragment(),
 
     companion object {
 
-         const val CITY_EXTRA = "CITY_EXTRA"
+        const val CITY_EXTRA = "CITY_EXTRA"
         private var isMain = true
         private var isLocation = true
 
