@@ -22,6 +22,7 @@ import com.example.kotlinstart.location.PermissionInterface
 import com.example.kotlinstart.location.REQUEST_CODE
 import com.example.kotlinstart.model.AppState
 import com.example.kotlinstart.model.WeatherParams
+import com.example.kotlinstart.model.WeatherParamsInterface
 import com.example.kotlinstart.view.shared.MainActivity
 import com.example.kotlinstart.view.weatherscreen.WeatherFragment
 import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou
@@ -32,7 +33,7 @@ import kotlinx.android.synthetic.main.fragment_details.*
 const val ACTION = "Receive"
 
 class DetailsFragment : Fragment(),
-    PermissionInterface, GeolocationInterface {
+    PermissionInterface, GeolocationInterface, WeatherParamsInterface {
 
     private lateinit var detailsViewModel: DetailsViewModel
     private var detailsBinding: FragmentDetailsBinding? = null
@@ -71,65 +72,13 @@ class DetailsFragment : Fragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setParamsInModel(arguments?.getParcelable(CITY_EXTRA) ?: WeatherParams("Москва"))
-        setBottomAppBar(view)
-        checkPermissions()
+      //  checkPermissions()
     }
 
     override fun onDestroy() {
         detailsBinding = null
         myGeolocation.listener = null
         super.onDestroy()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.menu_bottom_bar, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.app_bar_fav ->
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.list_container, WeatherFragment())
-                    .addToBackStack(null)
-                    .commitAllowingStateLoss()
-            R.id.app_bar_settings -> Toast.makeText(context, "Settings", Toast.LENGTH_SHORT).show()
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-
-
-    private fun setBottomAppBar(view: View) {
-        val context = activity as MainActivity
-        context.setSupportActionBar(view.findViewById(R.id.bottom_app_bar))
-        setHasOptionsMenu(true)
-        binding.fab.setOnClickListener {
-            if (isMain) {
-                isMain = false
-                binding.bottomAppBar.navigationIcon = null
-                binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
-                binding.fab.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        context,
-                        R.drawable.ic_back_fab
-                    )
-                )
-                binding.bottomAppBar.replaceMenu(R.menu.search_menu)
-            } else {
-                isMain = true
-                binding.bottomAppBar.navigationIcon =
-                    ContextCompat.getDrawable(context, R.drawable.ic_hamburger_menu_bottom_bar)
-                binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
-                binding.fab.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        context,
-                        R.drawable.ic_plus_cross
-                    )
-                )
-                binding.bottomAppBar.replaceMenu(R.menu.menu_bottom_bar)
-            }
-        }
     }
 
     private fun checkPermissions() {
@@ -274,6 +223,10 @@ class DetailsFragment : Fragment(),
             },
             null
         )
+    }
+
+    override fun getCreatedListWeather(): ArrayList<WeatherParams> {
+        TODO("Not yet implemented")
     }
 
 }

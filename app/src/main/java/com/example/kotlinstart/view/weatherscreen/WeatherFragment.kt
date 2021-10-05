@@ -18,7 +18,7 @@ import com.example.kotlinstart.view.search.CityDialogFragment
 import com.example.kotlinstart.view.shared.SharedViewModel
 
 //По ДЗ:
-//- Вынести BottomBar в MainActivity
+//- Вынести BottomBar в MainActivity +
 //- Имплементитровать выбор города через FAB
 //- Передавать данные из Диалога во Фрагмент
 //- Сохранять город в БД и формировать ViewPager из БД

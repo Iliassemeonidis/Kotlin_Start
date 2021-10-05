@@ -1,6 +1,7 @@
 package com.example.kotlinstart.location
 
 import android.Manifest
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Geocoder
@@ -8,11 +9,11 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.util.Log
+import android.widget.Toast
 import androidx.core.content.ContextCompat
-import com.example.kotlinstart.model.WeatherParams
 import com.example.kotlinstart.GeolocationInterface
-import java.lang.NullPointerException
-import  java.io.IOException
+import com.example.kotlinstart.model.WeatherParams
+import java.io.IOException
 
 const val REQUEST_CODE = 102
 private const val REFRESH_PERIOD = 60000L
@@ -149,5 +150,20 @@ class GeolocationHelper(context: Context) {
     ) {
         if (listener == null) throw NullPointerException("GeolocationInterface must be initialized")
         listener!!.showAddressDialog(address)
+    }
+
+
+    fun getAddressAsyncByCity(context: Context, city: String?) {
+        val geoCoder = Geocoder(context)
+        try {
+            val addresses = geoCoder.getFromLocationName(city, 1)
+            if (addresses.isNotEmpty()) {
+                Toast.makeText(context, addresses[0].toString(), Toast.LENGTH_SHORT).show()
+            } else {
+                Log.i("ADDRESS", "Список адресов пустой")
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
     }
 }
