@@ -39,7 +39,7 @@
         <activity android:name=".view.contacts.ContactsActivity" />
 
         <activity
-            android:name=".view.shared.MainActivity"
+            android:name=".view.main.MainActivity"
             android:configChanges="uiMode"
             android:screenOrientation="portrait">
 

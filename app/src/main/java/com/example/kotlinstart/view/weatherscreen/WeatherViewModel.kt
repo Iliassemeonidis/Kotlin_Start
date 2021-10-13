@@ -5,11 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.kotlinstart.model.Weather
 import com.example.kotlinstart.repository.geolocationrepository.RepositoryGeolocationHelperImpl
-import com.example.kotlinstart.repository.weatherrepository.RepositoryWeatherImpl
+import com.example.kotlinstart.repository.weatherrepository.RepositoryImpl
 
 internal class WeatherViewModel(
     private val liveDataForObservation: MutableLiveData<ArrayList<Weather>> = MutableLiveData(),
-    private val repositoryImpl: RepositoryWeatherImpl = RepositoryWeatherImpl(),
+    private val repositoryImpl: RepositoryImpl = RepositoryImpl(),
     private val repositoryGeolocationHelperImpl: RepositoryGeolocationHelperImpl = RepositoryGeolocationHelperImpl()
 ) : ViewModel() {
 

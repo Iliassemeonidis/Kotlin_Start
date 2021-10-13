@@ -1,4 +1,4 @@
-package com.example.kotlinstart.view.shared
+package com.example.kotlinstart.view.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

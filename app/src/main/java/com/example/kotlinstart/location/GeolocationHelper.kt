@@ -1,7 +1,6 @@
 package com.example.kotlinstart.location
 
 import android.Manifest
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Geocoder
@@ -9,11 +8,10 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.util.Log
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.example.kotlinstart.GeolocationInterface
 import com.example.kotlinstart.model.WeatherParams
-import com.example.kotlinstart.view.shared.CitySearchDialogInterface
+import com.example.kotlinstart.view.main.OnGetAddressListener
 import java.io.IOException
 
 const val REQUEST_CODE = 102
@@ -151,14 +149,15 @@ class GeolocationHelper(context: Context) {
         listener!!.showAddressDialog(address)
     }
 
-    fun getAddressAsyncByCity(context: Context, city: String?,dialog :CitySearchDialogInterface) {
+    fun getAddressAsyncByCity(context: Context, city: String, addressListener: OnGetAddressListener) {
         val geoCoder = Geocoder(context)
         try {
             val addresses = geoCoder.getFromLocationName(city, 1)
             if (addresses.isNotEmpty()) {
-                    dialog.showCitySelectionDialog(WeatherParams(addresses[0].locality))
+                addressListener.onValidData(WeatherParams(addresses[0].locality))
             } else {
-                Log.i("ADDRESS", "Список адресов пустой")
+                addressListener.onError()
+                //Log.i("ADDRESS", "Список адресов пустой")
             }
         } catch (e: IOException) {
             e.printStackTrace()

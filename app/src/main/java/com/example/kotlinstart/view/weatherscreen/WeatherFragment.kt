@@ -12,20 +12,9 @@ import com.example.kotlinstart.KotlinStartApplication.Companion.getGeolocationHe
 import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.FragmentWeatherBinding
 import com.example.kotlinstart.model.Weather
-import com.example.kotlinstart.model.WeatherParams
 import com.example.kotlinstart.view.detailsscreen.DetailsFragment
+import com.example.kotlinstart.view.main.SharedViewModel
 import com.example.kotlinstart.view.search.CityDialogFragment
-import com.example.kotlinstart.view.shared.MainActivity
-import com.example.kotlinstart.view.shared.SharedViewModel
-
-//По ДЗ:
-//- Вынести BottomBar в MainActivity +
-//- Имплементитровать выбор города через FAB+
-//- Передавать данные из Диалога во Фрагмент+
-
-//- Сохранять город в БД и формировать ViewPager из БД
-//- При выборе элемента списка использовать SharedViewModel для передачи позиции во ViewPager
-
 
 class WeatherFragment : Fragment() {
 

@@ -1,4 +1,4 @@
-package com.example.kotlinstart.view.shared
+package com.example.kotlinstart.view.main
 
 import android.content.res.Configuration
 import android.os.Build
@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
-import com.example.kotlinstart.KotlinStartApplication.Companion.getGeolocationHelper
+import androidx.lifecycle.ViewModelProvider
 import com.example.kotlinstart.KotlinStartApplication.Companion.getHistoryDao
 import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.ActivityMainBinding
@@ -27,16 +27,29 @@ import com.example.kotlinstart.view.weatherscreen.WeatherFragment
 import com.google.android.material.bottomappbar.BottomAppBar
 import kotlinx.android.synthetic.main.activity_main.*
 
-internal class MainActivity : AppCompatActivity(),CitySearchDialogInterface {
-    private var isMain = true
+
+//По ДЗ:
+//- Genymotion https://www.genymotion.com/download/
+//- Переход с Main на Weather через FAB. Возврат обратно по кнопке меню справа.
+//- Реализовать сохранение данных через VM
+//- Использовать AppState в качестве Unidirectional data flow
+//- Формировать ViewPager из БД
+
+internal class MainActivity : AppCompatActivity() {
+
+    private lateinit var viewModel: MainViewModel
     private lateinit var mainBinding: ActivityMainBinding
     private val binding get() = mainBinding
-    private val geolocationHelper = getGeolocationHelper()
+    private var isMain = true
+    private var isExit = false
+
     private val listWeatherParams: ArrayList<DetailsFragment> = ArrayList()
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        viewModel.subscribeOnWeatherParams().observe(this@MainActivity, { renderData(it) })
         initBindingAndAdapter()
         createBottomBar()
         initNavigationIcon()
@@ -56,7 +69,7 @@ internal class MainActivity : AppCompatActivity(),CitySearchDialogInterface {
         listWeatherParams.add(DetailsFragment())
         val adapter = DetailsViewPagerAdapter(
             this,
-         listWeatherParams
+            listWeatherParams
         )
         pager.adapter = adapter
     }
@@ -76,17 +89,7 @@ internal class MainActivity : AppCompatActivity(),CitySearchDialogInterface {
         binding.fab.setOnClickListener {
             if (isMain) {
                 isMain = false
-
-                binding.bottomAppBar.navigationIcon = null
-                binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
-
-                binding.fab.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        this,
-                        R.drawable.ic_back
-                    )
-                )
-                binding.bottomAppBar.replaceMenu(R.menu.search_menu)
+                changeFabIcon(isMain)
                 searchCity()
             } else {
                 isMain = true
@@ -106,6 +109,19 @@ internal class MainActivity : AppCompatActivity(),CitySearchDialogInterface {
         }
     }
 
+    private fun changeFabIcon(isMain: Boolean) {
+        binding.bottomAppBar.navigationIcon = null
+        binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
+
+        binding.fab.setImageDrawable(
+            ContextCompat.getDrawable(
+                this,
+                R.drawable.ic_back
+            )
+        )
+        binding.bottomAppBar.replaceMenu(R.menu.search_menu)
+    }
+
     private fun searchCity() {
         val search = binding.bottomAppBar.menu.getItem(0).actionView as SearchView
 
@@ -116,8 +132,8 @@ internal class MainActivity : AppCompatActivity(),CitySearchDialogInterface {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText != null) {
-                    if (newText.length > 1) {
-                        geolocationHelper.getAddressAsyncByCity(this@MainActivity, newText,this@MainActivity)
+                    if (newText.length > 4) {
+                        viewModel.getAddress(this@MainActivity, newText)
                     }
                 }
                 return true
@@ -178,10 +194,6 @@ internal class MainActivity : AppCompatActivity(),CitySearchDialogInterface {
         }
     }
 
-    companion object {
-        var isExit = false
-    }
-
     private fun setVisibilityInFab(visibility: Boolean) {
         if (visibility) {
             binding.fab.visibility = View.VISIBLE
@@ -190,14 +202,17 @@ internal class MainActivity : AppCompatActivity(),CitySearchDialogInterface {
         }
     }
 
-    override fun showCitySelectionDialog(city: WeatherParams) {
-        this.let {
-            AlertDialog.Builder(it)
+    private fun renderData(weatherParams: WeatherParams) {
+        if (weatherParams.city.isBlank()) {
+            Toast.makeText(this, "Список адресов пустой", Toast.LENGTH_SHORT).show()
+        } else {
+            AlertDialog.Builder(this)
                 .setTitle(getString(R.string.botton_search))
-                .setMessage(getString(R.string.dialog_city_search_message, city.city))
+                .setMessage(getString(R.string.dialog_city_search_message, weatherParams.city))
                 .setPositiveButton(getString(R.string.dialog_button_ok)) { dialog, _ ->
-                    saveCityInDataBase(city)
-                    addItemOnListWeather(city)
+                    //viewModel.saveToDB(weatherParams)
+                    saveCityInDataBase(weatherParams)
+                    addItemOnListWeather(weatherParams)
                     dialog.dismiss()
                 }
                 .setNegativeButton(getString(R.string.dialog_button_no)) { dialog, _ -> dialog.dismiss() }
