@@ -27,6 +27,7 @@ class WeatherHistoryAdapter(private var historyEntity: List<HistoryEntity>) :
 
     inner class WeatherHistoryHolder(private val itemWeatherHistoryBinding: ItemWeatherHistoryBinding) :
         RecyclerView.ViewHolder(itemWeatherHistoryBinding.root) {
+
         fun bind(historyEntity: HistoryEntity) {
             itemWeatherHistoryBinding.historyId.text = historyEntity.id.toString()
             itemWeatherHistoryBinding.textViewCity.text = historyEntity.city

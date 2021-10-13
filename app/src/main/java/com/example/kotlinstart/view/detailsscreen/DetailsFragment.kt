@@ -6,7 +6,9 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -23,12 +25,8 @@ import com.example.kotlinstart.location.REQUEST_CODE
 import com.example.kotlinstart.model.AppState
 import com.example.kotlinstart.model.WeatherParams
 import com.example.kotlinstart.model.WeatherParamsInterface
-import com.example.kotlinstart.view.shared.MainActivity
-import com.example.kotlinstart.view.weatherscreen.WeatherFragment
 import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou
-import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.fragment_details.*
 
 const val ACTION = "Receive"
 

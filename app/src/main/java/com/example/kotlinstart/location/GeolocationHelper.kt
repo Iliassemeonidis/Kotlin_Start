@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.example.kotlinstart.GeolocationInterface
 import com.example.kotlinstart.model.WeatherParams
+import com.example.kotlinstart.view.shared.CitySearchDialogInterface
 import java.io.IOException
 
 const val REQUEST_CODE = 102
@@ -125,8 +126,6 @@ class GeolocationHelper(context: Context) {
             // для примера указан город
             val addresses = geoCoder.getFromLocation(location.latitude, location.longitude, 1)
             if (addresses.isNotEmpty()) {
-//                println(addresses[0].locality)
-//                println(location)
 //                showAddressDialog(addresses[0].getAddressLine(0), location)
                 listener?.getWeatherParamsFromUserLocation(
                     WeatherParams(
@@ -152,13 +151,12 @@ class GeolocationHelper(context: Context) {
         listener!!.showAddressDialog(address)
     }
 
-
-    fun getAddressAsyncByCity(context: Context, city: String?) {
+    fun getAddressAsyncByCity(context: Context, city: String?,dialog :CitySearchDialogInterface) {
         val geoCoder = Geocoder(context)
         try {
             val addresses = geoCoder.getFromLocationName(city, 1)
             if (addresses.isNotEmpty()) {
-                Toast.makeText(context, addresses[0].toString(), Toast.LENGTH_SHORT).show()
+                    dialog.showCitySelectionDialog(WeatherParams(addresses[0].locality))
             } else {
                 Log.i("ADDRESS", "Список адресов пустой")
             }

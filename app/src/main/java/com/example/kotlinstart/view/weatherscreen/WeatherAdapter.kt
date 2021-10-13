@@ -49,7 +49,9 @@ class WeatherAdapter(
             itemWeatherBinding.textViewCity.text = weather.cityName
             itemWeatherBinding.textViewRegion.text = weather.region
             itemWeatherBinding.temperature.text = weather.temperature
-            itemView.setOnClickListener { onClickItem.onClick(weatherList[adapterPosition]) }
+            itemView.setOnClickListener {
+                onClickItem.onClick(weatherList[adapterPosition])
+            }
         }
 
         override fun onItemSelected() {

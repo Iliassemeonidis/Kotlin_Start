@@ -46,6 +46,8 @@
 
     <!--GPS-->
     <string name="dialog_button_close">Закрыть</string>
+    <string name="dialog_button_ok">Да</string>
+    <string name="dialog_button_no">Нет</string>
     <string name="dialog_title_no_gps">Доступ к геолокации закрыт</string>
     <string name="dialog_message_no_gps">Разрешите доступ к геолокации, если хотите узнать погоду текущего места</string>
     <string name="dialog_title_gps_turned_off">GPS отключён</string>
@@ -58,6 +60,7 @@
     <string name="dialog_address_title">Ваш адрес</string>
     <string name="dialog_address_get_weather">Узнать погоду</string>
     <string name="botton_search">Поиск</string>
+    <string name="dialog_city_search_message">Хотите знать погоду в городе %s?</string>
 
 
     <string name="default_address">Red Square, 1, Moscow</string>

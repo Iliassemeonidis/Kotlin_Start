@@ -1,36 +1,38 @@
 package com.example.kotlinstart.view.shared
 
-import android.Manifest
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.HandlerThread
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import com.example.kotlinstart.KotlinStartApplication.Companion.getGeolocationHelper
+import com.example.kotlinstart.KotlinStartApplication.Companion.getHistoryDao
 import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.ActivityMainBinding
-import com.example.kotlinstart.location.PermissionInterface
-import com.example.kotlinstart.location.REQUEST_CODE
 import com.example.kotlinstart.model.WeatherParams
+import com.example.kotlinstart.room.HistoryEntity
 import com.example.kotlinstart.view.detailsscreen.DetailsFragment
 import com.example.kotlinstart.view.detailsscreen.DetailsViewPagerAdapter
 import com.example.kotlinstart.view.weatherscreen.WeatherFragment
 import com.google.android.material.bottomappbar.BottomAppBar
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 
-internal class MainActivity : AppCompatActivity(),PermissionInterface {
+internal class MainActivity : AppCompatActivity(),CitySearchDialogInterface {
     private var isMain = true
     private lateinit var mainBinding: ActivityMainBinding
     private val binding get() = mainBinding
     private val geolocationHelper = getGeolocationHelper()
+    private val listWeatherParams: ArrayList<DetailsFragment> = ArrayList()
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +40,6 @@ internal class MainActivity : AppCompatActivity(),PermissionInterface {
         initBindingAndAdapter()
         createBottomBar()
         initNavigationIcon()
-        checkPermissions()
     }
 
 
@@ -49,13 +50,13 @@ internal class MainActivity : AppCompatActivity(),PermissionInterface {
     }
 
     private fun initPagerAdapter() {
+        //todo take data from BD if is empty show dialog
+        listWeatherParams.add(DetailsFragment.newInstance(WeatherParams("Пенза")))
+        listWeatherParams.add(DetailsFragment.newInstance(WeatherParams("Уфа")))
+        listWeatherParams.add(DetailsFragment())
         val adapter = DetailsViewPagerAdapter(
             this,
-            arrayListOf(
-                DetailsFragment.newInstance(WeatherParams("Пенза")),
-                DetailsFragment(),
-                DetailsFragment.newInstance(WeatherParams("Уфа"))
-            )
+         listWeatherParams
         )
         pager.adapter = adapter
     }
@@ -66,7 +67,7 @@ internal class MainActivity : AppCompatActivity(),PermissionInterface {
                 .replace(R.id.list_container, WeatherFragment())
                 .addToBackStack(null)
                 .commitAllowingStateLoss()
-            setVisibilityInFAB(false)
+            setVisibilityInFab(false)
         }
     }
 
@@ -105,7 +106,6 @@ internal class MainActivity : AppCompatActivity(),PermissionInterface {
         }
     }
 
-
     private fun searchCity() {
         val search = binding.bottomAppBar.menu.getItem(0).actionView as SearchView
 
@@ -115,9 +115,9 @@ internal class MainActivity : AppCompatActivity(),PermissionInterface {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                if (newText!=null) {
+                if (newText != null) {
                     if (newText.length > 1) {
-                        geolocationHelper.getAddressAsyncByCity(this@MainActivity, newText)
+                        geolocationHelper.getAddressAsyncByCity(this@MainActivity, newText,this@MainActivity)
                     }
                 }
                 return true
@@ -159,7 +159,7 @@ internal class MainActivity : AppCompatActivity(),PermissionInterface {
             0 -> checkExit()
             else -> {
                 supportFragmentManager.popBackStack()
-                setVisibilityInFAB(true)
+                setVisibilityInFab(true)
                 isExit = false
             }
         }
@@ -169,7 +169,7 @@ internal class MainActivity : AppCompatActivity(),PermissionInterface {
         when (isExit) {
             true -> {
                 super.onBackPressed()
-                setVisibilityInFAB(true)
+                setVisibilityInFab(true)
             }
             else -> {
                 Toast.makeText(this, R.string.exit, Toast.LENGTH_SHORT).show()
@@ -182,8 +182,7 @@ internal class MainActivity : AppCompatActivity(),PermissionInterface {
         var isExit = false
     }
 
-
-    fun setVisibilityInFAB(visibility: Boolean) {
+    private fun setVisibilityInFab(visibility: Boolean) {
         if (visibility) {
             binding.fab.visibility = View.VISIBLE
         } else {
@@ -191,23 +190,39 @@ internal class MainActivity : AppCompatActivity(),PermissionInterface {
         }
     }
 
-    private fun checkPermissions() {
-        val parentLayout = findViewById<View>(android.R.id.content)
-        Snackbar.make(
-            parentLayout,
-            "Определить погоду по Вашей геолокации?",
-            6000
-        ).setAction("Определить") {
-            geolocationHelper.checkPermission(this, this)
+    override fun showCitySelectionDialog(city: WeatherParams) {
+        this.let {
+            AlertDialog.Builder(it)
+                .setTitle(getString(R.string.botton_search))
+                .setMessage(getString(R.string.dialog_city_search_message, city.city))
+                .setPositiveButton(getString(R.string.dialog_button_ok)) { dialog, _ ->
+                    saveCityInDataBase(city)
+                    addItemOnListWeather(city)
+                    dialog.dismiss()
+                }
+                .setNegativeButton(getString(R.string.dialog_button_no)) { dialog, _ -> dialog.dismiss() }
+                .create()
+                .show()
         }
-            .show()
     }
 
-    override fun requestPermission() {
-        requestPermissions(
-            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-            REQUEST_CODE
-        )
+    private fun addItemOnListWeather(city: WeatherParams) {
+        listWeatherParams.add(DetailsFragment.newInstance(city))
     }
 
+    private fun saveCityInDataBase(city: WeatherParams) {
+        val handlerThread = HandlerThread("MyThread2")
+        handlerThread.start()
+        val handler = Handler(handlerThread.looper)
+        handler.post {
+            getHistoryDao().insert(
+                HistoryEntity(
+                    0,
+                    city.city,
+                    city.degrees,
+                    city.weatherCondition
+                )
+            )
+        }
+    }
 }

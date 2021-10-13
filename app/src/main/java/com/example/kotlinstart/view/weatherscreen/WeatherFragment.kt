@@ -15,12 +15,14 @@ import com.example.kotlinstart.model.Weather
 import com.example.kotlinstart.model.WeatherParams
 import com.example.kotlinstart.view.detailsscreen.DetailsFragment
 import com.example.kotlinstart.view.search.CityDialogFragment
+import com.example.kotlinstart.view.shared.MainActivity
 import com.example.kotlinstart.view.shared.SharedViewModel
 
 //По ДЗ:
 //- Вынести BottomBar в MainActivity +
-//- Имплементитровать выбор города через FAB
-//- Передавать данные из Диалога во Фрагмент
+//- Имплементитровать выбор города через FAB+
+//- Передавать данные из Диалога во Фрагмент+
+
 //- Сохранять город в БД и формировать ViewPager из БД
 //- При выборе элемента списка использовать SharedViewModel для передачи позиции во ViewPager
 
@@ -38,7 +40,7 @@ class WeatherFragment : Fragment() {
 
         override fun onClick(weather: Weather) {
             requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.list_container, DetailsFragment.newInstance(WeatherParams(weather.cityName)))
+                .replace(R.id.list_container, DetailsFragment())
                 .addToBackStack(null)
                 .commitAllowingStateLoss()
         }
@@ -60,22 +62,22 @@ class WeatherFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.subscribe().observe(viewLifecycleOwner, { renderData(it) })
+        viewModel.subscribe().observe(viewLifecycleOwner) { renderData(it) }
         viewModel.getCitiesList()
         //subscribeToSharedViewModel()
         val dialog = CityDialogFragment()
-        dialog.subscribe().observe(viewLifecycleOwner, {
-           // viewModel.saveCity(it)
+        dialog.subscribe().observe(viewLifecycleOwner) {
+            // viewModel.saveCity(it)
             // adapter.setItemInList(Weather(it))
-        })
+        }
         //childFragmentManager.beginTransaction().add(dialog)
     }
 
     private fun subscribeToSharedViewModel() {
         val sharedViewModel: SharedViewModel by activityViewModels()
-        sharedViewModel.subscribe().observe(viewLifecycleOwner, {
+        sharedViewModel.subscribe().observe(viewLifecycleOwner) {
             adapter.setItemInList(Weather(it))
-        })
+        }
     }
 
 

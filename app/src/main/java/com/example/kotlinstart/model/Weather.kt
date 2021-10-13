@@ -10,6 +10,7 @@ data class Weather(
     var temperature: String = "27°C"
 ) : Parcelable
 
+//todo take cities from BD
 fun getCityWeather() = arrayListOf(
     Weather("Москва", "Москва"),
     Weather("Лос-Анджелес", "Калифорния"),

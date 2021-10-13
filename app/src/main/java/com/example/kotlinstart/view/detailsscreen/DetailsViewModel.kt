@@ -37,20 +37,10 @@ internal class DetailsViewModel(
                             0,
                             data.city,
                             data.degrees,
-                            data.condition
+                            data.condition,
                         )
                     )
                 }
-//                Thread {
-//                    getHistoryDao().insert(
-//                        HistoryEntity(
-//                            0,
-//                            data.city,
-//                            data.degrees,
-//                            data.condition
-//                        )
-//                    )
-//                }.start()
             }
             detailsLiveData.postValue(stateSuccess)
         }
