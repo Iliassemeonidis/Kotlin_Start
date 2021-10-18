@@ -1,6 +1,6 @@
 package com.example.kotlinstart.model
 
-import com.example.kotlinstart.view.detailsscreen.WeatherDetailsData
+import com.example.kotlinstart.view.mainscreen.WeatherDetailsData
 
 sealed class AppState {
     data class Success(val weatherDetailsData: WeatherDetailsData) : AppState()

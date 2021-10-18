@@ -5,9 +5,9 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Weather(
-    var cityName: String = "Город",
-    var region: String = "Регион",
-    var temperature: String = "27°C"
+    var cityName: String = "",
+    var region: String = "",
+    var temperature: String = ""
 ) : Parcelable
 
 //todo take cities from BD

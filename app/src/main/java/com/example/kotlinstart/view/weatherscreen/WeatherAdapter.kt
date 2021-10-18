@@ -9,9 +9,11 @@ import com.example.kotlinstart.databinding.ItemCityWeatherBinding
 import com.example.kotlinstart.model.Weather
 
 class WeatherAdapter(
-    private var weatherList: ArrayList<Weather>,
-    private val onClickItem: WeatherFragment.OnClickItem
+    //Удалить список
+    private var weatherList: MutableList<Weather>,
+    private var onClickItem: WeatherFragment.OnClickItem?,
 ) : RecyclerView.Adapter<WeatherAdapter.WeatherViewHolder>(), ItemTouchHelperAdapter {
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -23,6 +25,18 @@ class WeatherAdapter(
 
     override fun onBindViewHolder(holder: WeatherViewHolder, position: Int) {
         holder.bind(weatherList[position])
+    }
+
+    fun onItemAdded(weather: Weather) {
+        weatherList.add(weather)
+        //TODO
+        notifyDataSetChanged()
+    }
+
+    fun onListAdded(list: MutableList<Weather>) {
+        weatherList = list
+        //TODO
+        notifyDataSetChanged()
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -43,6 +57,10 @@ class WeatherAdapter(
         notifyItemRemoved(position)
     }
 
+    fun onDestroy() {
+        onClickItem = null
+    }
+
     inner class WeatherViewHolder(private val itemWeatherBinding: ItemCityWeatherBinding) :
         RecyclerView.ViewHolder(itemWeatherBinding.root), ItemTouchHelperViewHolder {
         fun bind(weather: Weather) {
@@ -50,7 +68,7 @@ class WeatherAdapter(
             itemWeatherBinding.textViewRegion.text = weather.region
             itemWeatherBinding.temperature.text = weather.temperature
             itemView.setOnClickListener {
-                onClickItem.onClick(weatherList[adapterPosition])
+                onClickItem?.onClick(weatherList[adapterPosition])
             }
         }
 

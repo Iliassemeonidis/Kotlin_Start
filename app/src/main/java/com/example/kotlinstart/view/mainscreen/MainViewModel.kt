@@ -1,4 +1,4 @@
-package com.example.kotlinstart.view.detailsscreen
+package com.example.kotlinstart.view.mainscreen
 
 import android.os.Handler
 import android.os.HandlerThread
@@ -15,7 +15,7 @@ import com.example.kotlinstart.utils.getStateOnResponse
 import retrofit2.Call
 import retrofit2.Response
 
-internal class DetailsViewModel(
+internal class MainViewModel(
     private val detailsLiveData: MutableLiveData<AppState> = MutableLiveData(),
     private val detailsRepository: RepositoryDetailsImpl = RepositoryDetailsImpl(RemoteDataSource())
 ) : ViewModel() {

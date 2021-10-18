@@ -8,8 +8,9 @@ import com.example.kotlinstart.model.Weather
 import com.example.kotlinstart.model.WeatherParams
 import com.example.kotlinstart.model.getCityWeather
 import com.example.kotlinstart.room.HistoryEntity
-import com.example.kotlinstart.view.detailsscreen.DetailsFragment
-import com.example.kotlinstart.view.main.OnGetAddressListener
+import com.example.kotlinstart.view.base.OnGetAddressListener
+import com.example.kotlinstart.view.base.OnGetWeatherListListener
+import com.example.kotlinstart.view.mainscreen.DetailsFragment
 
 class RepositoryImpl : Repository {
 
@@ -42,7 +43,8 @@ class RepositoryImpl : Repository {
         handler.post {
             val listDao = KotlinStartApplication.getHistoryDao().all()
             for (i in listDao.indices) {
-                list.add(i,
+                list.add(
+                    i,
                     DetailsFragment.newInstance(
                         WeatherParams(
                             listDao[i].city,
@@ -55,17 +57,20 @@ class RepositoryImpl : Repository {
         }
     }
 
-    override fun getWeatherFromDataBase(list: ArrayList<Weather>) {
+    override fun getWeatherFromDataBase(listener: OnGetWeatherListListener) {
         val handler = Handler(createThread().looper)
         handler.post {
             val listDao = KotlinStartApplication.getHistoryDao().all()
+            val list = mutableListOf<Weather>()
             for (i in listDao.indices) {
                 list.add(
-                    Weather(cityName = listDao[i].city,"",
+                    Weather(
+                        cityName = listDao[i].city, "",
                         listDao[i].temperature,
                     )
                 )
             }
+            listener.onListReady(list)
         }
     }
 

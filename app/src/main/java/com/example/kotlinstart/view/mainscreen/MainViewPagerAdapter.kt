@@ -1,10 +1,10 @@
-package com.example.kotlinstart.view.detailsscreen
+package com.example.kotlinstart.view.mainscreen
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
-class DetailsViewPagerAdapter(
+class MainViewPagerAdapter(
     activity: FragmentActivity,
     private val listDetailsFragment: ArrayList<DetailsFragment>
 ) : FragmentStateAdapter(activity) {

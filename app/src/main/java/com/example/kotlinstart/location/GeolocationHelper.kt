@@ -12,7 +12,7 @@ import androidx.core.content.ContextCompat
 import com.example.kotlinstart.GeolocationInterface
 import com.example.kotlinstart.model.Weather
 import com.example.kotlinstart.model.WeatherParams
-import com.example.kotlinstart.view.main.OnGetAddressListener
+import com.example.kotlinstart.view.base.OnGetAddressListener
 import java.io.IOException
 
 const val REQUEST_CODE = 102
@@ -165,11 +165,13 @@ class GeolocationHelper(context: Context) {
                     addressListener.onValidData(Weather(addresses[0].locality))
                 }
             } else {
+                //TODO Обработка пустого списка или ошибки
                 addressListener.onError()
                 //Log.i("ADDRESS", "Список адресов пустой")
             }
         } catch (e: IOException) {
             e.printStackTrace()
+            //addressListener.onError(e)
         }
     }
 }

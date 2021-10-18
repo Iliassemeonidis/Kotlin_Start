@@ -3,8 +3,8 @@ package com.example.kotlinstart.utils
 import com.example.kotlinstart.constant.*
 import com.example.kotlinstart.dto.FactDTO
 import com.example.kotlinstart.dto.WeatherDTO
-import com.example.kotlinstart.model.*
-import com.example.kotlinstart.view.detailsscreen.WeatherDetailsData
+import com.example.kotlinstart.model.AppState
+import com.example.kotlinstart.view.mainscreen.WeatherDetailsData
 import retrofit2.Response
 
 private const val CORRUPTED_DATA = "Неполные данные"

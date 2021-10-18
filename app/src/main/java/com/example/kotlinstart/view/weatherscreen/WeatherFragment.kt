@@ -16,7 +16,7 @@ import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.FragmentWeatherBinding
 import com.example.kotlinstart.model.Weather
 import com.example.kotlinstart.model.WeatherParams
-import com.example.kotlinstart.view.detailsscreen.DetailsFragment
+import com.example.kotlinstart.view.mainscreen.DetailsFragment
 import com.google.android.material.bottomappbar.BottomAppBar
 
 
@@ -26,7 +26,7 @@ class WeatherFragment : Fragment() {
     private var weatherBinding: FragmentWeatherBinding? = null
     private val binding get() = weatherBinding!!
     private lateinit var adapter: WeatherAdapter
-    private var weatherList: ArrayList<Weather> = ArrayList()
+
     private val myGeolocation = getGeolocationHelper()
 
     private val onClickListItem: OnClickItem = object : OnClickItem {
@@ -55,9 +55,26 @@ class WeatherFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.subscribe().observe(viewLifecycleOwner) { renderData(it) }
-        viewModel.createWeatherData(weatherList)
+        viewModel.subscribeToNewAddress().observe(viewLifecycleOwner) { onWeatherItemAdded(it) }
+        viewModel.subscribeToDB().observe(viewLifecycleOwner) { onWeatherListAdded(it) }
+        viewModel.getWeatherFromBD()
+
+        adapter = WeatherAdapter(mutableListOf(), onClickListItem)
+        binding.recyclerViewMain.adapter = adapter
+        ItemTouchHelper(ItemTouchHelperCallback(adapter))
+            .attachToRecyclerView(binding.recyclerViewMain)
+
         changeFabIcon()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        weatherBinding = null
+        adapter.onDestroy()
+    }
+
+    private fun onWeatherListAdded(list: MutableList<Weather>) {
+        adapter.onListAdded(list)
     }
 
     override fun onRequestPermissionsResult(
@@ -67,18 +84,14 @@ class WeatherFragment : Fragment() {
         myGeolocation.checkPermissionsResult(requireContext(), requestCode, grantResults)
     }
 
-    private fun renderData(weatherList: ArrayList<Weather>) {
-        adapter = WeatherAdapter(weatherList, onClickListItem)
-        this.weatherList = weatherList
-
-        binding.recyclerViewMain.adapter = adapter
-        ItemTouchHelper(ItemTouchHelperCallback(adapter))
-            .attachToRecyclerView(binding.recyclerViewMain)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        weatherBinding = null
+    private fun onWeatherItemAdded(weather: Weather) {
+        if (weather.cityName.isNotEmpty()) {
+            //weatherList.add(weather)
+            adapter.onItemAdded(weather)
+            viewModel.saveCityInDataBase(WeatherParams().apply {
+                city = weather.cityName
+            })
+        }
     }
 
     private fun changeFabIcon() {
@@ -97,40 +110,41 @@ class WeatherFragment : Fragment() {
     }
 
     private fun clickOnFab() {
-        // todo разобраться с действием назад
+        //TODO разобраться с действием назад
         binding.fab.setOnClickListener {
-            requireActivity().supportFragmentManager.beginTransaction()
+            requireActivity().supportFragmentManager.popBackStack()
+            /*requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.list_container,DetailsFragment())
-                .commitAllowingStateLoss()
+                .commitAllowingStateLoss()*/
         }
     }
 
+    private fun searchCityDialog(weatherParams: WeatherParams) {
+        if (weatherParams.city.isBlank()) {
+            Toast.makeText(requireContext(), "Список адресов пустой", Toast.LENGTH_SHORT).show()
+        } else {
+            AlertDialog.Builder(requireContext())
+                .setTitle(getString(R.string.botton_search))
+                .setMessage(getString(R.string.dialog_city_search_message, weatherParams.city))
+                .setPositiveButton(getString(R.string.dialog_button_ok)) { dialog, _ ->
+                    saveCityInDataBase(weatherParams)
+                    addItemOnListWeather(weatherParams)
+                    dialog.dismiss()
+                }
+                .setNegativeButton(getString(R.string.dialog_button_no)) { dialog, _ -> dialog.dismiss() }
+                .create()
+                .show()
 
-   private fun searchCityDialog(weatherParams: WeatherParams) {
-       if (weatherParams.city.isBlank()) {
-           Toast.makeText(requireContext(), "Список адресов пустой", Toast.LENGTH_SHORT).show()
-       } else {
-           AlertDialog.Builder(requireContext())
-               .setTitle(getString(R.string.botton_search))
-               .setMessage(getString(R.string.dialog_city_search_message, weatherParams.city))
-               .setPositiveButton(getString(R.string.dialog_button_ok)) { dialog, _ ->
-                   saveCityInDataBase(weatherParams)
-                   addItemOnListWeather(weatherParams)
-                   dialog.dismiss()
-               }
-               .setNegativeButton(getString(R.string.dialog_button_no)) { dialog, _ -> dialog.dismiss() }
-               .create()
-               .show()
-
-       }
+        }
     }
 
     private fun addItemOnListWeather(city: WeatherParams) {
-        weatherList.add(Weather(city.city, "", city.degrees))
+        //weatherList.add(Weather(city.city, "", city.degrees))
 
     }
+
     private fun saveCityInDataBase(city: WeatherParams) {
-        viewModel.saveCityInDataBase(city)
+        //viewModel.saveCityInDataBase(city)
     }
 
     private fun searchCity() {

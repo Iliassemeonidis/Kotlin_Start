@@ -39,7 +39,7 @@
         <activity android:name=".view.contacts.ContactsActivity" />
 
         <activity
-            android:name=".view.main.MainActivity"
+            android:name=".view.base.BaseActivity"
             android:configChanges="uiMode"
             android:screenOrientation="portrait">
 
@@ -51,7 +51,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".view.detailsscreen.DetailsService" />
+        <service android:name=".view.mainscreen.DetailsService" />
         <service
             android:name=".view.experiments.MainService"
             android:enabled="true"

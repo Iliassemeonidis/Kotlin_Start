@@ -14,7 +14,7 @@ import com.example.kotlinstart.DialogInterface
 import com.example.kotlinstart.databinding.FragmentCityDialogBinding
 import com.example.kotlinstart.model.CityData
 import com.example.kotlinstart.model.WeatherParams
-import com.example.kotlinstart.view.main.SharedViewModel
+import com.example.kotlinstart.view.base.SharedViewModel
 import java.util.*
 
 class CityDialogFragment : DialogFragment() {

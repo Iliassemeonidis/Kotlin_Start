@@ -6,25 +6,24 @@
     android:id="@+id/list_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.main.MainActivity"
+    tools:context=".view.base.BaseActivity"
     >
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/details_constraint"
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="ПУСТОЙ СПИСОК"
+        android:textColor="@color/black"
+        android:textSize="30sp"
+        />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        >
-
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        />
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottom_app_bar"
@@ -49,7 +48,4 @@
         app:srcCompat="@drawable/ic_plus_cross"
         app:tint="#FFFFFF"
         />
-
-
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

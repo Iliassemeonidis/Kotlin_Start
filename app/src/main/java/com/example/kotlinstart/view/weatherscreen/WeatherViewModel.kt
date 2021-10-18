@@ -6,41 +6,46 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.kotlinstart.model.Weather
 import com.example.kotlinstart.model.WeatherParams
-import com.example.kotlinstart.repository.geolocationrepository.RepositoryGeolocationHelperImpl
 import com.example.kotlinstart.repository.weatherrepository.RepositoryImpl
-import com.example.kotlinstart.view.main.OnGetAddressListener
+import com.example.kotlinstart.view.base.OnGetAddressListener
+import com.example.kotlinstart.view.base.OnGetWeatherListListener
 
 internal class WeatherViewModel(
-    private val liveDataForObservation: MutableLiveData<ArrayList<Weather>> = MutableLiveData(),
+    private val liveDataForNewAddress: MutableLiveData<Weather> = MutableLiveData(),
+    private val liveDataForDB: MutableLiveData<MutableList<Weather>> = MutableLiveData(),
     private val repositoryImpl: RepositoryImpl = RepositoryImpl(),
 ) : ViewModel() {
 
     fun getAddress(context: Context, address: String) {
         repositoryImpl.getAddress(context, address, object : OnGetAddressListener {
             override fun onValidData(weather: Weather) {
-                liveDataForObservation.value = arrayListOf(weather)
+                liveDataForNewAddress.value = weather
+
             }
 
             override fun onError() {
-                TODO("Not yet implemented")
+                //TODO Сделать через AppState
+                liveDataForNewAddress.value = Weather()
             }
 
             override fun onInfo() {
-                TODO("Not yet implemented")
+                //TODO Сделать через AppState
+                liveDataForNewAddress.value = Weather()
             }
-
-
         })
     }
 
-    fun subscribe(): LiveData<ArrayList<Weather>> {
-        return liveDataForObservation
+    fun subscribeToNewAddress(): LiveData<Weather> {
+        return liveDataForNewAddress
     }
 
 
-    fun createWeatherData(list: ArrayList<Weather>) {
-        repositoryImpl.getWeatherFromDataBase(list)
-        liveDataForObservation.postValue(list)
+    fun getWeatherFromBD() {
+        repositoryImpl.getWeatherFromDataBase(object : OnGetWeatherListListener {
+            override fun onListReady(list: MutableList<Weather>) {
+                liveDataForDB.postValue(list)
+            }
+        })
     }
 
     fun saveCityInDataBase(weatherParams: WeatherParams) {
@@ -51,4 +56,7 @@ internal class WeatherViewModel(
         repositoryImpl.deleteAllWeatherParamsFromDataBase()
     }
 
+    fun subscribeToDB(): MutableLiveData<MutableList<Weather>> {
+        return liveDataForDB
+    }
 }

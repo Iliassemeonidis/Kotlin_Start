@@ -1,4 +1,4 @@
-package com.example.kotlinstart.view.detailsscreen
+package com.example.kotlinstart.view.mainscreen
 
 import android.Manifest
 import android.content.Context
@@ -19,7 +19,7 @@ import coil.api.load
 import com.example.kotlinstart.GeolocationInterface
 import com.example.kotlinstart.KotlinStartApplication.Companion.getGeolocationHelper
 import com.example.kotlinstart.R
-import com.example.kotlinstart.databinding.FragmentDetailsBinding
+import com.example.kotlinstart.databinding.FragmentMainBinding
 import com.example.kotlinstart.location.PermissionInterface
 import com.example.kotlinstart.location.REQUEST_CODE
 import com.example.kotlinstart.model.AppState
@@ -33,8 +33,8 @@ const val ACTION = "Receive"
 class DetailsFragment : Fragment(),
     PermissionInterface, GeolocationInterface, WeatherParamsInterface {
 
-    private lateinit var detailsViewModel: DetailsViewModel
-    private var detailsBinding: FragmentDetailsBinding? = null
+    private lateinit var mainViewModel: MainViewModel
+    private var detailsBinding: FragmentMainBinding? = null
     private val binding get() = detailsBinding!!
     private val myGeolocation = getGeolocationHelper()
 
@@ -57,20 +57,20 @@ class DetailsFragment : Fragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        detailsBinding = FragmentDetailsBinding.inflate(inflater, container, false)
+        detailsBinding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        detailsViewModel = ViewModelProvider(this).get(DetailsViewModel::class.java)
+        mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         myGeolocation.listener = this
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setParamsInModel(arguments?.getParcelable(CITY_EXTRA) ?: WeatherParams("Москва"))
-      //  checkPermissions()
+        //  checkPermissions()
     }
 
     override fun onDestroy() {
@@ -91,9 +91,9 @@ class DetailsFragment : Fragment(),
     }
 
     private fun setParamsInModel(weatherParams: WeatherParams) {
-        detailsViewModel.setNewCity(weatherParams.city)
-        detailsViewModel.getLiveData().observe(viewLifecycleOwner) { renderData(it) }
-        detailsViewModel.getWeatherFromRemoteSource(weatherParams.lat, weatherParams.lon)
+        mainViewModel.setNewCity(weatherParams.city)
+        mainViewModel.getLiveData().observe(viewLifecycleOwner) { renderData(it) }
+        mainViewModel.getWeatherFromRemoteSource(weatherParams.lat, weatherParams.lon)
     }
 
     private fun renderData(appState: AppState) {
@@ -115,6 +115,7 @@ class DetailsFragment : Fragment(),
                     binding.iconCondition
                 )
                 binding.imageView.load(appState.weatherDetailsData.cityIconURL)
+
             }
             is AppState.Loading -> {
                 binding.loadingLayout.visibility = View.VISIBLE

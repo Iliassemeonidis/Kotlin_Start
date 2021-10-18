@@ -1,13 +1,13 @@
-package com.example.kotlinstart.view.main
+package com.example.kotlinstart.view.base
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.kotlinstart.model.WeatherParams
 import com.example.kotlinstart.repository.weatherrepository.RepositoryImpl
-import com.example.kotlinstart.view.detailsscreen.DetailsFragment
+import com.example.kotlinstart.view.mainscreen.DetailsFragment
 
-internal class MainViewModel(
+internal class BaseViewModel(
     private val liveDataForObservation: MutableLiveData<WeatherParams> = MutableLiveData(),
     private val repositoryImpl: RepositoryImpl = RepositoryImpl()
 ) : ViewModel() {
