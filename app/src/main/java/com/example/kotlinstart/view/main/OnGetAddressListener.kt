@@ -1,8 +1,9 @@
 package com.example.kotlinstart.view.main
 
-import com.example.kotlinstart.model.WeatherParams
+import com.example.kotlinstart.model.Weather
 
 interface OnGetAddressListener {
-    fun onValidData(weatherParams: WeatherParams)
+    fun onValidData(weather: Weather)
     fun onError()
+    fun onInfo()
 }

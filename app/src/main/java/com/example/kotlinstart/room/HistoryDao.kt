@@ -1,6 +1,7 @@
 package com.example.kotlinstart.room
 
 import androidx.room.*
+import retrofit2.http.DELETE
 
 @Dao
 interface HistoryDao {

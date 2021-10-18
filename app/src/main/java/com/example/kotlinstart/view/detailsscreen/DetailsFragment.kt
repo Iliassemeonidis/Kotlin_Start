@@ -92,7 +92,7 @@ class DetailsFragment : Fragment(),
 
     private fun setParamsInModel(weatherParams: WeatherParams) {
         detailsViewModel.setNewCity(weatherParams.city)
-        detailsViewModel.getLiveData().observe(viewLifecycleOwner, { renderData(it) })
+        detailsViewModel.getLiveData().observe(viewLifecycleOwner) { renderData(it) }
         detailsViewModel.getWeatherFromRemoteSource(weatherParams.lat, weatherParams.lon)
     }
 
