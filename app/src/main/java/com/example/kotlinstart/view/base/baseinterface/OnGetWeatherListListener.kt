@@ -1,4 +1,4 @@
-package com.example.kotlinstart.view.base
+package com.example.kotlinstart.view.base.baseinterface
 
 import com.example.kotlinstart.model.Weather
 

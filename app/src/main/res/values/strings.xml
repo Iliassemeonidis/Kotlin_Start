@@ -27,6 +27,7 @@
     <string name="weather_condition">Солнечно</string>
     <string name="detail_information_text">Дитальная информация о погоде на неделю и в течении дня</string>
     <string name="image_weather_condition">Изображение состояние погоды</string>
+    <string name="city_is_not_find">Город не найден</string>
 
     <string name="threads">Threads</string>
     <string name="in_main_thread">В главном потоке</string>
@@ -48,6 +49,7 @@
     <string name="dialog_button_close">Закрыть</string>
     <string name="dialog_button_ok">Да</string>
     <string name="dialog_button_no">Нет</string>
+    <string name="massage_error_appstate">"Ошибка получения данных из AppState"</string>
     <string name="dialog_title_no_gps">Доступ к геолокации закрыт</string>
     <string name="dialog_message_no_gps">Разрешите доступ к геолокации, если хотите узнать погоду текущего места</string>
     <string name="dialog_title_gps_turned_off">GPS отключён</string>
@@ -69,4 +71,5 @@
     <string name="favourite">favourite</string>
     <string name="settings">settings</string>
     <string name="search">search</string>
+    <string name="empty_list">ПУСТОЙ СПИСОК</string>
 </resources>

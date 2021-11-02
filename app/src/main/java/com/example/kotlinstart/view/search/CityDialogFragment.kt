@@ -82,7 +82,7 @@ class CityDialogFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        cityDialogViewModel.subscribe().observe(viewLifecycleOwner, { renderData(it) })
+        cityDialogViewModel.subscribe().observe(viewLifecycleOwner) { renderData(it) }
         cityDialogViewModel.getCityNamesList()
         initButtonSearch()
     }
@@ -106,12 +106,6 @@ class CityDialogFragment : DialogFragment() {
             helper.listener = callBackDialog*/
            // GeolocationHelper.getAddressAsync(callBackDialog, binding.searchCity.text.toString())
         }
-    }
-
-    interface CallBackDialog: DialogInterface {
-        fun getWeatherParams(weather: WeatherParams)
-        fun openDetalisationOfCity()
-        fun getContext(): Context
     }
 }
 

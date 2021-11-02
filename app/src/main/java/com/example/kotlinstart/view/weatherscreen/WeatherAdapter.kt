@@ -9,11 +9,10 @@ import com.example.kotlinstart.databinding.ItemCityWeatherBinding
 import com.example.kotlinstart.model.Weather
 
 class WeatherAdapter(
-    //Удалить список
-    private var weatherList: MutableList<Weather>,
     private var onClickItem: WeatherFragment.OnClickItem?,
 ) : RecyclerView.Adapter<WeatherAdapter.WeatherViewHolder>(), ItemTouchHelperAdapter {
 
+    private var weatherList: MutableList<Weather> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -29,13 +28,16 @@ class WeatherAdapter(
 
     fun onItemAdded(weather: Weather) {
         weatherList.add(weather)
-        //TODO
-        notifyDataSetChanged()
+        if (weatherList.size > 1) {
+            notifyItemInserted(weatherList.size - 1)
+        } else {
+            notifyItemInserted(0)
+        }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun onListAdded(list: MutableList<Weather>) {
         weatherList = list
-        //TODO
         notifyDataSetChanged()
     }
 

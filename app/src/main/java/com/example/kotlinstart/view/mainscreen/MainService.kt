@@ -2,7 +2,6 @@ package com.example.kotlinstart.view.mainscreen
 
 import android.app.IntentService
 import android.content.Intent
-import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.kotlinstart.constant.*
 import com.example.kotlinstart.dto.FactDTO
@@ -19,7 +18,7 @@ const val BROADCAST_WEATHER_DTO_EXCEPTION = "Exception"
 const val LATITUDE_EXTRA = "Latitude"
 const val LONGITUDE_EXTRA = "Longitude"
 
-class DetailsService(name: String = "DetailsService") : IntentService(name) {
+class MainService(name: String = "DetailsService") : IntentService(name) {
 
     var city: String? = null
 
@@ -31,13 +30,13 @@ class DetailsService(name: String = "DetailsService") : IntentService(name) {
                 intent.putExtra(
                     BROADCAST_WEATHER_DTO, convertDtoToWeatherData(city!!, response.body()!!)
                 )
-                LocalBroadcastManager.getInstance(this@DetailsService).sendBroadcast(intent)
+                LocalBroadcastManager.getInstance(this@MainService).sendBroadcast(intent)
             }
         }
 
         override fun onFailure(call: Call<WeatherDTO>, t: Throwable) {
             intent.putExtra(BROADCAST_WEATHER_DTO_EXCEPTION, t.message)
-            LocalBroadcastManager.getInstance(this@DetailsService).sendBroadcast(intent)
+            LocalBroadcastManager.getInstance(this@MainService).sendBroadcast(intent)
         }
     }
 
@@ -73,9 +72,5 @@ class DetailsService(name: String = "DetailsService") : IntentService(name) {
                 callBack
             )
         }
-    }
-
-    private fun createLogMessage(message: String) {
-        Log.d(TAG, message)
     }
 }

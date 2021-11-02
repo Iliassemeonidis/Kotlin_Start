@@ -12,8 +12,9 @@ import androidx.core.content.ContextCompat
 import com.example.kotlinstart.GeolocationInterface
 import com.example.kotlinstart.model.Weather
 import com.example.kotlinstart.model.WeatherParams
-import com.example.kotlinstart.view.base.OnGetAddressListener
+import com.example.kotlinstart.view.base.baseinterface.OnGetAddressListener
 import java.io.IOException
+import java.util.*
 
 const val REQUEST_CODE = 102
 private const val REFRESH_PERIOD = 60000L
@@ -158,20 +159,21 @@ class GeolocationHelper(context: Context) {
         val geoCoder = Geocoder(context)
         try {
             val addresses = geoCoder.getFromLocationName(city, 1)
+//            val addresses = "Moscow"
+//            addressListener.onValidData(Weather(addresses))
+
             if (addresses.isNotEmpty()) {
                 if (addresses[0].locality.isEmpty()) {
-                    addressListener.onInfo()
+                    addressListener.onEmpty()
                 } else {
                     addressListener.onValidData(Weather(addresses[0].locality))
                 }
             } else {
-                //TODO Обработка пустого списка или ошибки
-                addressListener.onError()
-                //Log.i("ADDRESS", "Список адресов пустой")
+                addressListener.onEmpty()
             }
         } catch (e: IOException) {
             e.printStackTrace()
-            //addressListener.onError(e)
+            addressListener.onError(e)
         }
     }
 }

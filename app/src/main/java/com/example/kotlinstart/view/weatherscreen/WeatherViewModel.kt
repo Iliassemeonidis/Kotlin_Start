@@ -1,39 +1,20 @@
 package com.example.kotlinstart.view.weatherscreen
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.kotlinstart.model.Weather
 import com.example.kotlinstart.model.WeatherParams
 import com.example.kotlinstart.repository.weatherrepository.RepositoryImpl
-import com.example.kotlinstart.view.base.OnGetAddressListener
-import com.example.kotlinstart.view.base.OnGetWeatherListListener
+import com.example.kotlinstart.view.base.baseinterface.OnGetWeatherListListener
 
+// пока не удалил ее так как она возможно она понадобится для запросов в бд
 internal class WeatherViewModel(
     private val liveDataForNewAddress: MutableLiveData<Weather> = MutableLiveData(),
     private val liveDataForDB: MutableLiveData<MutableList<Weather>> = MutableLiveData(),
     private val repositoryImpl: RepositoryImpl = RepositoryImpl(),
 ) : ViewModel() {
 
-    fun getAddress(context: Context, address: String) {
-        repositoryImpl.getAddress(context, address, object : OnGetAddressListener {
-            override fun onValidData(weather: Weather) {
-                liveDataForNewAddress.value = weather
-
-            }
-
-            override fun onError() {
-                //TODO Сделать через AppState
-                liveDataForNewAddress.value = Weather()
-            }
-
-            override fun onInfo() {
-                //TODO Сделать через AppState
-                liveDataForNewAddress.value = Weather()
-            }
-        })
-    }
 
     fun subscribeToNewAddress(): LiveData<Weather> {
         return liveDataForNewAddress

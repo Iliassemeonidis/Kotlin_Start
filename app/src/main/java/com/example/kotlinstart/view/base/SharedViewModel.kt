@@ -8,11 +8,14 @@ internal class SharedViewModel(
     private val liveDataForObservation: MutableLiveData<String> = MutableLiveData()
 ) : ViewModel() {
 
+   private var city:String = ""
+
     fun subscribe(): LiveData<String> {
         return liveDataForObservation
     }
 
     fun setCity(city: String) {
+        this.city = city
         liveDataForObservation.value = city
     }
 }

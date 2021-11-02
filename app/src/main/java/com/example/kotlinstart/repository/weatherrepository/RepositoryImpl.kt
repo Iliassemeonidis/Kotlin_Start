@@ -6,15 +6,13 @@ import android.os.HandlerThread
 import com.example.kotlinstart.KotlinStartApplication
 import com.example.kotlinstart.model.Weather
 import com.example.kotlinstart.model.WeatherParams
-import com.example.kotlinstart.model.getCityWeather
 import com.example.kotlinstart.room.HistoryEntity
-import com.example.kotlinstart.view.base.OnGetAddressListener
-import com.example.kotlinstart.view.base.OnGetWeatherListListener
-import com.example.kotlinstart.view.mainscreen.DetailsFragment
+import com.example.kotlinstart.view.base.baseinterface.OnGetAddressListener
+import com.example.kotlinstart.view.base.baseinterface.OnGetWeatherFragmentList
+import com.example.kotlinstart.view.base.baseinterface.OnGetWeatherListListener
+import com.example.kotlinstart.view.mainscreen.MainFragment
 
 class RepositoryImpl : Repository {
-
-    override fun getListCityWeatherFromLocalStorage() = getCityWeather()
 
     override fun getAddress(context: Context, address: String, listener: OnGetAddressListener) {
         KotlinStartApplication.getGeolocationHelper().getAddressAsyncByCity(
@@ -38,14 +36,15 @@ class RepositoryImpl : Repository {
         }
     }
 
-    override fun getWeatherParamsFromDataBase(list: ArrayList<DetailsFragment>) {
+    override fun getWeatherParamsFromDataBase(listener: OnGetWeatherFragmentList) {
         val handler = Handler(createThread().looper)
         handler.post {
             val listDao = KotlinStartApplication.getHistoryDao().all()
+            val list = mutableListOf<MainFragment>()
             for (i in listDao.indices) {
                 list.add(
                     i,
-                    DetailsFragment.newInstance(
+                    MainFragment.newInstance(
                         WeatherParams(
                             listDao[i].city,
                             listDao[i].temperature,
@@ -54,6 +53,7 @@ class RepositoryImpl : Repository {
                     )
                 )
             }
+            listener.onListFragment(list)
         }
     }
 

@@ -25,12 +25,15 @@ import com.example.kotlinstart.location.REQUEST_CODE
 import com.example.kotlinstart.model.AppState
 import com.example.kotlinstart.model.WeatherParams
 import com.example.kotlinstart.model.WeatherParamsInterface
+import com.example.kotlinstart.view.weatherscreen.WeatherFragment
 import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou
+import com.google.android.material.bottomappbar.BottomAppBar
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 
 const val ACTION = "Receive"
 
-class DetailsFragment : Fragment(),
+class MainFragment : Fragment(),
     PermissionInterface, GeolocationInterface, WeatherParamsInterface {
 
     private lateinit var mainViewModel: MainViewModel
@@ -70,8 +73,8 @@ class DetailsFragment : Fragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setParamsInModel(arguments?.getParcelable(CITY_EXTRA) ?: WeatherParams("Москва"))
-        //  checkPermissions()
     }
+
 
     override fun onDestroy() {
         detailsBinding = null
@@ -79,16 +82,16 @@ class DetailsFragment : Fragment(),
         super.onDestroy()
     }
 
-    private fun checkPermissions() {
-        Snackbar.make(
-            this.requireView(),
-            "Определить погоду по Вашей геолокации?",
-            6000
-        ).setAction("Определить") {
-            myGeolocation.checkPermission(requireContext(), this)
-        }
-            .show()
-    }
+//    private fun checkPermissions() {
+//        Snackbar.make(
+//            this.requireView(),
+//            "Определить погоду по Вашей геолокации?",
+//            6000
+//        ).setAction("Определить") {
+//            myGeolocation.checkPermission(requireContext(), this)
+//        }
+//            .show()
+//    }
 
     private fun setParamsInModel(weatherParams: WeatherParams) {
         mainViewModel.setNewCity(weatherParams.city)
@@ -107,8 +110,10 @@ class DetailsFragment : Fragment(),
                     appState.weatherDetailsData.degrees
                 )
                 binding.weatherCondition.text = appState.weatherDetailsData.condition
-                binding.textViewFeelsLike.text =
-                    "Ощущается как ${appState.weatherDetailsData.feelsLike}°"
+                binding.textViewFeelsLike.text = String.format(
+                    getString(R.string.fills_like),
+                    appState.weatherDetailsData.feelsLike
+                )
                 GlideToVectorYou.justLoadImage(
                     requireActivity(),
                     Uri.parse(appState.weatherDetailsData.icon),
@@ -124,6 +129,11 @@ class DetailsFragment : Fragment(),
                 binding.loadingLayout.visibility = View.GONE
                 Toast.makeText(requireContext(), appState.error.message, Toast.LENGTH_SHORT).show()
             }
+            else -> Toast.makeText(
+                requireContext(),
+                R.string.massage_error_appstate,
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -155,7 +165,7 @@ class DetailsFragment : Fragment(),
                 .setTitle(getString(R.string.dialog_rationale_title))
                 .setMessage(getString(R.string.dialog_message_no_gps))
                 .setPositiveButton(getString(R.string.dialog_rationale_give_access)) { _, _ ->
-                    myGeolocation.requestPermission(this@DetailsFragment)
+                    myGeolocation.requestPermission(this@MainFragment)
                     openAppSettingsPermission(it)
                 }
                 .setNegativeButton(getString(R.string.dialog_rationale_decline)) { dialog, _ -> dialog.dismiss() }
@@ -206,12 +216,10 @@ class DetailsFragment : Fragment(),
     companion object {
 
         const val CITY_EXTRA = "CITY_EXTRA"
-        private var isMain = true
-        private var isLocation = true
 
         @JvmStatic
         fun newInstance(city: WeatherParams) =
-            DetailsFragment().apply { arguments = bundleOf(CITY_EXTRA to city) }
+            MainFragment().apply { arguments = bundleOf(CITY_EXTRA to city) }
     }
 
     private fun openAppSettingsPermission(it: Context) {
@@ -223,10 +231,7 @@ class DetailsFragment : Fragment(),
             null
         )
     }
-
     override fun getCreatedListWeather(): ArrayList<WeatherParams> {
         TODO("Not yet implemented")
     }
-
 }
-

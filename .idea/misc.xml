@@ -19,6 +19,8 @@
         <entry key="app/src/main/res/layout/fragment_city_dialog.xml" value="0.19672059670058598" />
         <entry key="app/src/main/res/layout/fragment_details.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_google_maps.xml" value="0.15896739130434784" />
+        <entry key="app/src/main/res/layout/fragment_list.xml" value="0.14855072463768115" />
+        <entry key="app/src/main/res/layout/fragment_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_thread.xml" value="0.16576086956521738" />
         <entry key="app/src/main/res/layout/fragment_weather.xml" value="0.1793478260869565" />
         <entry key="app/src/main/res/layout/fragment_weather_history.xml" value="0.19384057971014493" />

@@ -10,12 +10,3 @@ data class Weather(
     var temperature: String = ""
 ) : Parcelable
 
-//todo take cities from BD
-fun getCityWeather() = arrayListOf(
-    Weather("Москва", "Москва"),
-    Weather("Лос-Анджелес", "Калифорния"),
-    Weather("Афины", "Аттика"),
-    Weather("Сочи", "Краснодарский край"),
-    Weather("Владикавказ", "Северная Осетия"),
-    Weather("Таймырский", "Долгано-Ненецкий")
-)
