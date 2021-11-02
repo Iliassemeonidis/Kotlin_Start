@@ -15,21 +15,15 @@ import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import coil.api.load
 import com.example.kotlinstart.GeolocationInterface
 import com.example.kotlinstart.KotlinStartApplication.Companion.getGeolocationHelper
 import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.FragmentMainBinding
 import com.example.kotlinstart.location.PermissionInterface
 import com.example.kotlinstart.location.REQUEST_CODE
-import com.example.kotlinstart.model.AppState
 import com.example.kotlinstart.model.WeatherParams
 import com.example.kotlinstart.model.WeatherParamsInterface
-import com.example.kotlinstart.view.weatherscreen.WeatherFragment
 import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou
-import com.google.android.material.bottomappbar.BottomAppBar
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 
 const val ACTION = "Receive"
 
@@ -99,35 +93,35 @@ class MainFragment : Fragment(),
         mainViewModel.getWeatherFromRemoteSource(weatherParams.lat, weatherParams.lon)
     }
 
-    private fun renderData(appState: AppState) {
-        when (appState) {
-            is AppState.Success -> {
+    private fun renderData(detailsFragmentState: DetailsFragmentState) {
+        when (detailsFragmentState) {
+            is DetailsFragmentState.Success -> {
                 binding.loadingLayout.visibility = View.GONE
-                val weatherData = appState.weatherDetailsData
+                val weatherData = detailsFragmentState.weatherDetailsData
                 binding.textViewCityName.text = weatherData.city
                 binding.degrees.text = String.format(
                     getString(R.string.degrees_text),
-                    appState.weatherDetailsData.degrees
+                    detailsFragmentState.weatherDetailsData.degrees
                 )
-                binding.weatherCondition.text = appState.weatherDetailsData.condition
+                binding.weatherCondition.text = detailsFragmentState.weatherDetailsData.condition
                 binding.textViewFeelsLike.text = String.format(
                     getString(R.string.fills_like),
-                    appState.weatherDetailsData.feelsLike
+                    detailsFragmentState.weatherDetailsData.feelsLike
                 )
                 GlideToVectorYou.justLoadImage(
                     requireActivity(),
-                    Uri.parse(appState.weatherDetailsData.icon),
+                    Uri.parse(detailsFragmentState.weatherDetailsData.icon),
                     binding.iconCondition
                 )
-                binding.imageView.load(appState.weatherDetailsData.cityIconURL)
+                binding.imageView.load(detailsFragmentState.weatherDetailsData.cityIconURL)
 
             }
-            is AppState.Loading -> {
+            is DetailsFragmentState.Loading -> {
                 binding.loadingLayout.visibility = View.VISIBLE
             }
-            is AppState.Error -> {
+            is DetailsFragmentState.Error -> {
                 binding.loadingLayout.visibility = View.GONE
-                Toast.makeText(requireContext(), appState.error.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), detailsFragmentState.error.message, Toast.LENGTH_SHORT).show()
             }
             else -> Toast.makeText(
                 requireContext(),

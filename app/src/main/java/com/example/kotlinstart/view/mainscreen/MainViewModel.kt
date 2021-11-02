@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.kotlinstart.KotlinStartApplication.Companion.getHistoryDao
 import com.example.kotlinstart.dto.WeatherDTO
-import com.example.kotlinstart.model.AppState
 import com.example.kotlinstart.repository.detailsrepository.RepositoryDetailsImpl
 import com.example.kotlinstart.repository.detailsrepository.datasource.RemoteDataSource
 import com.example.kotlinstart.room.HistoryEntity
@@ -16,7 +15,7 @@ import retrofit2.Call
 import retrofit2.Response
 
 internal class MainViewModel(
-    private val detailsLiveData: MutableLiveData<AppState> = MutableLiveData(),
+    private val detailsLiveData: MutableLiveData<DetailsFragmentState> = MutableLiveData(),
     private val detailsRepository: RepositoryDetailsImpl = RepositoryDetailsImpl(RemoteDataSource())
 ) : ViewModel() {
 
@@ -25,7 +24,7 @@ internal class MainViewModel(
 
         override fun onResponse(call: Call<WeatherDTO>, response: Response<WeatherDTO>) {
             val stateSuccess = getStateOnResponse(city, response)
-            if (stateSuccess is AppState.Success) {
+            if (stateSuccess is DetailsFragmentState.Success) {
                 val data = stateSuccess.weatherDetailsData
                 //detailsRepository.saveData(data)
                 val handlerThread = HandlerThread("MyThread2")
@@ -57,7 +56,7 @@ internal class MainViewModel(
     fun getLiveData() = detailsLiveData
 
     fun getWeatherFromRemoteSource(lat: Double, lon: Double) {
-        detailsLiveData.value = AppState.Loading
+        detailsLiveData.value = DetailsFragmentState.Loading
         detailsRepository.getWeatherDataFromServers(lat, lon, callBack)
     }
 }

@@ -4,35 +4,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.kotlinstart.KotlinStartApplication.Companion.getGeolocationHelper
 import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.FragmentWeatherBinding
 import com.example.kotlinstart.model.Weather
 import com.example.kotlinstart.model.WeatherParams
-import com.example.kotlinstart.view.base.BaseActivity
-import com.example.kotlinstart.view.base.BaseViewModel
-import com.example.kotlinstart.view.base.SharedViewModel
+import com.example.kotlinstart.view.base.MainViewModel
 import com.example.kotlinstart.view.mainscreen.MainFragment
-import com.google.android.material.bottomappbar.BottomAppBar
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-
 
 class WeatherFragment : Fragment() {
 
-    private val viewModel: BaseViewModel by activityViewModels()
+    private val viewModel: MainViewModel by activityViewModels()
     private var weatherBinding: FragmentWeatherBinding? = null
     private val binding get() = weatherBinding!!
     private lateinit var adapter: WeatherAdapter
     private val myGeolocation = getGeolocationHelper()
+    private var isAttached = true
 
     private val onClickListItem: OnClickItem = object : OnClickItem {
 
@@ -49,6 +39,7 @@ class WeatherFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        isAttached = true
         weatherBinding = FragmentWeatherBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -65,7 +56,7 @@ class WeatherFragment : Fragment() {
         ItemTouchHelper(ItemTouchHelperCallback(adapter))
             .attachToRecyclerView(binding.recyclerViewMain)
 
-       //changeFabIcon()
+        //changeFabIcon()
     }
 
     override fun onDestroyView() {
@@ -86,12 +77,16 @@ class WeatherFragment : Fragment() {
     }
 
     private fun onWeatherItemAdded(weather: Weather) {
-        if (weather.cityName.isNotEmpty()) {
-            adapter.onItemAdded(weather)
+        if (isAttached) {
+            isAttached = false
+        } else {
+            if (weather.cityName.isNotEmpty()) {
+                adapter.onItemAdded(weather)
 
-            viewModel.saveCityInDataBase(WeatherParams().apply {
-                city = weather.cityName
-            })
+                /*viewModel.saveCityInDataBase(WeatherParams().apply {
+                    city = weather.cityName
+                })*/
+            }
         }
     }
 

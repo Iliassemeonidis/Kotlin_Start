@@ -17,14 +17,22 @@ import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.ActivityMainBinding
 import com.example.kotlinstart.model.Weather
 import com.example.kotlinstart.model.WeatherParams
-import com.example.kotlinstart.view.base.baseinterface.DialogSearchInterface
 import com.example.kotlinstart.view.mainscreen.MainFragment
 import com.example.kotlinstart.view.mainscreen.MainViewPagerAdapter
+import com.example.kotlinstart.view.mainscreen.SearchCityState
 import com.example.kotlinstart.view.weatherscreen.WeatherFragment
 import com.google.android.material.bottomappbar.BottomAppBar
 import kotlinx.android.synthetic.main.activity_main.*
 
 //По ДЗ:
+
+//Обработка onBackPressed для поддержки FAB
+// разобраться с действием назад после -
+//- добавления города и отработать нажатие на элименты списка(дописал себе задание сам)
+//Решить проблему с добавлением нового элемента в WeatherFragment
+//Добавить еще один уровень вложенности
+//- Доделать остальные TODO +(за исключением некоторых не методов)
+
 
 //- Разобраться с видимость FAB
 // ( сделал в activity_main.xml FrameLayout в который кладу фрагменты) +
@@ -32,21 +40,13 @@ import kotlinx.android.synthetic.main.activity_main.*
 //- Реализовать сохранение данных через VM в MainFragment
 // (вынес вечь функционал по добавлению в BaseViewModel и в WeatherFragment по подписке добавляю и схораняю)+
 
-//- Использовать AppState в качестве Unidirectional data flow и
-// возвращать корректные ошибки (не использую ,
-// по той причине что не понял сути их применения , реализовал все через лисенер интерфейса DialogSearchInterface)
+//Использовать AppState в качестве Unidirectional data flow и
+//возвращать корректные ошибки (не использую ,
+//по той причине что не понял сути их применения , реализовал все через лисенер интерфейса DialogSearchInterface)
 
-//- Доделать остальные TODO +(за исключением некоторых не методов)
+internal class MainActivity : AppCompatActivity()/*, DialogSearchInterface*/ {
 
-
-// разобраться с действием назад после -
-//- добавления города и отработать нажатие на элименты списка(дописал себе задание сам)
-
-
-
-internal class BaseActivity : AppCompatActivity(), DialogSearchInterface {
-
-    private lateinit var viewModel: BaseViewModel
+    private lateinit var viewModel: MainViewModel
     private lateinit var mainBinding: ActivityMainBinding
     private val binding get() = mainBinding
     private lateinit var adapter: MainViewPagerAdapter
@@ -66,8 +66,11 @@ internal class BaseActivity : AppCompatActivity(), DialogSearchInterface {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.app_bar_favourite -> { openWeatherFragment() }
-            R.id.app_bar_settings -> Toast.makeText(this, R.string.settings, Toast.LENGTH_SHORT).show()
+            R.id.app_bar_favourite -> {
+                openWeatherFragment()
+            }
+            R.id.app_bar_settings -> Toast.makeText(this, R.string.settings, Toast.LENGTH_SHORT)
+                .show()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -83,8 +86,9 @@ internal class BaseActivity : AppCompatActivity(), DialogSearchInterface {
     }
 
     private fun initViewMainParams() {
-        viewModel = ViewModelProvider(this).get(BaseViewModel::class.java)
-        viewModel.subscribeOnWeatherParams().observe(this@BaseActivity) { renderData(it) }
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        viewModel.subscribeOnWeatherParams().observe(this@MainActivity) { renderData(it) }
+        viewModel.subscribeToNewCity().observe(this) { isCityReady(it) }
         viewModel.subscribeOnWeatherFromDB().observe(this) { onWeatherList(it) }
         viewModel.getWeatherParamsFromDataBase()
 
@@ -204,7 +208,7 @@ internal class BaseActivity : AppCompatActivity(), DialogSearchInterface {
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText != null) {
                     if (newText.length > 4) {
-                        viewModel.getAddress(this@BaseActivity, newText, this@BaseActivity)
+                        viewModel.getAddress(this@MainActivity, newText)
                     }
                 }
                 return true
@@ -212,12 +216,24 @@ internal class BaseActivity : AppCompatActivity(), DialogSearchInterface {
         })
     }
 
-    override fun showDialog(city: String) {
+    private fun isCityReady(state: SearchCityState) {
+        when (state) {
+            is SearchCityState.Success -> showDialog(state.city)
+            SearchCityState.Empty -> Toast.makeText(
+                this,
+                R.string.city_is_not_find,
+                Toast.LENGTH_SHORT
+            ).show()
+            is SearchCityState.Error -> TODO()
+        }
+    }
+
+    private fun showDialog(city: String) {
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.botton_search))
             .setMessage(getString(R.string.dialog_city_search_message, city))
             .setPositiveButton(getString(R.string.dialog_button_ok)) { dialog, _ ->
-                viewModel.saveWeather(Weather(city))
+                viewModel.onCityApprovedByUser(Weather(city))
                 dialog.dismiss()
             }
             .setNegativeButton(getString(R.string.dialog_button_no)) { dialog, _ ->
@@ -225,9 +241,5 @@ internal class BaseActivity : AppCompatActivity(), DialogSearchInterface {
             }
             .create()
             .show()
-    }
-
-    override fun showToast() {
-        Toast.makeText(this, R.string.city_is_not_find, Toast.LENGTH_SHORT).show()
     }
 }

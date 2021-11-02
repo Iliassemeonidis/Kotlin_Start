@@ -3,7 +3,7 @@ package com.example.kotlinstart.utils
 import com.example.kotlinstart.constant.*
 import com.example.kotlinstart.dto.FactDTO
 import com.example.kotlinstart.dto.WeatherDTO
-import com.example.kotlinstart.model.AppState
+import com.example.kotlinstart.view.mainscreen.DetailsFragmentState
 import com.example.kotlinstart.view.mainscreen.WeatherDetailsData
 import retrofit2.Response
 
@@ -11,28 +11,28 @@ private const val CORRUPTED_DATA = "Неполные данные"
 private const val SERVER_ERROR = "Ошибка сервера"
 private const val REQUEST_ERROR = "Ошибка запроса на сервер"
 
-internal fun getStateOnResponse(city: String, response: Response<WeatherDTO>): AppState {
+internal fun getStateOnResponse(city: String, response: Response<WeatherDTO>): DetailsFragmentState {
     val serverResponse: WeatherDTO? = response.body()
     return if (response.isSuccessful && serverResponse != null) {
         checkResponse(city, response.body())
     } else {
-        AppState.Error(Throwable(SERVER_ERROR))
+        DetailsFragmentState.Error(Throwable(SERVER_ERROR))
     }
 }
 
-internal fun getStateOnFailure(t: Throwable) = AppState.Error(
+internal fun getStateOnFailure(t: Throwable) = DetailsFragmentState.Error(
     Throwable(t.message ?: REQUEST_ERROR)
 )
 
-internal fun checkResponse(city: String, serverResponse: WeatherDTO?): AppState {
+internal fun checkResponse(city: String, serverResponse: WeatherDTO?): DetailsFragmentState {
     val fact = serverResponse?.fact
     return if (
         fact?.temp == null ||
         fact.feels_like == null ||
         fact.condition.isNullOrEmpty()
     ) {
-        AppState.Error(Throwable(CORRUPTED_DATA))
-    } else AppState.Success(convertDtoToWeatherData(city, serverResponse))
+        DetailsFragmentState.Error(Throwable(CORRUPTED_DATA))
+    } else DetailsFragmentState.Success(convertDtoToWeatherData(city, serverResponse))
 }
 
 private fun convertDtoToWeatherData(city: String, weatherDTO: WeatherDTO): WeatherDetailsData {

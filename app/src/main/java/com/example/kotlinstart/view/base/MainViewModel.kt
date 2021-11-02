@@ -7,18 +7,18 @@ import androidx.lifecycle.ViewModel
 import com.example.kotlinstart.model.Weather
 import com.example.kotlinstart.model.WeatherParams
 import com.example.kotlinstart.repository.weatherrepository.RepositoryImpl
-import com.example.kotlinstart.view.base.baseinterface.DialogSearchInterface
 import com.example.kotlinstart.view.base.baseinterface.OnGetAddressListener
 import com.example.kotlinstart.view.base.baseinterface.OnGetWeatherFragmentList
 import com.example.kotlinstart.view.base.baseinterface.OnGetWeatherListListener
 import com.example.kotlinstart.view.mainscreen.MainFragment
+import com.example.kotlinstart.view.mainscreen.SearchCityState
 
-internal class BaseViewModel(
+internal class MainViewModel(
     private val liveDataForObservation: MutableLiveData<WeatherParams> = MutableLiveData(),
     private val liveDataForNewAddress: MutableLiveData<Weather> = MutableLiveData(),
+    private val liveDataForNewCity: MutableLiveData<SearchCityState> = MutableLiveData(),
     private val liveDataForDB: MutableLiveData<MutableList<MainFragment>> = MutableLiveData(),
     private val liveDataForDBWeather: MutableLiveData<MutableList<Weather>> = MutableLiveData(),
-    private val liveDataAnswer: MutableLiveData<Boolean> = MutableLiveData(),
     private val repositoryImpl: RepositoryImpl = RepositoryImpl(),
 ) : ViewModel() {
 
@@ -30,31 +30,39 @@ internal class BaseViewModel(
         })
     }
 
-    fun getAddress(context: Context, address: String, dialog: DialogSearchInterface) {
+    fun getAddress(context: Context, address: String) {
 
         repositoryImpl.getAddress(context, address, object : OnGetAddressListener {
 
             override fun onValidData(weather: Weather) {
-                dialog.showDialog(weather.cityName)
+                liveDataForNewCity.value = SearchCityState.Success(weather.cityName)
             }
 
             override fun onError(error: Throwable) {
-               Throwable(error.message)
+                liveDataForNewCity.value = SearchCityState.Error(error)
             }
 
             override fun onEmpty() {
-               dialog.showToast()
+                liveDataForNewCity.value = SearchCityState.Empty
             }
         })
     }
 
-     fun saveWeather(weather: Weather) {
+    fun onCityApprovedByUser(weather: Weather) {
         liveDataForNewAddress.value = weather
+        repositoryImpl.saveCityInDataBase(WeatherParams().apply {
+            city = weather.cityName
+        })
     }
 
     fun subscribeToNewAddress(): LiveData<Weather> {
         return liveDataForNewAddress
     }
+
+    fun subscribeToNewCity(): LiveData<SearchCityState> {
+        return liveDataForNewCity
+    }
+
     fun saveCityInDataBase(weatherParams: WeatherParams) {
         repositoryImpl.saveCityInDataBase(weatherParams)
     }

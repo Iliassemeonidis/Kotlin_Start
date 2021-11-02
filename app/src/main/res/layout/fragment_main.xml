@@ -9,104 +9,50 @@
     >
 
     <FrameLayout
+        android:id="@+id/list_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.mainscreen.MainFragment"
         >
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/details_constraint"
+        <TextView
+            android:id="@+id/list_empty_textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/empty_list"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            >
-
-            <TextView
-                android:id="@+id/text_view_city_name"
-                style="@style/MainCityItemStyle"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="@string/city_name"
-                />
-
-            <TextView
-                android:id="@+id/degrees"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_degrees"
-                android:layout_marginTop="24dp"
-                android:gravity="center"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_degrees"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.544"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_view_city_name"
-                tools:text="@string/degrees_centigrade"
-                />
-
-            <TextView
-                android:id="@+id/weather_condition"
-                style="@style/MainCityItemStyle"
-                android:fontFamily="@font/aguafina_script"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/degrees"
-                tools:text="@string/weather_condition"
-                />
-
-            <TextView
-                android:id="@+id/text_view_feels_like"
-                style="@style/MainCityItemStyle"
-                android:textColor="@color/black"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/weather_condition"
-                tools:text="@string/fills_like_text"
-                />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/icon_condition"
-                android:layout_width="@dimen/weather_icon_width"
-                android:layout_height="@dimen/weather_icon_height"
-                android:layout_marginTop="5dp"
-                android:contentDescription="@string/image_weather_condition"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_view_feels_like"
-                />
-
-            <ImageView
-                android:id="@+id/image_view"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:scaleType="fitXY"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <FrameLayout
-            android:id="@+id/loadingLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"
-            tools:visibility="visible"
-            >
-
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                />
-
-        </FrameLayout>
+            />
     </FrameLayout>
+
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottom_app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:backgroundTint="@color/CornflowerBlue"
+        app:fabAlignmentMode="center"
+        app:hideOnScroll="true"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:navigationIcon="@drawable/ic_hamburger_menu_bottom_bar"
+        tools:ignore="BottomAppBar"
+        />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:contentDescription="@string/add_new_city"
+        app:layout_anchor="@id/bottom_app_bar"
+        app:srcCompat="@drawable/ic_plus_cross"
+        app:tint="#FFFFFF"
+        />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
