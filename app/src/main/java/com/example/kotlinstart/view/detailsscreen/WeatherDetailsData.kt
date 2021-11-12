@@ -1,4 +1,4 @@
-package com.example.kotlinstart.view.mainscreen
+package com.example.kotlinstart.view.detailsscreen
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

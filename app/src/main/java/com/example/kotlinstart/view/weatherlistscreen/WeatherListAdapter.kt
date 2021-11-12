@@ -1,4 +1,4 @@
-package com.example.kotlinstart.view.weatherscreen
+package com.example.kotlinstart.view.weatherlistscreen
 
 import android.annotation.SuppressLint
 import android.graphics.Color
@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlinstart.databinding.ItemCityWeatherBinding
 import com.example.kotlinstart.model.Weather
 
-class WeatherAdapter(
-    private var onClickItem: WeatherFragment.OnClickItem?,
-) : RecyclerView.Adapter<WeatherAdapter.WeatherViewHolder>(), ItemTouchHelperAdapter {
+class WeatherListAdapter(
+    private var onClickItem: WeatherListFragment.OnClickItem?,
+) : RecyclerView.Adapter<WeatherListAdapter.WeatherViewHolder>(), ItemTouchHelperAdapter {
 
     private var weatherList: MutableList<Weather> = mutableListOf()
 

@@ -10,7 +10,7 @@ import com.example.kotlinstart.room.HistoryEntity
 import com.example.kotlinstart.view.base.baseinterface.OnGetAddressListener
 import com.example.kotlinstart.view.base.baseinterface.OnGetWeatherFragmentList
 import com.example.kotlinstart.view.base.baseinterface.OnGetWeatherListListener
-import com.example.kotlinstart.view.mainscreen.MainFragment
+import com.example.kotlinstart.view.detailsscreen.DetailsFragment
 
 class RepositoryImpl : Repository {
 
@@ -40,11 +40,11 @@ class RepositoryImpl : Repository {
         val handler = Handler(createThread().looper)
         handler.post {
             val listDao = KotlinStartApplication.getHistoryDao().all()
-            val list = mutableListOf<MainFragment>()
+            val list = mutableListOf<DetailsFragment>()
             for (i in listDao.indices) {
                 list.add(
                     i,
-                    MainFragment.newInstance(
+                    DetailsFragment.newInstance(
                         WeatherParams(
                             listDao[i].city,
                             listDao[i].temperature,

@@ -6,10 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.kotlinstart.databinding.FragmentWeatherHistoryBinding
 import com.example.kotlinstart.room.HistoryEntity
-import com.example.kotlinstart.view.weatherscreen.ItemTouchHelperCallback
 
 
 class WeatherHistoryFragment : Fragment() {

@@ -1,4 +1,4 @@
-package com.example.kotlinstart.view.mainscreen
+package com.example.kotlinstart.view.detailsscreen
 
 import android.app.IntentService
 import android.content.Intent

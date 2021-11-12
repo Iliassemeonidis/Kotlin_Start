@@ -1,13 +1,13 @@
-package com.example.kotlinstart.view.mainscreen
+package com.example.kotlinstart.view.detailsscreen
 
 import android.annotation.SuppressLint
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
-class MainViewPagerAdapter(
+class DetailsViewPagerAdapter(
     activity: FragmentActivity,
-    private var listDetailsFragment: MutableList<MainFragment>
+    private var listDetailsFragment: MutableList<DetailsFragment>
 ) : FragmentStateAdapter(activity) {
 
     override fun getItemCount(): Int {
@@ -19,12 +19,12 @@ class MainViewPagerAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun addNewList(list: MutableList<MainFragment>) {
+    fun addNewList(list: MutableList<DetailsFragment>) {
         listDetailsFragment = list
         notifyDataSetChanged()
     }
 
-    fun addNewItem(item:MainFragment) {
+    fun addNewItem(item:DetailsFragment) {
         listDetailsFragment.add(item)
         if (listDetailsFragment.size == 0) {
             notifyItemChanged(0)

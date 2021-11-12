@@ -1,52 +1,28 @@
 package com.example.kotlinstart.view.mainscreen
 
-import android.Manifest
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.kotlinstart.GeolocationInterface
-import com.example.kotlinstart.KotlinStartApplication.Companion.getGeolocationHelper
 import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.FragmentMainBinding
-import com.example.kotlinstart.location.PermissionInterface
-import com.example.kotlinstart.location.REQUEST_CODE
-import com.example.kotlinstart.model.WeatherParams
-import com.example.kotlinstart.model.WeatherParamsInterface
-import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou
+import com.example.kotlinstart.view.detailsscreen.DetailsFragment
+import com.example.kotlinstart.view.detailsscreen.DetailsViewPagerAdapter
+import com.example.kotlinstart.view.weatherlistscreen.WeatherListFragment
 
-const val ACTION = "Receive"
 
-class MainFragment : Fragment(),
-    PermissionInterface, GeolocationInterface, WeatherParamsInterface {
+class MainFragment : Fragment() {
 
-    private lateinit var mainViewModel: MainViewModel
-    private var detailsBinding: FragmentMainBinding? = null
-    private val binding get() = detailsBinding!!
-    private val myGeolocation = getGeolocationHelper()
+    private lateinit var viewModel: MainViewModel
+    private var mainBinding: FragmentMainBinding? = null
+    private val binding get() = mainBinding!!
+    private lateinit var adapter: DetailsViewPagerAdapter
 
-    override fun requestPermission() {
-        requestPermissions(
-            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-            REQUEST_CODE
-        )
-    }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>, grantResults: IntArray
-    ) {
-        myGeolocation.checkPermissionsResult(requireContext(), requestCode, grantResults)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -54,178 +30,66 @@ class MainFragment : Fragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        detailsBinding = FragmentMainBinding.inflate(inflater, container, false)
+        mainBinding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        myGeolocation.listener = this
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setParamsInModel(arguments?.getParcelable(CITY_EXTRA) ?: WeatherParams("Москва"))
+        initViewMainParams()
+        initBindingAndPager()
+        createBottomBarAndNavigationIcon()
     }
 
+    private fun initViewMainParams() {
+        viewModel.subscribeOnWeatherFromDB().observe(viewLifecycleOwner) { onWeatherList(it) }
+        viewModel.getWeatherParamsFromDataBase()
 
-    override fun onDestroy() {
-        detailsBinding = null
-        myGeolocation.listener = null
-        super.onDestroy()
     }
 
-//    private fun checkPermissions() {
-//        Snackbar.make(
-//            this.requireView(),
-//            "Определить погоду по Вашей геолокации?",
-//            6000
-//        ).setAction("Определить") {
-//            myGeolocation.checkPermission(requireContext(), this)
-//        }
-//            .show()
-//    }
-
-    private fun setParamsInModel(weatherParams: WeatherParams) {
-        mainViewModel.setNewCity(weatherParams.city)
-        mainViewModel.getLiveData().observe(viewLifecycleOwner) { renderData(it) }
-        mainViewModel.getWeatherFromRemoteSource(weatherParams.lat, weatherParams.lon)
+    private fun onWeatherList(list: MutableList<DetailsFragment>) {
+        if (list.isNotEmpty()) {
+            binding.listEmptyTextView.visibility = View.INVISIBLE
+        }
+        adapter.addNewList(list)
     }
 
-    private fun renderData(detailsFragmentState: DetailsFragmentState) {
-        when (detailsFragmentState) {
-            is DetailsFragmentState.Success -> {
-                binding.loadingLayout.visibility = View.GONE
-                val weatherData = detailsFragmentState.weatherDetailsData
-                binding.textViewCityName.text = weatherData.city
-                binding.degrees.text = String.format(
-                    getString(R.string.degrees_text),
-                    detailsFragmentState.weatherDetailsData.degrees
-                )
-                binding.weatherCondition.text = detailsFragmentState.weatherDetailsData.condition
-                binding.textViewFeelsLike.text = String.format(
-                    getString(R.string.fills_like),
-                    detailsFragmentState.weatherDetailsData.feelsLike
-                )
-                GlideToVectorYou.justLoadImage(
-                    requireActivity(),
-                    Uri.parse(detailsFragmentState.weatherDetailsData.icon),
-                    binding.iconCondition
-                )
-                binding.imageView.load(detailsFragmentState.weatherDetailsData.cityIconURL)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_bottom_bar, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.app_bar_favourite -> {
+                openWeatherFragment()
             }
-            is DetailsFragmentState.Loading -> {
-                binding.loadingLayout.visibility = View.VISIBLE
-            }
-            is DetailsFragmentState.Error -> {
-                binding.loadingLayout.visibility = View.GONE
-                Toast.makeText(requireContext(), detailsFragmentState.error.message, Toast.LENGTH_SHORT).show()
-            }
-            else -> Toast.makeText(
+            R.id.app_bar_settings -> Toast.makeText(
                 requireContext(),
-                R.string.massage_error_appstate,
+                R.string.settings,
                 Toast.LENGTH_SHORT
-            ).show()
-        }
-    }
-
-    override fun showDialogGeolocationIsClosed() {
-        requireContext().let {
-            AlertDialog.Builder(it)
-                .setTitle(getString(R.string.dialog_title_no_gps))
-                .setMessage(getString(R.string.dialog_message_no_gps))
-                .setNegativeButton(getString(R.string.dialog_button_close)) { dialog, _ -> dialog.dismiss() }
-                .create()
+            )
                 .show()
         }
+
+        return super.onOptionsItemSelected(item)
     }
 
-    override fun showDialogGeolocationIsDisabled() {
-        requireContext().let {
-            AlertDialog.Builder(it)
-                .setTitle(getString(R.string.dialog_title_gps_turned_off))
-                .setMessage(getString(R.string.dialog_message_last_known_location))
-                .setNegativeButton(getString(R.string.dialog_button_close)) { dialog, _ -> dialog.dismiss() }
-                .create()
-                .show()
+    private fun initBindingAndPager() {
+        adapter = DetailsViewPagerAdapter(requireActivity(), mutableListOf())
+        mainBinding?.pager?.adapter = adapter
+    }
+
+    private fun createBottomBarAndNavigationIcon() {
+        binding.fab.setOnClickListener {
+            openWeatherFragment()
         }
     }
 
-    override fun showRationaleDialog() {
-        context?.let {
-            AlertDialog.Builder(it)
-                .setTitle(getString(R.string.dialog_rationale_title))
-                .setMessage(getString(R.string.dialog_message_no_gps))
-                .setPositiveButton(getString(R.string.dialog_rationale_give_access)) { _, _ ->
-                    myGeolocation.requestPermission(this@MainFragment)
-                    openAppSettingsPermission(it)
-                }
-                .setNegativeButton(getString(R.string.dialog_rationale_decline)) { dialog, _ -> dialog.dismiss() }
-                .create()
-                .show()
-        }
-    }
-
-    override fun showAddressDialog(city: String) {
-        context?.let {
-            AlertDialog.Builder(it)
-                .setTitle(getString(R.string.dialog_address_title))
-                .setMessage(city)
-                .setPositiveButton(getString(R.string.dialog_address_get_weather)) { _, _ ->
-                    //openWeatherDetails(Weather(city))
-                }
-                .setNegativeButton(getString(R.string.dialog_button_close)) { dialog, _ -> dialog.dismiss() }
-                .create()
-                .show()
-        }
-    }
-
-
-    override fun alertDialog() {
-        AlertDialog.Builder(requireContext())
-            .setTitle(getString(R.string.dialog_title_gps_turned_off))
-            .setMessage(getString(R.string.dialog_message_last_location_unknown))
-            .setPositiveButton("OK") { _, _ ->
-                ContextCompat.startActivity(
-                    requireContext(),
-                    Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),
-                    null
-                )
-            }
-            .setNegativeButton(getString(R.string.dialog_button_close)) { dialog, _ -> dialog.dismiss() }
-            .create()
-            .show()
-    }
-
-    override fun getRequestPermissionRationale() =
-        shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
-
-
-    override fun getWeatherParamsFromUserLocation(params: WeatherParams) {
-        setParamsInModel(params)
-    }
-
-    companion object {
-
-        const val CITY_EXTRA = "CITY_EXTRA"
-
-        @JvmStatic
-        fun newInstance(city: WeatherParams) =
-            MainFragment().apply { arguments = bundleOf(CITY_EXTRA to city) }
-    }
-
-    private fun openAppSettingsPermission(it: Context) {
-        ContextCompat.startActivity(
-            it,
-            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                data = Uri.fromParts("package", it.packageName, null)
-            },
-            null
-        )
-    }
-    override fun getCreatedListWeather(): ArrayList<WeatherParams> {
-        TODO("Not yet implemented")
+    private fun openWeatherFragment() {
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.main_container, WeatherListFragment())
+            .addToBackStack(null)
+            .commitAllowingStateLoss()
     }
 }

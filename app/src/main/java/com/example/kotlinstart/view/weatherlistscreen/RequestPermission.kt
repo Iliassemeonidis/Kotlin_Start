@@ -1,4 +1,4 @@
-package com.example.kotlinstart.view.weatherscreen
+package com.example.kotlinstart.view.weatherlistscreen
 
 interface RequestPermission {
     fun onRequestPermission()

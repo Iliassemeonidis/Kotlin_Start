@@ -1,7 +1,7 @@
 package com.example.kotlinstart.view.base.baseinterface
 
-import com.example.kotlinstart.view.mainscreen.MainFragment
+import com.example.kotlinstart.view.detailsscreen.DetailsFragment
 
 interface OnGetWeatherFragmentList {
-    fun onListFragment(list: MutableList<MainFragment>)
+    fun onListFragment(list: MutableList<DetailsFragment>)
 }

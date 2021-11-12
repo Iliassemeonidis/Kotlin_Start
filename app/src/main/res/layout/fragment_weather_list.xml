@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.weatherscreen.WeatherFragment"
+    tools:context=".view.weatherlistscreen.WeatherListFragment"
     >
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -27,4 +27,30 @@
             tools:listitem="@layout/item_city_weather"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottom_app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:backgroundTint="@color/CornflowerBlue"
+        app:fabAlignmentMode="center"
+        app:hideOnScroll="true"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:navigationIcon="@drawable/ic_hamburger_menu_bottom_bar"
+        tools:ignore="BottomAppBar"
+        />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:contentDescription="@string/add_new_city"
+        app:layout_anchor="@id/bottom_app_bar"
+        app:srcCompat="@drawable/ic_plus_cross"
+        app:tint="#FFFFFF"
+        />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

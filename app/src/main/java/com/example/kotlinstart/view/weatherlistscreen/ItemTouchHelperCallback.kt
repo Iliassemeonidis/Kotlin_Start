@@ -1,4 +1,4 @@
-package com.example.kotlinstart.view.weatherscreen
+package com.example.kotlinstart.view.weatherlistscreen
 
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView

@@ -13,7 +13,6 @@
     <string name="title">Укажи свои данные, земляненен и нажми кнопку!</string>
     <string name="add_new_city">add new city</string>
     <string name="icon_sun">icon_sun</string>
-    <string name="city_search">Выполните поиск города на текущем яыке</string>
     <string name="hint_city">Город</string>
     <string name="add_your_place">Поиск города</string>
     <string name="write_city">Введите название города</string>
@@ -71,5 +70,8 @@
     <string name="favourite">favourite</string>
     <string name="settings">settings</string>
     <string name="search">search</string>
+    <string name="city_search">Поиск города</string>
     <string name="empty_list">ПУСТОЙ СПИСОК</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

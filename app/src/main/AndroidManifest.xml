@@ -51,7 +51,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".view.mainscreen.MainService" />
+        <service android:name=".view.detailsscreen.MainService" />
         <service
             android:name=".view.experiments.MainService"
             android:enabled="true"

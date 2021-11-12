@@ -1,4 +1,4 @@
-package com.example.kotlinstart.view.mainscreen
+package com.example.kotlinstart.view.detailsscreen
 
 sealed class DetailsFragmentState {
     data class Success(val weatherDetailsData: WeatherDetailsData) : DetailsFragmentState()

@@ -7,7 +7,6 @@
         <entry key="../../../../Library/Android/sdk/platforms/android-30/data/res/drawable/ic_plus.xml" value="0.25885416666666666" />
         <entry key="..\:/Users/sanek/Desktop/Profi/Ilias/Kotlin_Start/app/src/main/res/layout/activity_main.xml" value="0.17502532928064843" />
         <entry key="..\:/Users/sanek/Desktop/Profi/Ilias/Kotlin_Start/app/src/main/res/layout/fragment_details.xml" value="0.17502532928064843" />
-        <entry key="..\:/Users/sanek/Desktop/Profi/Ilias/Kotlin_Start/app/src/main/res/layout/fragment_main.xml" value="0.2644927536231884" />
         <entry key="..\:/Users/sanek/Desktop/Profi/Ilias/Kotlin_Start/app/src/main/res/layout/fragment_weather.xml" value="0.1259259259259259" />
         <entry key="..\:/Users/sanek/Desktop/Profi/Ilias/Kotlin_Start/app/src/main/res/mipmap-anydpi-v26/ic_la.xml" value="0.25" />
         <entry key="..\:/Users/sanek/Desktop/Profi/Ilias/Kotlin_Start/app/src/main/res/mipmap-anydpi-v26/ic_la_round.xml" value="0.25" />
@@ -19,10 +18,14 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.14719202898550723" />
         <entry key="app/src/main/res/layout/fragment_city_dialog.xml" value="0.19672059670058598" />
         <entry key="app/src/main/res/layout/fragment_details.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_details2.xml" value="0.14855072463768115" />
         <entry key="app/src/main/res/layout/fragment_google_maps.xml" value="0.15896739130434784" />
+        <entry key="app/src/main/res/layout/fragment_list.xml" value="0.14855072463768115" />
+        <entry key="app/src/main/res/layout/fragment_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_thread.xml" value="0.16576086956521738" />
         <entry key="app/src/main/res/layout/fragment_weather.xml" value="0.1793478260869565" />
         <entry key="app/src/main/res/layout/fragment_weather_history.xml" value="0.19384057971014493" />
+        <entry key="app/src/main/res/layout/fragment_weather_list.xml" value="0.17255434782608695" />
         <entry key="app/src/main/res/layout/google_maps.xml" value="0.21784420289855072" />
         <entry key="app/src/main/res/layout/item_city.xml" value="0.1793478260869565" />
         <entry key="app/src/main/res/layout/item_city_weather.xml" value="0.1644021739130435" />
