@@ -11,6 +11,7 @@ import com.example.kotlinstart.databinding.FragmentMainBinding
 import com.example.kotlinstart.view.detailsscreen.DetailsFragment
 import com.example.kotlinstart.view.detailsscreen.DetailsViewPagerAdapter
 import com.example.kotlinstart.view.weatherlistscreen.WeatherListFragment
+import kotlinx.android.synthetic.main.fragment_main.*
 
 
 class MainFragment : Fragment() {
@@ -78,8 +79,8 @@ class MainFragment : Fragment() {
 
     private fun initBindingAndPager() {
         adapter = DetailsViewPagerAdapter(requireActivity(), mutableListOf())
-        mainBinding?.pager?.adapter = adapter
-        mainBinding?.pager?.currentItem = arguments?.getInt(PAGER_POSITION) ?: 0
+        binding.pager.adapter = adapter
+        binding.pager.setCurrentItem(arguments?.getInt(PAGER_POSITION) ?: 0, true)
     }
 
     private fun createBottomBarAndNavigationIcon() {
@@ -96,7 +97,7 @@ class MainFragment : Fragment() {
     }
 
     companion object {
-         const val PAGER_POSITION = "PAGER_POSITION"
+        const val PAGER_POSITION = "PAGER_POSITION"
 
         fun newInstance(position: Int) =
             MainFragment().apply { arguments = bundleOf(PAGER_POSITION to position) }

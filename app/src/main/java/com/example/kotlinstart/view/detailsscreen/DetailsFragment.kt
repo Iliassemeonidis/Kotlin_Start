@@ -30,7 +30,7 @@ import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou
 const val ACTION = "Receive"
 
 class DetailsFragment : Fragment(),
-    PermissionInterface, GeolocationInterface, WeatherParamsInterface {
+    PermissionInterface, GeolocationInterface {
 
     private lateinit var mainViewModel: DetailsViewModel
     private var detailsBinding: FragmentDetailsBinding? = null
@@ -227,8 +227,4 @@ class DetailsFragment : Fragment(),
             null
         )
     }
-    override fun getCreatedListWeather(): ArrayList<WeatherParams> {
-        TODO("Not yet implemented")
-    }
-
 }
