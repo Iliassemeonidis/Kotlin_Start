@@ -70,7 +70,7 @@ class WeatherListAdapter(
             itemWeatherBinding.textViewRegion.text = weather.region
             itemWeatherBinding.temperature.text = weather.temperature
             itemView.setOnClickListener {
-                onClickItem?.onClick(weatherList[adapterPosition])
+                onClickItem?.onClick(adapterPosition)
             }
         }
 

@@ -33,9 +33,9 @@ class WeatherListFragment : Fragment() {
 
     private val onClickListItem: OnClickItem = object : OnClickItem {
 
-        override fun onClick(weather: Weather) {
+        override fun onClick(position:Int) {
             requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.list_container, DetailsFragment())
+                .replace(R.id.main_container, MainFragment.newInstance(position))
                 .addToBackStack(null)
                 .commitAllowingStateLoss()
         }
@@ -88,8 +88,8 @@ class WeatherListFragment : Fragment() {
     }
 
     private fun onWeatherListAdded(list: MutableList<Weather>) {
-        listAdapter.onListAdded(list)
-    }
+        listAdapter.onListAdded(list) }
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -121,7 +121,7 @@ class WeatherListFragment : Fragment() {
     }
 
     interface OnClickItem {
-        fun onClick(weather: Weather)
+        fun onClick(position:Int)
     }
 
     private fun initFab() {
@@ -192,5 +192,3 @@ class WeatherListFragment : Fragment() {
             .show()
     }
 }
-
-

@@ -35,6 +35,4 @@ internal class MainViewModel(
     fun subscribeOnWeatherFromDB(): MutableLiveData<MutableList<DetailsFragment>> {
         return liveDataForDB
     }
-
-
 }

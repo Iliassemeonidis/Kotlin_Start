@@ -3,6 +3,7 @@ package com.example.kotlinstart.view.mainscreen
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.kotlinstart.R
@@ -78,6 +79,7 @@ class MainFragment : Fragment() {
     private fun initBindingAndPager() {
         adapter = DetailsViewPagerAdapter(requireActivity(), mutableListOf())
         mainBinding?.pager?.adapter = adapter
+        mainBinding?.pager?.currentItem = arguments?.getInt(PAGER_POSITION) ?: 0
     }
 
     private fun createBottomBarAndNavigationIcon() {
@@ -91,5 +93,13 @@ class MainFragment : Fragment() {
             .replace(R.id.main_container, WeatherListFragment())
             .addToBackStack(null)
             .commitAllowingStateLoss()
+    }
+
+    companion object {
+         const val PAGER_POSITION = "PAGER_POSITION"
+
+        fun newInstance(position: Int) =
+            MainFragment().apply { arguments = bundleOf(PAGER_POSITION to position) }
+
     }
 }
