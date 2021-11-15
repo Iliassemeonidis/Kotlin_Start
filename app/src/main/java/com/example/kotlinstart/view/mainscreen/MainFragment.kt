@@ -60,7 +60,7 @@ class MainFragment : Fragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_bottom_bar,menu)
+        inflater.inflate(R.menu.menu_bottom_bar, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -89,6 +89,23 @@ class MainFragment : Fragment() {
 
     private fun createBottomBarAndNavigationIcon() {
         initFab()
+        initBottomAppBar()
+    }
+
+    private fun initBottomAppBar() {
+        binding.bottomAppBar.navigationIcon =
+            ContextCompat.getDrawable(requireContext(), R.drawable.ic_hamburger_menu_bottom_bar)
+        binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
+        binding.bottomAppBar.replaceMenu(R.menu.menu_bottom_bar)
+    }
+
+    private fun initFab() {
+        binding.fab.setImageDrawable(
+            ContextCompat.getDrawable(
+                requireContext(),
+                R.drawable.ic_plus_cross
+            )
+        )
         binding.fab.setOnClickListener {
             openWeatherListFragment()
         }
@@ -97,23 +114,8 @@ class MainFragment : Fragment() {
     private fun openWeatherListFragment() {
         requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.main_container, WeatherListFragment())
-            .addToBackStack(null)
+            .addToBackStack("null")
             .commitAllowingStateLoss()
-    }
-
-    private fun initFab() {
-        binding.bottomAppBar.navigationIcon =
-            ContextCompat.getDrawable(requireContext(), R.drawable.ic_hamburger_menu_bottom_bar)
-
-        binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
-
-        binding.fab.setImageDrawable(
-            ContextCompat.getDrawable(
-                requireContext(),
-                R.drawable.ic_plus_cross
-            )
-        )
-        binding.bottomAppBar.replaceMenu(R.menu.menu_bottom_bar)
     }
 
     companion object {

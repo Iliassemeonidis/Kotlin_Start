@@ -24,9 +24,6 @@ import com.example.kotlinstart.view.mainscreen.MainFragment
 // 1) После добавления новго города в список и нажатя назад приложение падает +
 // 2) Обновление вью пейджера +
 
-//Добавить еще один уровень вложенности , то есть сделать отдельный фрагмент дли детализации +
-//(сделал из main_activity.xml контейнер для фрагментов) +
-
 //Обработка onBackPressed для поддержки FAB +
 // (благодаря использованию main_activity. как контейнера для фрагментов решил эту проблему)
 
@@ -46,7 +43,7 @@ internal class MainActivity : AppCompatActivity() {
             .commitAllowingStateLoss()
     }
 
-    override fun onBackPressed() {
+   /* override fun onBackPressed() {
         when (supportFragmentManager.backStackEntryCount) {
             0 -> checkExit()
             else -> {
@@ -54,7 +51,7 @@ internal class MainActivity : AppCompatActivity() {
                 isExit = false
             }
         }
-    }
+    }*/
 
     private fun checkExit() {
         when (isExit) {

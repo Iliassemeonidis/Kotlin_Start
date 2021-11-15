@@ -48,7 +48,7 @@ internal class WeatherListViewModel(
     }
 
     fun onCityApprovedByUser(weather: Weather) {
-        liveDataForNewAddress.value = weather
+        //liveDataForNewAddress.value = weather
         repositoryImpl.saveCityInDataBase(WeatherParams().apply {
             city = weather.cityName
         })
