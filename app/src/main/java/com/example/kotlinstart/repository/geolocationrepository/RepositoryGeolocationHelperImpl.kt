@@ -11,7 +11,6 @@ internal class RepositoryGeolocationHelperImpl : RepositoryGeolocation {
         return MyGeolocationHelper(context, fragment, activity)
     }*/
 
-    override fun gatWeatherCoordinatesByCityName(): WeatherParams {
-        TODO("Not yet implemented")
-    }
+//    override fun gatWeatherCoordinatesByCityName(): WeatherParams {
+//    }
 }

@@ -29,14 +29,12 @@ class WeatherListFragment : Fragment() {
     private val binding get() = weatherBinding!!
     private lateinit var listAdapter: WeatherListAdapter
     private val myGeolocation = getGeolocationHelper()
-    private var isAttached = true
 
     private val onClickListItem: OnClickItem = object : OnClickItem {
 
-        override fun onClick(position:Int) {
+        override fun onClick(position: Int) {
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.main_container, MainFragment.newInstance(position))
-                .addToBackStack(null)
                 .commitAllowingStateLoss()
         }
     }
@@ -52,7 +50,6 @@ class WeatherListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        isAttached = true
         weatherBinding = FragmentWeatherListBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -70,13 +67,18 @@ class WeatherListFragment : Fragment() {
         ItemTouchHelper(ItemTouchHelperCallback(listAdapter))
             .attachToRecyclerView(binding.recyclerViewMain)
 
+
         initFab()
         onClickFab()
     }
 
     private fun subscribeOnViewModel() {
-        viewModel.subscribeToNewAddress().observe(viewLifecycleOwner) { onWeatherItemAdded(it) }
-        viewModel.subscribeToDB().observe(viewLifecycleOwner) { onWeatherListAdded(it) }
+        viewModel.subscribeToNewAddress().observe(viewLifecycleOwner) {
+            onWeatherItemAdded(it)
+        }
+        viewModel.subscribeToDB().observe(viewLifecycleOwner) {
+            onWeatherListAdded(it)
+        }
         viewModel.subscribeToNewCity().observe(viewLifecycleOwner) { isCityReady(it) }
         viewModel.getWeatherFromBD()
     }
@@ -88,7 +90,15 @@ class WeatherListFragment : Fragment() {
     }
 
     private fun onWeatherListAdded(list: MutableList<Weather>) {
-        listAdapter.onListAdded(list) }
+        listAdapter.onListAdded(list)
+        isListAdapterEmpty()
+    }
+
+    private fun isListAdapterEmpty() {
+        if (listAdapter.itemCount == 0) {
+            Toast.makeText(requireContext(), "Добавтье новый город", Toast.LENGTH_SHORT).show()
+        }
+    }
 
 
     override fun onRequestPermissionsResult(
@@ -99,16 +109,8 @@ class WeatherListFragment : Fragment() {
     }
 
     private fun onWeatherItemAdded(weather: Weather) {
-        if (isAttached) {
-            isAttached = false
-        } else {
             if (weather.cityName.isNotEmpty()) {
                 listAdapter.onItemAdded(weather)
-
-                /*viewModel.saveCityInDataBase(WeatherParams().apply {
-                    city = weather.cityName
-                })*/
-            }
         }
     }
 
@@ -121,7 +123,7 @@ class WeatherListFragment : Fragment() {
     }
 
     interface OnClickItem {
-        fun onClick(position:Int)
+        fun onClick(position: Int)
     }
 
     private fun initFab() {
@@ -140,7 +142,7 @@ class WeatherListFragment : Fragment() {
     private fun onClickFab() {
         binding.fab.setOnClickListener {
             requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.main_container,MainFragment())
+                .replace(R.id.main_container, MainFragment())
                 .commitAllowingStateLoss()
         }
     }
@@ -166,14 +168,15 @@ class WeatherListFragment : Fragment() {
     }
 
     private fun isCityReady(state: SearchCityState) {
-                when (state) {
+        when (state) {
             is SearchCityState.Success -> showDialog(state.city)
             SearchCityState.Empty -> Toast.makeText(
                 requireContext(),
                 R.string.city_is_not_find,
                 Toast.LENGTH_SHORT
             ).show()
-            is SearchCityState.Error -> TODO()
+            is SearchCityState.Error ->
+                Toast.makeText(requireContext(), state.error.message, Toast.LENGTH_SHORT).show()
         }
     }
 

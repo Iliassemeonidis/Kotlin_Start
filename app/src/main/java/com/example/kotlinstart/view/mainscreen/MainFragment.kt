@@ -1,8 +1,10 @@
 package com.example.kotlinstart.view.mainscreen
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -11,7 +13,7 @@ import com.example.kotlinstart.databinding.FragmentMainBinding
 import com.example.kotlinstart.view.detailsscreen.DetailsFragment
 import com.example.kotlinstart.view.detailsscreen.DetailsViewPagerAdapter
 import com.example.kotlinstart.view.weatherlistscreen.WeatherListFragment
-import kotlinx.android.synthetic.main.fragment_main.*
+import com.google.android.material.bottomappbar.BottomAppBar
 
 
 class MainFragment : Fragment() {
@@ -33,6 +35,7 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         mainBinding = FragmentMainBinding.inflate(inflater, container, false)
+
         return binding.root
     }
 
@@ -57,14 +60,14 @@ class MainFragment : Fragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_bottom_bar, menu)
+        inflater.inflate(R.menu.menu_bottom_bar,menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.app_bar_favourite -> {
-                openWeatherFragment()
+                openWeatherListFragment()
             }
             R.id.app_bar_settings -> Toast.makeText(
                 requireContext(),
@@ -77,6 +80,7 @@ class MainFragment : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun initBindingAndPager() {
         adapter = DetailsViewPagerAdapter(requireActivity(), mutableListOf())
         binding.pager.adapter = adapter
@@ -84,16 +88,32 @@ class MainFragment : Fragment() {
     }
 
     private fun createBottomBarAndNavigationIcon() {
+        initFab()
         binding.fab.setOnClickListener {
-            openWeatherFragment()
+            openWeatherListFragment()
         }
     }
 
-    private fun openWeatherFragment() {
+    private fun openWeatherListFragment() {
         requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.main_container, WeatherListFragment())
             .addToBackStack(null)
             .commitAllowingStateLoss()
+    }
+
+    private fun initFab() {
+        binding.bottomAppBar.navigationIcon =
+            ContextCompat.getDrawable(requireContext(), R.drawable.ic_hamburger_menu_bottom_bar)
+
+        binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
+
+        binding.fab.setImageDrawable(
+            ContextCompat.getDrawable(
+                requireContext(),
+                R.drawable.ic_plus_cross
+            )
+        )
+        binding.bottomAppBar.replaceMenu(R.menu.menu_bottom_bar)
     }
 
     companion object {
@@ -101,6 +121,5 @@ class MainFragment : Fragment() {
 
         fun newInstance(position: Int) =
             MainFragment().apply { arguments = bundleOf(PAGER_POSITION to position) }
-
     }
 }

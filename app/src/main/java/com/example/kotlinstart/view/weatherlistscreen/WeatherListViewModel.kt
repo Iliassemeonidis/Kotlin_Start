@@ -31,7 +31,6 @@ internal class WeatherListViewModel(
     }
 
     fun getAddress(context: Context, address: String) {
-
         repositoryImpl.getAddress(context, address, object : OnGetAddressListener {
 
             override fun onValidData(weather: Weather) {
@@ -47,6 +46,7 @@ internal class WeatherListViewModel(
             }
         })
     }
+
     fun onCityApprovedByUser(weather: Weather) {
         liveDataForNewAddress.value = weather
         repositoryImpl.saveCityInDataBase(WeatherParams().apply {

@@ -61,7 +61,8 @@ class RepositoryImpl : Repository {
         val handler = Handler(createThread().looper)
         handler.post {
             val listDao = KotlinStartApplication.getHistoryDao().all()
-            val list = mutableListOf<Weather>()
+
+            val list = mutableSetOf<Weather>()
             for (i in listDao.indices) {
                 list.add(
                     Weather(
@@ -70,7 +71,8 @@ class RepositoryImpl : Repository {
                     )
                 )
             }
-            listener.onListReady(list)
+            val listWeather : MutableList<Weather> = list.toMutableList()
+            listener.onListReady(listWeather)
         }
     }
 

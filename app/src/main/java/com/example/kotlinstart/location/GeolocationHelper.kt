@@ -157,23 +157,22 @@ class GeolocationHelper(context: Context) {
         addressListener: OnGetAddressListener
     ) {
         val geoCoder = Geocoder(context)
-//        try {
-//            val addresses = geoCoder.getFromLocationName(city, 1)
-            val addresses = "Moscow"
-            addressListener.onValidData(Weather(addresses))
-//
-//            if (addresses.isNotEmpty()) {
-//                if (addresses[0].locality.isEmpty()) {
-//                    addressListener.onEmpty()
-//                } else {
-//                    addressListener.onValidData(Weather(addresses[0].locality))
-//                }
-//            } else {
-//                addressListener.onEmpty()
-//            }
-//        } catch (e: IOException) {
-//            e.printStackTrace()
-//            addressListener.onError(e)
-//        }
+        try {
+            val addresses = geoCoder.getFromLocationName(city, 1)
+//            val addresses = "Moscow"
+//            addressListener.onValidData(Weather(addresses))
+            if (addresses.isNotEmpty()) {
+                if (addresses[0].locality.isEmpty()) {
+                    addressListener.onEmpty()
+                } else {
+                    addressListener.onValidData(Weather(addresses[0].locality))
+                }
+            } else {
+                addressListener.onEmpty()
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+            addressListener.onError(e)
+        }
     }
 }
