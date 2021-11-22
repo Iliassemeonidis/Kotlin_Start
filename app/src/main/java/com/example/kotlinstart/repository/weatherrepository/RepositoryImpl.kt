@@ -30,7 +30,9 @@ class RepositoryImpl : Repository {
                     0,
                     city.city,
                     city.degrees,
-                    city.weatherCondition
+                    city.weatherCondition,
+                    city.lat,
+                    city.lon
                 )
             )
         }
@@ -47,8 +49,10 @@ class RepositoryImpl : Repository {
                     DetailsFragment.newInstance(
                         WeatherParams(
                             listDao[i].city,
+                            listDao[i].city,
                             listDao[i].temperature,
-                            listDao[i].condition
+                            lat = listDao[i].lat,
+                            lon = listDao[i].lon
                         )
                     )
                 )
@@ -62,7 +66,7 @@ class RepositoryImpl : Repository {
         handler.post {
             val listDao = KotlinStartApplication.getHistoryDao().all()
 
-            val list = mutableSetOf<Weather>()
+            val list = mutableListOf<Weather>()
             for (i in listDao.indices) {
                 list.add(
                     Weather(
@@ -71,8 +75,7 @@ class RepositoryImpl : Repository {
                     )
                 )
             }
-            val listWeather : MutableList<Weather> = list.toMutableList()
-            listener.onListReady(listWeather)
+            listener.onListReady(list)
         }
     }
 

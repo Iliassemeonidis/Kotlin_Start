@@ -32,7 +32,8 @@ internal fun checkResponse(city: String, serverResponse: WeatherDTO?): DetailsFr
         fact.condition.isNullOrEmpty()
     ) {
         DetailsFragmentState.Error(Throwable(CORRUPTED_DATA))
-    } else DetailsFragmentState.Success(convertDtoToWeatherData(city, serverResponse))
+    }
+    else DetailsFragmentState.Success(convertDtoToWeatherData(city, serverResponse))
 }
 
 private fun convertDtoToWeatherData(city: String, weatherDTO: WeatherDTO): WeatherDetailsData {

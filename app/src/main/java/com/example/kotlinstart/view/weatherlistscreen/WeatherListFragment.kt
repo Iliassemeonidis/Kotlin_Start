@@ -1,12 +1,10 @@
 package com.example.kotlinstart.view.weatherlistscreen
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
@@ -33,27 +31,29 @@ class WeatherListFragment : Fragment() {
     private val onClickListItem: OnClickItem = object : OnClickItem {
 
         override fun onClick(position: Int) {
+            removeMainFragmentFromBackStack()
+
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.main_container, MainFragment.newInstance(position))
                 .commitAllowingStateLoss()
         }
-    }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        requireActivity().onBackPressedDispatcher.addCallback(
-            this,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    requireActivity().supportFragmentManager.popBackStack()
-                }
-            })
+        private fun removeMainFragmentFromBackStack() {
+            requireActivity().supportFragmentManager.beginTransaction().remove(MainFragment())
+            requireActivity().supportFragmentManager.popBackStack()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(WeatherListViewModel::class.java)
 
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        weatherBinding = null
+        listAdapter.onDestroy()
     }
 
     override fun onCreateView(
@@ -68,19 +68,27 @@ class WeatherListFragment : Fragment() {
     //TODO разобраться с очередностью вызова методов
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         subscribeOnViewModel()
 
-        listAdapter = WeatherListAdapter(onClickListItem)
-
-        binding.recyclerViewMain.adapter = listAdapter
+        initListAdapterAndRecyclerAdapter()
 
         ItemTouchHelper(ItemTouchHelperCallback(listAdapter))
             .attachToRecyclerView(binding.recyclerViewMain)
 
-
         initFab()
-        onClickFab()
+
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>, grantResults: IntArray
+    ) {
+        myGeolocation.checkPermissionsResult(requireContext(), requestCode, grantResults)
+    }
+
+    private fun initListAdapterAndRecyclerAdapter() {
+        listAdapter = WeatherListAdapter(onClickListItem)
+        binding.recyclerViewMain.adapter = listAdapter
     }
 
     private fun subscribeOnViewModel() {
@@ -94,29 +102,16 @@ class WeatherListFragment : Fragment() {
         viewModel.getWeatherFromBD()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        weatherBinding = null
-        listAdapter.onDestroy()
-    }
-
     private fun onWeatherListAdded(list: MutableList<Weather>) {
         listAdapter.onListAdded(list)
         isListAdapterEmpty()
     }
 
+
     private fun isListAdapterEmpty() {
         if (listAdapter.itemCount == 0) {
             Toast.makeText(requireContext(), "Добавтье новый город", Toast.LENGTH_SHORT).show()
         }
-    }
-
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>, grantResults: IntArray
-    ) {
-        myGeolocation.checkPermissionsResult(requireContext(), requestCode, grantResults)
     }
 
  /*   private fun onWeatherItemAdded(weather: Weather) {
@@ -133,10 +128,6 @@ class WeatherListFragment : Fragment() {
         //viewModel.saveCityInDataBase(city)
     }
 
-    interface OnClickItem {
-        fun onClick(position: Int)
-    }
-
     private fun initFab() {
         binding.bottomAppBar.navigationIcon = null
         binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
@@ -147,14 +138,13 @@ class WeatherListFragment : Fragment() {
             )
         )
         binding.bottomAppBar.replaceMenu(R.menu.search_menu)
+        onClickFab()
         searchCity()
     }
 
     private fun onClickFab() {
         binding.fab.setOnClickListener {
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.main_container, MainFragment())
-                .commitAllowingStateLoss()
+            requireActivity().supportFragmentManager.popBackStack()
         }
     }
 
@@ -180,7 +170,7 @@ class WeatherListFragment : Fragment() {
 
     private fun isCityReady(state: SearchCityState) {
         when (state) {
-            is SearchCityState.Success -> showDialog(state.city)
+            is SearchCityState.Success -> showDialog(state.weather)
             SearchCityState.Empty -> Toast.makeText(
                 requireContext(),
                 R.string.city_is_not_find,
@@ -191,14 +181,13 @@ class WeatherListFragment : Fragment() {
         }
     }
 
-    private fun showDialog(city: String) {
+    private fun showDialog(weather: WeatherParams) {
         AlertDialog.Builder(requireContext())
             .setTitle(getString(R.string.botton_search))
-            .setMessage(getString(R.string.dialog_city_search_message, city))
+            .setMessage(getString(R.string.dialog_city_search_message, weather.city))
             .setPositiveButton(getString(R.string.dialog_button_ok)) { dialog, _ ->
-                val weather = Weather(city)
                 viewModel.onCityApprovedByUser(weather)
-                listAdapter.onItemAdded(weather)
+                listAdapter.onItemAdded(Weather(weather.city))
                 dialog.dismiss()
             }
             .setNegativeButton(getString(R.string.dialog_button_no)) { dialog, _ ->
@@ -206,5 +195,9 @@ class WeatherListFragment : Fragment() {
             }
             .create()
             .show()
+    }
+
+    interface OnClickItem {
+        fun onClick(position: Int)
     }
 }

@@ -1,7 +1,7 @@
 package com.example.kotlinstart.view.mainscreen
 
-import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Handler
 import android.view.*
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -24,6 +24,7 @@ class MainFragment : Fragment() {
     private lateinit var adapter: DetailsViewPagerAdapter
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
@@ -35,17 +36,16 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         mainBinding = FragmentMainBinding.inflate(inflater, container, false)
-
         return binding.root
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViewMainParams()
-        initBindingAndPager()
+        initAdapterAndPager()
         createBottomBarAndNavigationIcon()
     }
-
     private fun initViewMainParams() {
         viewModel.subscribeOnWeatherFromDB().observe(viewLifecycleOwner) { onWeatherList(it) }
         viewModel.getWeatherParamsFromDataBase()
@@ -58,7 +58,7 @@ class MainFragment : Fragment() {
         }
         adapter.addNewList(list)
     }
-
+       //TODO Разобратья почему не реагирует на клики меню
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_bottom_bar, menu)
         super.onCreateOptionsMenu(menu, inflater)
@@ -80,11 +80,12 @@ class MainFragment : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    private fun initBindingAndPager() {
+    private fun initAdapterAndPager() {
         adapter = DetailsViewPagerAdapter(requireActivity(), mutableListOf())
         binding.pager.adapter = adapter
-        binding.pager.setCurrentItem(arguments?.getInt(PAGER_POSITION) ?: 0, true)
+        Handler().postDelayed({
+            binding.pager.setCurrentItem(arguments?.getInt(PAGER_POSITION) ?: 0, true)
+        }, 100)
     }
 
     private fun createBottomBarAndNavigationIcon() {
@@ -113,8 +114,8 @@ class MainFragment : Fragment() {
 
     private fun openWeatherListFragment() {
         requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.main_container, WeatherListFragment())
-            .addToBackStack("null")
+            .add(R.id.main_container, WeatherListFragment())
+            .addToBackStack(null)
             .commitAllowingStateLoss()
     }
 

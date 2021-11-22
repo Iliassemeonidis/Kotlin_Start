@@ -14,7 +14,6 @@ import com.example.kotlinstart.model.Weather
 import com.example.kotlinstart.model.WeatherParams
 import com.example.kotlinstart.view.base.baseinterface.OnGetAddressListener
 import java.io.IOException
-import java.util.*
 
 const val REQUEST_CODE = 102
 private const val REFRESH_PERIOD = 60000L
@@ -165,7 +164,8 @@ class GeolocationHelper(context: Context) {
                 if (addresses[0].locality.isEmpty()) {
                     addressListener.onEmpty()
                 } else {
-                    addressListener.onValidData(Weather(addresses[0].locality))
+                    val address = addresses[0]
+                    addressListener.onValidData(WeatherParams(address.locality,lon = address.longitude,lat = address.latitude))
                 }
             } else {
                 addressListener.onEmpty()
@@ -174,5 +174,11 @@ class GeolocationHelper(context: Context) {
             e.printStackTrace()
             addressListener.onError(e)
         }
+    }
+
+    private fun checkAdminAreal(adminArea: String?): String {
+        return if (adminArea.isNullOrEmpty()) {
+            adminArea.toString()
+        }else ""
     }
 }

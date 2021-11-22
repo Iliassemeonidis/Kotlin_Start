@@ -20,11 +20,9 @@ import com.example.kotlinstart.GeolocationInterface
 import com.example.kotlinstart.KotlinStartApplication.Companion.getGeolocationHelper
 import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.FragmentDetailsBinding
-import com.example.kotlinstart.databinding.FragmentMainBinding
 import com.example.kotlinstart.location.PermissionInterface
 import com.example.kotlinstart.location.REQUEST_CODE
 import com.example.kotlinstart.model.WeatherParams
-import com.example.kotlinstart.model.WeatherParamsInterface
 import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou
 
 const val ACTION = "Receive"
@@ -123,7 +121,11 @@ class DetailsFragment : Fragment(),
             }
             is DetailsFragmentState.Error -> {
                 binding.loadingLayout.visibility = View.GONE
-                Toast.makeText(requireContext(), detailsFragmentState.error.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    detailsFragmentState.error.message,
+                    Toast.LENGTH_SHORT
+                ).show()
             }
             else -> Toast.makeText(
                 requireContext(),
@@ -213,18 +215,18 @@ class DetailsFragment : Fragment(),
 
         const val CITY_EXTRA = "CITY_EXTRA"
 
+        private fun openAppSettingsPermission(it: Context) {
+            ContextCompat.startActivity(
+                it,
+                Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                    data = Uri.fromParts("package", it.packageName, null)
+                },
+                null
+            )
+        }
+
         @JvmStatic
         fun newInstance(city: WeatherParams) =
             DetailsFragment().apply { arguments = bundleOf(CITY_EXTRA to city) }
-    }
-
-    private fun openAppSettingsPermission(it: Context) {
-        ContextCompat.startActivity(
-            it,
-            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                data = Uri.fromParts("package", it.packageName, null)
-            },
-            null
-        )
     }
 }

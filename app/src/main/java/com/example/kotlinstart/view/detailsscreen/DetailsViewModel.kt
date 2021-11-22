@@ -17,26 +17,8 @@ internal class DetailsViewModel(
 
     lateinit var city: String
     private val callBack = object : retrofit2.Callback<WeatherDTO> {
-
         override fun onResponse(call: Call<WeatherDTO>, response: Response<WeatherDTO>) {
             val stateSuccess = getStateOnResponse(city, response)
-            if (stateSuccess is DetailsFragmentState.Success) {
-                val data = stateSuccess.weatherDetailsData
-                //detailsRepository.saveData(data)
-                /*val handlerThread = HandlerThread("MyThread2")
-                handlerThread.start()
-                val handler = Handler(handlerThread.looper)
-                handler.post {
-                    getHistoryDao().insert(
-                        HistoryEntity(
-                            0,
-                            data.city,
-                            data.degrees,
-                            data.condition,
-                        )
-                    )
-                }*/
-            }
             detailsLiveData.postValue(stateSuccess)
         }
 
@@ -55,7 +37,5 @@ internal class DetailsViewModel(
         detailsLiveData.value = DetailsFragmentState.Loading
         detailsRepository.getWeatherDataFromServers(lat, lon, callBack)
     }
-
-
 }
 

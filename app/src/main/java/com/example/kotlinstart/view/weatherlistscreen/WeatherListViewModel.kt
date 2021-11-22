@@ -33,8 +33,8 @@ internal class WeatherListViewModel(
     fun getAddress(context: Context, address: String) {
         repositoryImpl.getAddress(context, address, object : OnGetAddressListener {
 
-            override fun onValidData(weather: Weather) {
-                liveDataForNewCity.value = SearchCityState.Success(weather.cityName)
+            override fun onValidData(weather: WeatherParams) {
+                liveDataForNewCity.value = SearchCityState.Success(weather)
             }
 
             override fun onError(error: Throwable) {
@@ -47,11 +47,9 @@ internal class WeatherListViewModel(
         })
     }
 
-    fun onCityApprovedByUser(weather: Weather) {
+    fun onCityApprovedByUser(weather: WeatherParams) {
         //liveDataForNewAddress.value = weather
-        repositoryImpl.saveCityInDataBase(WeatherParams().apply {
-            city = weather.cityName
-        })
+        repositoryImpl.saveCityInDataBase(weather)
     }
 
     fun subscribeToNewCity(): LiveData<SearchCityState> {
@@ -70,5 +68,4 @@ internal class WeatherListViewModel(
     fun subscribeToDB(): MutableLiveData<MutableList<Weather>> {
         return liveDataForDB
     }
-
 }

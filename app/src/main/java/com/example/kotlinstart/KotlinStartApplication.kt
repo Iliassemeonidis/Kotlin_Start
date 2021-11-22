@@ -41,6 +41,7 @@ class KotlinStartApplication : Application() {
                             HistoryDataBase::class.java,
                             DB_NAME
                         )
+                            .fallbackToDestructiveMigration()
                             .build()
                     }
                 }
