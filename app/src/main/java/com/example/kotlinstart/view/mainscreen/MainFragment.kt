@@ -15,15 +15,12 @@ import com.example.kotlinstart.view.detailsscreen.DetailsViewPagerAdapter
 import com.example.kotlinstart.view.weatherlistscreen.WeatherListFragment
 import com.google.android.material.bottomappbar.BottomAppBar
 
-
 class MainFragment : Fragment() {
 
     private lateinit var viewModel: MainViewModel
     private var mainBinding: FragmentMainBinding? = null
     private val binding get() = mainBinding!!
     private lateinit var adapter: DetailsViewPagerAdapter
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +43,7 @@ class MainFragment : Fragment() {
         initAdapterAndPager()
         createBottomBarAndNavigationIcon()
     }
+
     private fun initViewMainParams() {
         viewModel.subscribeOnWeatherFromDB().observe(viewLifecycleOwner) { onWeatherList(it) }
         viewModel.getWeatherParamsFromDataBase()
@@ -58,7 +56,8 @@ class MainFragment : Fragment() {
         }
         adapter.addNewList(list)
     }
-       //TODO Разобратья почему не реагирует на клики меню
+
+    //TODO Разобратья почему не реагирует на клики меню
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_bottom_bar, menu)
         super.onCreateOptionsMenu(menu, inflater)
@@ -117,6 +116,26 @@ class MainFragment : Fragment() {
             .add(R.id.main_container, WeatherListFragment())
             .addToBackStack(null)
             .commitAllowingStateLoss()
+
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            "1",
+            this
+        ) { requestKey, bundle ->
+            if (requestKey == "1"){
+                val result = bundle.getParcelable<Enum>("DeleteAlertDialog.DELETE_DIALOG_RESULT")
+                result?.let{
+                    when(it){
+                        VAR_1 //Ничего
+                        VAR_2 -> //refresh()
+                        VAR_3 -> //bundle.getPosition - move to position
+                        VAR_4 -> //refresh() bundle.getPosition - move to position
+                        else //Ничего
+                }
+                }
+
+            }
+
+        }
     }
 
     companion object {

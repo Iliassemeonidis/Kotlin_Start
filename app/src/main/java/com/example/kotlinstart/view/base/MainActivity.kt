@@ -8,6 +8,8 @@ import com.example.kotlinstart.view.mainscreen.MainFragment
 
 //По ДЗ:
 
+//java.lang.NullPointerException: addresses[0].locality must not be null
+
 // замени Set на List +
 
 // Разобраться с падением при отработке onBackPress() +

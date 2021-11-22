@@ -1,14 +1,17 @@
 package com.example.kotlinstart.view.weatherlistscreen
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.kotlinstart.KotlinStartApplication.Companion.getGeolocationHelper
@@ -17,31 +20,58 @@ import com.example.kotlinstart.databinding.FragmentWeatherListBinding
 import com.example.kotlinstart.model.Weather
 import com.example.kotlinstart.model.WeatherParams
 import com.example.kotlinstart.view.detailsscreen.SearchCityState
-import com.example.kotlinstart.view.mainscreen.MainFragment
 import com.google.android.material.bottomappbar.BottomAppBar
 
 class WeatherListFragment : Fragment() {
 
-    private lateinit var viewModel: WeatherListViewModel
     private var weatherBinding: FragmentWeatherListBinding? = null
     private val binding get() = weatherBinding!!
+
+    private lateinit var viewModel: WeatherListViewModel
     private lateinit var listAdapter: WeatherListAdapter
-    private val myGeolocation = getGeolocationHelper()
 
     private val onClickListItem: OnClickItem = object : OnClickItem {
 
         override fun onClick(position: Int) {
-            removeMainFragmentFromBackStack()
+            //removeAllEragments()
 
-            requireActivity().supportFragmentManager.beginTransaction()
+            /*requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.main_container, MainFragment.newInstance(position))
-                .commitAllowingStateLoss()
-        }
+                .commitAllowingStateLoss()*/
 
-        private fun removeMainFragmentFromBackStack() {
-            requireActivity().supportFragmentManager.beginTransaction().remove(MainFragment())
+            setFragmentResult(
+                "1",
+                Bundle().apply {
+                    Enum,
+                    position
+                }
+            )
             requireActivity().supportFragmentManager.popBackStack()
         }
+
+        private fun removeAllEragments() {
+            requireActivity().supportFragmentManager.let { fragmentManager ->
+                fragmentManager.fragments.map { fragment ->
+                    fragmentManager.beginTransaction().remove(fragment)
+                }
+            }
+        }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        requireActivity().onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                setFragmentResult(
+                    "1",
+                    Bundle().apply {
+                            Enum,
+                            position
+                    }
+                )
+                requireActivity().supportFragmentManager.popBackStack()
+            }
+        })
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,7 +113,7 @@ class WeatherListFragment : Fragment() {
         requestCode: Int,
         permissions: Array<String>, grantResults: IntArray
     ) {
-        myGeolocation.checkPermissionsResult(requireContext(), requestCode, grantResults)
+        getGeolocationHelper().checkPermissionsResult(requireContext(), requestCode, grantResults)
     }
 
     private fun initListAdapterAndRecyclerAdapter() {
@@ -92,9 +122,9 @@ class WeatherListFragment : Fragment() {
     }
 
     private fun subscribeOnViewModel() {
-       /* viewModel.subscribeToNewAddress().observe(viewLifecycleOwner) {
-            onWeatherItemAdded(it)
-        }*/
+        /* viewModel.subscribeToNewAddress().observe(viewLifecycleOwner) {
+             onWeatherItemAdded(it)
+         }*/
         viewModel.subscribeToDB().observe(viewLifecycleOwner) {
             onWeatherListAdded(it)
         }
@@ -114,11 +144,11 @@ class WeatherListFragment : Fragment() {
         }
     }
 
- /*   private fun onWeatherItemAdded(weather: Weather) {
-        if (weather.cityName.isNotEmpty()) {
-            listAdapter.onItemAdded(weather)
-        }
-    }*/
+    /*   private fun onWeatherItemAdded(weather: Weather) {
+           if (weather.cityName.isNotEmpty()) {
+               listAdapter.onItemAdded(weather)
+           }
+       }*/
 
     private fun addItemOnListWeather(city: WeatherParams) {
         //weatherList.add(Weather(city.city, "", city.degrees))
