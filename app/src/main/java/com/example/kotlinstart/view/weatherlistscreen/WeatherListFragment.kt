@@ -42,8 +42,14 @@ internal class WeatherListFragment : Fragment() {
 //                .commitAllowingStateLoss()
 
             when (isListSizeChanged) {
-                true -> setFragmentResult("1", bundleOf( LISTSTATE_KEY to ListState.MOVINGTOTHENEW(position)))
-                else -> setFragmentResult("1", bundleOf(LISTSTATE_KEY to ListState.MOVINGTOTHETOOLD(position)))
+                true -> setFragmentResult(
+                    "1",
+                    bundleOf(LIST_STATE_KEY to ListState.ToPosition(position, true))
+                )
+                else -> setFragmentResult(
+                    "1",
+                    bundleOf(LIST_STATE_KEY to ListState.ToPosition(position, false))
+                )
 
             }
 
@@ -207,16 +213,16 @@ internal class WeatherListFragment : Fragment() {
     }
 
     private fun checkStateList() {
-        when (isListSizeChanged) {
-            true -> setFragmentResult("1", bundleOf(LISTSTATE_KEY to ListState.New(isListSizeChanged)))
-            false -> setFragmentResult("1", bundleOf(LISTSTATE_KEY to ListState.Old(isListSizeChanged)))
-        }
+        setFragmentResult(
+            "1",
+            bundleOf(LIST_STATE_KEY to ListState.NotChanged(isListSizeChanged))
+        )
         requireActivity().supportFragmentManager.popBackStack()
     }
 
 
     companion object {
-        const val LISTSTATE_KEY = "LISTSTATE"
+        const val LIST_STATE_KEY = "LISTSTATE"
     }
 
     interface OnClickItem {

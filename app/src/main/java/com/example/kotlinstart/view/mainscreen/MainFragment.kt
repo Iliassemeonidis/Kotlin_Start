@@ -14,7 +14,7 @@ import com.example.kotlinstart.view.detailsscreen.DetailsFragment
 import com.example.kotlinstart.view.detailsscreen.DetailsViewPagerAdapter
 import com.example.kotlinstart.view.weatherlistscreen.ListState
 import com.example.kotlinstart.view.weatherlistscreen.WeatherListFragment
-import com.example.kotlinstart.view.weatherlistscreen.WeatherListFragment.Companion.LISTSTATE_KEY
+import com.example.kotlinstart.view.weatherlistscreen.WeatherListFragment.Companion.LIST_STATE_KEY
 import com.google.android.material.bottomappbar.BottomAppBar
 
 class MainFragment : Fragment() {
@@ -129,22 +129,21 @@ class MainFragment : Fragment() {
             this
         ) { requestKey, bundle ->
             if (requestKey == "1") {
-                val result = bundle.get(LISTSTATE_KEY) as ListState
+                val result = bundle.get(LIST_STATE_KEY) as ListState
                 println(result)
                 when (result) {
-                    is ListState.Old
-                    -> println("Ничего не изменилось вернулись назад")
-                    is ListState.New
-                    -> initViewMainParams()
-                    is ListState.MOVINGTOTHETOOLD -> {
-                        println("bundle.getPosition - move to position не изменился и нажали на элемент")
-                        setPagerPosition(result.position)
+                    is ListState.NotChanged -> {
+                        if (result.refresh) {
+                            initViewMainParams()
+                        }
                     }
-                    is ListState.MOVINGTOTHENEW
-                    -> {
-                        println("refresh() bundle.getPosition - move to position  изменился список и нажали на новый жлемент")
-                        initViewMainParams()
-                        setPagerPosition(result.position)
+                    is ListState.ToPosition -> {
+                        if (result.refresh) {
+                            initViewMainParams()
+                            setPagerPosition(result.position)
+                        } else {
+                            setPagerPosition(result.position)
+                        }
                     }
                 }
             }
