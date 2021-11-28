@@ -8,16 +8,11 @@ import com.example.kotlinstart.view.mainscreen.MainFragment
 
 //По ДЗ:
 
-//java.lang.NullPointerException: addresses[0].locality must not be null
+// java.lang.NullPointerException: addresses[0].locality must not be null +
 
-// замени Set на List +
+// отрабоать 4 сченария по обработки навигации между фрагментами
 
-// Разобраться с падением при отработке onBackPress() +
-
-// Отработать нажатие на элименты списка (открывать нужный элемент во всью пейджере) +
-
-// Отображать корректные данные в лист фрагмент и в пайджере  +
-// (переделал бд данные смегрировал)
+// разобраться с onBackPressed()
 
 // * разобраться с удалением элементво из бд
 // * узнать как делать рефрешь фрагмента и тогда убрать добавление нового фрагмента в weatherListFragment
@@ -40,15 +35,15 @@ internal class MainActivity : AppCompatActivity() {
             .commitAllowingStateLoss()
     }
 
-    override fun onBackPressed() {
-        when (supportFragmentManager.backStackEntryCount) {
-            0 -> checkExit()
-            else -> {
-                supportFragmentManager.popBackStack()
-                isExit = false
-            }
-        }
-    }
+//    override fun onBackPressed() {
+//        when (supportFragmentManager.backStackEntryCount) {
+//            0 -> checkExit()
+//            else -> {
+//                supportFragmentManager.popBackStack()
+//                isExit = false
+//            }
+//        }
+//    }
 
     private fun checkExit() {
         when (isExit) {

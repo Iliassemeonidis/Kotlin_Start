@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlinstart.databinding.ItemCityWeatherBinding
 import com.example.kotlinstart.model.Weather
 
-class WeatherListAdapter(
+internal class WeatherListAdapter(
     private var onClickItem: WeatherListFragment.OnClickItem?,
 ) : RecyclerView.Adapter<WeatherListAdapter.WeatherViewHolder>(), ItemTouchHelperAdapter {
 

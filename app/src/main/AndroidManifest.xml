@@ -36,7 +36,6 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".view.contacts.ContactsActivity" />
 
         <activity
             android:name=".view.base.MainActivity"
@@ -52,14 +51,6 @@
         </activity>
 
         <service android:name=".view.detailsscreen.MainService" />
-        <service
-            android:name=".view.experiments.MainService"
-            android:enabled="true"
-            android:exported="true" />
-        <service
-            android:name=".view.experiments.BoundService"
-            android:enabled="true"
-            android:exported="true" />
 
         <receiver android:name=".view.experiments.MainBroadcastReceiver">
             <intent-filter>

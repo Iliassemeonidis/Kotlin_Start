@@ -124,15 +124,14 @@ class GeolocationHelper(context: Context) {
         try {
             // для примера указан город
             val addresses = geoCoder.getFromLocation(location.latitude, location.longitude, 1)
-            if (addresses.isNotEmpty()) {
-//                showAddressDialog(addresses[0].getAddressLine(0), location)
-                listener?.getWeatherParamsFromUserLocation(
-                    WeatherParams(
-                        addresses[0].locality,
-                        lat = location.latitude,
-                        lon = location.longitude
+            if (addresses[0].locality.isNotEmpty()) {
+                    listener?.getWeatherParamsFromUserLocation(
+                        WeatherParams(
+                            addresses[0].locality,
+                            lat = location.latitude,
+                            lon = location.longitude
+                        )
                     )
-                )
             } else {
                 Log.i("ADDRESS", "Список адресов пустой")
             }
@@ -158,10 +157,8 @@ class GeolocationHelper(context: Context) {
         val geoCoder = Geocoder(context)
         try {
             val addresses = geoCoder.getFromLocationName(city, 1)
-//            val addresses = "Moscow"
-//            addressListener.onValidData(Weather(addresses))
             if (addresses.isNotEmpty()) {
-                if (addresses[0].locality.isEmpty()) {
+              if (addresses[0].locality.isNullOrBlank()) {
                     addressListener.onEmpty()
                 } else {
                     val address = addresses[0]
@@ -174,11 +171,5 @@ class GeolocationHelper(context: Context) {
             e.printStackTrace()
             addressListener.onError(e)
         }
-    }
-
-    private fun checkAdminAreal(adminArea: String?): String {
-        return if (adminArea.isNullOrEmpty()) {
-            adminArea.toString()
-        }else ""
     }
 }

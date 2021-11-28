@@ -12,7 +12,9 @@ import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.FragmentMainBinding
 import com.example.kotlinstart.view.detailsscreen.DetailsFragment
 import com.example.kotlinstart.view.detailsscreen.DetailsViewPagerAdapter
+import com.example.kotlinstart.view.weatherlistscreen.ListState
 import com.example.kotlinstart.view.weatherlistscreen.WeatherListFragment
+import com.example.kotlinstart.view.weatherlistscreen.WeatherListFragment.Companion.LISTSTATE_KEY
 import com.google.android.material.bottomappbar.BottomAppBar
 
 class MainFragment : Fragment() {
@@ -25,6 +27,7 @@ class MainFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        checkFragmentResult()
     }
 
     override fun onCreateView(
@@ -36,7 +39,6 @@ class MainFragment : Fragment() {
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViewMainParams()
@@ -47,7 +49,6 @@ class MainFragment : Fragment() {
     private fun initViewMainParams() {
         viewModel.subscribeOnWeatherFromDB().observe(viewLifecycleOwner) { onWeatherList(it) }
         viewModel.getWeatherParamsFromDataBase()
-
     }
 
     private fun onWeatherList(list: MutableList<DetailsFragment>) {
@@ -79,11 +80,15 @@ class MainFragment : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun initAdapterAndPager() {
+    private fun initAdapterAndPager(position: Int = 0) {
         adapter = DetailsViewPagerAdapter(requireActivity(), mutableListOf())
         binding.pager.adapter = adapter
+        setPagerPosition(position)
+    }
+
+    private fun setPagerPosition(position: Int) {
         Handler().postDelayed({
-            binding.pager.setCurrentItem(arguments?.getInt(PAGER_POSITION) ?: 0, true)
+            binding.pager.setCurrentItem(position, true)
         }, 100)
     }
 
@@ -116,25 +121,33 @@ class MainFragment : Fragment() {
             .add(R.id.main_container, WeatherListFragment())
             .addToBackStack(null)
             .commitAllowingStateLoss()
+    }
 
+    private fun checkFragmentResult() {
         requireActivity().supportFragmentManager.setFragmentResultListener(
             "1",
             this
         ) { requestKey, bundle ->
-            if (requestKey == "1"){
-                val result = bundle.getParcelable<Enum>("DeleteAlertDialog.DELETE_DIALOG_RESULT")
-                result?.let{
-                    when(it){
-                        VAR_1 //Ничего
-                        VAR_2 -> //refresh()
-                        VAR_3 -> //bundle.getPosition - move to position
-                        VAR_4 -> //refresh() bundle.getPosition - move to position
-                        else //Ничего
+            if (requestKey == "1") {
+                val result = bundle.get(LISTSTATE_KEY) as ListState
+                println(result)
+                when (result) {
+                    is ListState.Old
+                    -> println("Ничего не изменилось вернулись назад")
+                    is ListState.New
+                    -> initViewMainParams()
+                    is ListState.MOVINGTOTHETOOLD -> {
+                        println("bundle.getPosition - move to position не изменился и нажали на элемент")
+                        setPagerPosition(result.position)
+                    }
+                    is ListState.MOVINGTOTHENEW
+                    -> {
+                        println("refresh() bundle.getPosition - move to position  изменился список и нажали на новый жлемент")
+                        initViewMainParams()
+                        setPagerPosition(result.position)
+                    }
                 }
-                }
-
             }
-
         }
     }
 
@@ -143,5 +156,6 @@ class MainFragment : Fragment() {
 
         fun newInstance(position: Int) =
             MainFragment().apply { arguments = bundleOf(PAGER_POSITION to position) }
+
     }
 }

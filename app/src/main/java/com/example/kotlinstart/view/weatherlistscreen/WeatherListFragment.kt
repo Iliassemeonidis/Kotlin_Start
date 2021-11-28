@@ -10,6 +10,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.ViewModelProvider
@@ -22,30 +23,30 @@ import com.example.kotlinstart.model.WeatherParams
 import com.example.kotlinstart.view.detailsscreen.SearchCityState
 import com.google.android.material.bottomappbar.BottomAppBar
 
-class WeatherListFragment : Fragment() {
+internal class WeatherListFragment : Fragment() {
 
     private var weatherBinding: FragmentWeatherListBinding? = null
     private val binding get() = weatherBinding!!
 
     private lateinit var viewModel: WeatherListViewModel
     private lateinit var listAdapter: WeatherListAdapter
+    private var isListSizeChanged = false
 
     private val onClickListItem: OnClickItem = object : OnClickItem {
 
         override fun onClick(position: Int) {
-            //removeAllEragments()
+//            removeAllEragments()
+//
+//            requireActivity().supportFragmentManager.beginTransaction()
+//                .replace(R.id.main_container, MainFragment.newInstance(position))
+//                .commitAllowingStateLoss()
 
-            /*requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.main_container, MainFragment.newInstance(position))
-                .commitAllowingStateLoss()*/
+            when (isListSizeChanged) {
+                true -> setFragmentResult("1", bundleOf( LISTSTATE_KEY to ListState.MOVINGTOTHENEW(position)))
+                else -> setFragmentResult("1", bundleOf(LISTSTATE_KEY to ListState.MOVINGTOTHETOOLD(position)))
 
-            setFragmentResult(
-                "1",
-                Bundle().apply {
-                    Enum,
-                    position
-                }
-            )
+            }
+
             requireActivity().supportFragmentManager.popBackStack()
         }
 
@@ -60,19 +61,15 @@ class WeatherListFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        requireActivity().onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                setFragmentResult(
-                    "1",
-                    Bundle().apply {
-                            Enum,
-                            position
-                    }
-                )
-                requireActivity().supportFragmentManager.popBackStack()
-            }
-        })
+        requireActivity().onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    checkStateList()
+                }
+            })
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -122,12 +119,7 @@ class WeatherListFragment : Fragment() {
     }
 
     private fun subscribeOnViewModel() {
-        /* viewModel.subscribeToNewAddress().observe(viewLifecycleOwner) {
-             onWeatherItemAdded(it)
-         }*/
-        viewModel.subscribeToDB().observe(viewLifecycleOwner) {
-            onWeatherListAdded(it)
-        }
+        viewModel.subscribeToDB().observe(viewLifecycleOwner) { onWeatherListAdded(it) }
         viewModel.subscribeToNewCity().observe(viewLifecycleOwner) { isCityReady(it) }
         viewModel.getWeatherFromBD()
     }
@@ -142,20 +134,6 @@ class WeatherListFragment : Fragment() {
         if (listAdapter.itemCount == 0) {
             Toast.makeText(requireContext(), "Добавтье новый город", Toast.LENGTH_SHORT).show()
         }
-    }
-
-    /*   private fun onWeatherItemAdded(weather: Weather) {
-           if (weather.cityName.isNotEmpty()) {
-               listAdapter.onItemAdded(weather)
-           }
-       }*/
-
-    private fun addItemOnListWeather(city: WeatherParams) {
-        //weatherList.add(Weather(city.city, "", city.degrees))
-    }
-
-    private fun saveCityInDataBase(city: WeatherParams) {
-        //viewModel.saveCityInDataBase(city)
     }
 
     private fun initFab() {
@@ -174,7 +152,7 @@ class WeatherListFragment : Fragment() {
 
     private fun onClickFab() {
         binding.fab.setOnClickListener {
-            requireActivity().supportFragmentManager.popBackStack()
+            checkStateList()
         }
     }
 
@@ -218,6 +196,7 @@ class WeatherListFragment : Fragment() {
             .setPositiveButton(getString(R.string.dialog_button_ok)) { dialog, _ ->
                 viewModel.onCityApprovedByUser(weather)
                 listAdapter.onItemAdded(Weather(weather.city))
+                isListSizeChanged = true
                 dialog.dismiss()
             }
             .setNegativeButton(getString(R.string.dialog_button_no)) { dialog, _ ->
@@ -225,6 +204,19 @@ class WeatherListFragment : Fragment() {
             }
             .create()
             .show()
+    }
+
+    private fun checkStateList() {
+        when (isListSizeChanged) {
+            true -> setFragmentResult("1", bundleOf(LISTSTATE_KEY to ListState.New(isListSizeChanged)))
+            false -> setFragmentResult("1", bundleOf(LISTSTATE_KEY to ListState.Old(isListSizeChanged)))
+        }
+        requireActivity().supportFragmentManager.popBackStack()
+    }
+
+
+    companion object {
+        const val LISTSTATE_KEY = "LISTSTATE"
     }
 
     interface OnClickItem {
