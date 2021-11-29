@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.*
 import android.widget.Toast
+import android.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.kotlinstart.R
@@ -15,7 +17,9 @@ import com.example.kotlinstart.view.detailsscreen.DetailsViewPagerAdapter
 import com.example.kotlinstart.view.weatherlistscreen.ListState
 import com.example.kotlinstart.view.weatherlistscreen.WeatherListFragment
 import com.example.kotlinstart.view.weatherlistscreen.WeatherListFragment.Companion.LIST_STATE_KEY
+import com.example.kotlinstart.view.weatherlistscreen.WeatherListFragment.Companion.REQUEST_KEY
 import com.google.android.material.bottomappbar.BottomAppBar
+import java.util.zip.Inflater
 
 class MainFragment : Fragment() {
 
@@ -24,10 +28,13 @@ class MainFragment : Fragment() {
     private val binding get() = mainBinding!!
     private lateinit var adapter: DetailsViewPagerAdapter
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         checkFragmentResult()
+        setHasOptionsMenu(true)
+
     }
 
     override fun onCreateView(
@@ -51,6 +58,7 @@ class MainFragment : Fragment() {
         viewModel.getWeatherParamsFromDataBase()
     }
 
+
     private fun onWeatherList(list: MutableList<DetailsFragment>) {
         if (list.isNotEmpty()) {
             binding.listEmptyTextView.visibility = View.INVISIBLE
@@ -60,9 +68,10 @@ class MainFragment : Fragment() {
 
     //TODO Разобратья почему не реагирует на клики меню
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_bottom_bar, menu)
+        inflater.inflate(R.menu.menu_bottom_bar,menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -76,7 +85,6 @@ class MainFragment : Fragment() {
             )
                 .show()
         }
-
         return super.onOptionsItemSelected(item)
     }
 
@@ -125,10 +133,10 @@ class MainFragment : Fragment() {
 
     private fun checkFragmentResult() {
         requireActivity().supportFragmentManager.setFragmentResultListener(
-            "1",
+            REQUEST_KEY,
             this
         ) { requestKey, bundle ->
-            if (requestKey == "1") {
+            if (requestKey == REQUEST_KEY) {
                 val result = bundle.get(LIST_STATE_KEY) as ListState
                 println(result)
                 when (result) {

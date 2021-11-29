@@ -1,7 +1,9 @@
 package com.example.kotlinstart.view.weatherlistscreen
 
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +24,7 @@ import com.example.kotlinstart.model.Weather
 import com.example.kotlinstart.model.WeatherParams
 import com.example.kotlinstart.view.detailsscreen.SearchCityState
 import com.google.android.material.bottomappbar.BottomAppBar
+import kotlinx.android.parcel.Parcelize
 
 internal class WeatherListFragment : Fragment() {
 
@@ -35,33 +38,17 @@ internal class WeatherListFragment : Fragment() {
     private val onClickListItem: OnClickItem = object : OnClickItem {
 
         override fun onClick(position: Int) {
-//            removeAllEragments()
-//
-//            requireActivity().supportFragmentManager.beginTransaction()
-//                .replace(R.id.main_container, MainFragment.newInstance(position))
-//                .commitAllowingStateLoss()
-
             when (isListSizeChanged) {
                 true -> setFragmentResult(
-                    "1",
+                    REQUEST_KEY,
                     bundleOf(LIST_STATE_KEY to ListState.ToPosition(position, true))
                 )
                 else -> setFragmentResult(
-                    "1",
+                    REQUEST_KEY,
                     bundleOf(LIST_STATE_KEY to ListState.ToPosition(position, false))
                 )
-
             }
-
             requireActivity().supportFragmentManager.popBackStack()
-        }
-
-        private fun removeAllEragments() {
-            requireActivity().supportFragmentManager.let { fragmentManager ->
-                fragmentManager.fragments.map { fragment ->
-                    fragmentManager.beginTransaction().remove(fragment)
-                }
-            }
         }
     }
 
@@ -76,11 +63,9 @@ internal class WeatherListFragment : Fragment() {
             })
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(WeatherListViewModel::class.java)
-
     }
 
     override fun onDestroyView() {
@@ -105,8 +90,7 @@ internal class WeatherListFragment : Fragment() {
 
         initListAdapterAndRecyclerAdapter()
 
-        ItemTouchHelper(ItemTouchHelperCallback(listAdapter))
-            .attachToRecyclerView(binding.recyclerViewMain)
+        ItemTouchHelper(ItemTouchHelperCallback(listAdapter)).attachToRecyclerView(binding.recyclerViewMain)
 
         initFab()
 
@@ -135,10 +119,9 @@ internal class WeatherListFragment : Fragment() {
         isListAdapterEmpty()
     }
 
-
     private fun isListAdapterEmpty() {
         if (listAdapter.itemCount == 0) {
-            Toast.makeText(requireContext(), "Добавтье новый город", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), R.string.add_new_city, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -200,10 +183,7 @@ internal class WeatherListFragment : Fragment() {
             .setTitle(getString(R.string.botton_search))
             .setMessage(getString(R.string.dialog_city_search_message, weather.city))
             .setPositiveButton(getString(R.string.dialog_button_ok)) { dialog, _ ->
-                viewModel.onCityApprovedByUser(weather)
-                listAdapter.onItemAdded(Weather(weather.city))
-                isListSizeChanged = true
-                dialog.dismiss()
+                saveWeatherInDbAndAddToAdapter(weather, dialog)
             }
             .setNegativeButton(getString(R.string.dialog_button_no)) { dialog, _ ->
                 dialog.dismiss()
@@ -212,17 +192,27 @@ internal class WeatherListFragment : Fragment() {
             .show()
     }
 
+    private fun saveWeatherInDbAndAddToAdapter(
+        weather: WeatherParams,
+        dialog: DialogInterface
+    ) {
+        viewModel.onCityApprovedByUser(weather)
+        listAdapter.onItemAdded(Weather(weather.city))
+        isListSizeChanged = true
+        dialog.dismiss()
+    }
+
     private fun checkStateList() {
         setFragmentResult(
-            "1",
+            REQUEST_KEY,
             bundleOf(LIST_STATE_KEY to ListState.NotChanged(isListSizeChanged))
         )
         requireActivity().supportFragmentManager.popBackStack()
     }
 
-
     companion object {
-        const val LIST_STATE_KEY = "LISTSTATE"
+        const val LIST_STATE_KEY = "LIST_STATE"
+        const val REQUEST_KEY = "1"
     }
 
     interface OnClickItem {

@@ -41,8 +41,7 @@
         <item name="android:layout_marginTop">10dp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="fontFamily">@font/aguafina_script</item>
-        <item name="android:fontFamily">@font/aguafina_script</item>
+
     </style>
 
     <style name="CityItem">

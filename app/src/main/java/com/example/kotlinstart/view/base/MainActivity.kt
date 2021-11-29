@@ -1,6 +1,7 @@
 package com.example.kotlinstart.view.base
 
 import android.os.Bundle
+import android.view.Menu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.kotlinstart.R
@@ -10,12 +11,15 @@ import com.example.kotlinstart.view.mainscreen.MainFragment
 
 // java.lang.NullPointerException: addresses[0].locality must not be null +
 
-// отрабоать 4 сченария по обработки навигации между фрагментами
+// отрабоать 4 сченария по обработки навигации между фрагментами +
 
-// разобраться с onBackPressed()
+// разобраться с onBackPressed() +
+
+// * узнать как делать рефрешь фрагмента и тогда убрать добавление нового фрагмента в weatherListFragment +
+
 
 // * разобраться с удалением элементво из бд
-// * узнать как делать рефрешь фрагмента и тогда убрать добавление нового фрагмента в weatherListFragment
+// * разобраться почему не работает меню
 
 
 
@@ -35,15 +39,15 @@ internal class MainActivity : AppCompatActivity() {
             .commitAllowingStateLoss()
     }
 
-//    override fun onBackPressed() {
-//        when (supportFragmentManager.backStackEntryCount) {
-//            0 -> checkExit()
-//            else -> {
-//                supportFragmentManager.popBackStack()
-//                isExit = false
-//            }
-//        }
-//    }
+    override fun onBackPressed() {
+        when (supportFragmentManager.backStackEntryCount) {
+            0 -> checkExit()
+            else -> {
+                supportFragmentManager.popBackStack()
+                isExit = false
+            }
+        }
+    }
 
     private fun checkExit() {
         when (isExit) {

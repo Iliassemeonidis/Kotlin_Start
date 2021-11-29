@@ -11,7 +11,7 @@
     <string name="greeting">Приветсвую тебя человечешка!</string>
     <string name="introduce_yourself">Жми на кнопку человечешка!</string>
     <string name="title">Укажи свои данные, земляненен и нажми кнопку!</string>
-    <string name="add_new_city">add new city</string>
+    <string name="add_new_city">"Добавтье новый город"</string>
     <string name="icon_sun">icon_sun</string>
     <string name="hint_city">Город</string>
     <string name="add_your_place">Поиск города</string>
