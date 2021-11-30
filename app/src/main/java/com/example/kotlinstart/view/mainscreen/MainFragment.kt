@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.kotlinstart.R
 import com.example.kotlinstart.databinding.FragmentMainBinding
+import com.example.kotlinstart.view.base.MainActivity
 import com.example.kotlinstart.view.detailsscreen.DetailsFragment
 import com.example.kotlinstart.view.detailsscreen.DetailsViewPagerAdapter
 import com.example.kotlinstart.view.weatherlistscreen.ListState
@@ -29,7 +30,7 @@ class MainFragment : Fragment() {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         checkFragmentResult()
-        setHasOptionsMenu(true)
+        //setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -82,10 +83,12 @@ class MainFragment : Fragment() {
     }
 
     private fun initBottomAppBar() {
+        val context = activity as MainActivity
+        context.setSupportActionBar(binding.bottomAppBar)
+        setHasOptionsMenu(true)
         binding.bottomAppBar.navigationIcon =
             ContextCompat.getDrawable(requireContext(), R.drawable.ic_hamburger_menu_bottom_bar)
         binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
-        binding.bottomAppBar.replaceMenu(R.menu.menu_bottom_bar)
     }
 
     private fun initAdapterAndPager(position: Int = 0) {
