@@ -1,7 +1,6 @@
 package com.example.kotlinstart.view.base
 
 import android.os.Bundle
-import android.view.Menu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.kotlinstart.R
@@ -39,7 +38,8 @@ internal class MainActivity : AppCompatActivity() {
             .commitAllowingStateLoss()
     }
 
-    override fun onBackPressed() {
+    /*override fun onBackPressed() {
+        super.onBackPressed()
         when (supportFragmentManager.backStackEntryCount) {
             0 -> checkExit()
             else -> {
@@ -47,7 +47,7 @@ internal class MainActivity : AppCompatActivity() {
                 isExit = false
             }
         }
-    }
+    }*/
 
     private fun checkExit() {
         when (isExit) {
