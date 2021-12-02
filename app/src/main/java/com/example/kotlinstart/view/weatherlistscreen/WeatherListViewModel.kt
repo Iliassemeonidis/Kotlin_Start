@@ -12,15 +12,11 @@ import com.example.kotlinstart.view.base.baseinterface.OnGetWeatherListListener
 import com.example.kotlinstart.view.detailsscreen.SearchCityState
 
 internal class WeatherListViewModel(
-    private val liveDataForNewAddress: MutableLiveData<Weather> = MutableLiveData(),
     private val liveDataForDB: MutableLiveData<MutableList<Weather>> = MutableLiveData(),
     private val repositoryImpl: RepositoryImpl = RepositoryImpl(),
     private val liveDataForNewCity: MutableLiveData<SearchCityState> = MutableLiveData()
 ) : ViewModel() {
 
-    fun subscribeToNewAddress(): LiveData<Weather> {
-        return liveDataForNewAddress
-    }
 
     fun getWeatherFromBD() {
         repositoryImpl.getWeatherFromDataBase(object : OnGetWeatherListListener {
@@ -48,7 +44,6 @@ internal class WeatherListViewModel(
     }
 
     fun onCityApprovedByUser(weather: WeatherParams) {
-        //liveDataForNewAddress.value = weather
         repositoryImpl.saveCityInDataBase(weather)
     }
 
@@ -56,13 +51,8 @@ internal class WeatherListViewModel(
         return liveDataForNewCity
     }
 
-
-    fun saveCityInDataBase(weatherParams: WeatherParams) {
-        repositoryImpl.saveCityInDataBase(weatherParams)
-    }
-
-    fun deleteAllWeatherData() {
-        repositoryImpl.deleteAllWeatherParamsFromDataBase()
+    fun deleteAllWeatherData(weather: Weather) {
+        repositoryImpl.deleteAllWeatherParamsFromDataBase(weather)
     }
 
     fun subscribeToDB(): MutableLiveData<MutableList<Weather>> {

@@ -7,12 +7,16 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlinstart.databinding.ItemCityWeatherBinding
 import com.example.kotlinstart.model.Weather
+import com.example.kotlinstart.repository.weatherrepository.RepositoryImpl
 
 internal class WeatherListAdapter(
     private var onClickItem: WeatherListFragment.OnClickItem?,
+    private val onItemDeleteListener: OnItemDeleteListener
 ) : RecyclerView.Adapter<WeatherListAdapter.WeatherViewHolder>(), ItemTouchHelperAdapter {
 
     private var weatherList: MutableList<Weather> = mutableListOf()
+
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -35,16 +39,21 @@ internal class WeatherListAdapter(
         }
     }
 
+    fun hasWeatherInList(cityName: String): Boolean {
+        var result = false
+        weatherList.map {
+            if (it.cityName == cityName) {
+                result = true
+            }
+        }
+        return result
+    }
+
+
     @SuppressLint("NotifyDataSetChanged")
     fun onListAdded(list: MutableList<Weather>) {
         weatherList = list
         notifyDataSetChanged()
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun setItemInList(weather: Weather) {
-        weatherList.add(weather)
-        notifyItemInserted(weatherList.size - 1)
     }
 
     override fun onItemMove(fromPosition: Int, toPosition: Int) {
@@ -55,9 +64,11 @@ internal class WeatherListAdapter(
     }
 
     override fun onItemDismiss(position: Int) {
+        onItemDeleteListener.onItemDelete(true,weatherList[position])
         weatherList.removeAt(position)
         notifyItemRemoved(position)
     }
+
 
     fun onDestroy() {
         onClickItem = null
@@ -82,4 +93,5 @@ internal class WeatherListAdapter(
             itemView.setBackgroundColor(Color.RED)
         }
     }
+
 }

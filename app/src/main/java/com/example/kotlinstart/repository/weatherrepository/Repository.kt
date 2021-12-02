@@ -12,5 +12,5 @@ interface Repository {
     fun saveCityInDataBase(city: WeatherParams)
     fun getWeatherParamsFromDataBase(listener: OnGetWeatherFragmentList)
     fun getWeatherFromDataBase(listener: OnGetWeatherListListener)
-    fun deleteAllWeatherParamsFromDataBase()
+    fun deleteAllWeatherParamsFromDataBase(weather: Weather)
 }

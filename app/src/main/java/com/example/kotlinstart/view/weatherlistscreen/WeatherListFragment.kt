@@ -3,7 +3,6 @@ package com.example.kotlinstart.view.weatherlistscreen
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,9 +23,8 @@ import com.example.kotlinstart.model.Weather
 import com.example.kotlinstart.model.WeatherParams
 import com.example.kotlinstart.view.detailsscreen.SearchCityState
 import com.google.android.material.bottomappbar.BottomAppBar
-import kotlinx.android.parcel.Parcelize
 
-internal class WeatherListFragment : Fragment() {
+internal class WeatherListFragment : Fragment(), OnItemDeleteListener {
 
     private var weatherBinding: FragmentWeatherListBinding? = null
     private val binding get() = weatherBinding!!
@@ -34,6 +32,7 @@ internal class WeatherListFragment : Fragment() {
     private lateinit var viewModel: WeatherListViewModel
     private lateinit var listAdapter: WeatherListAdapter
     private var isListSizeChanged = false
+    private var itemRemoved = false
 
     private val onClickListItem: OnClickItem = object : OnClickItem {
 
@@ -51,6 +50,8 @@ internal class WeatherListFragment : Fragment() {
             requireActivity().supportFragmentManager.popBackStack()
         }
     }
+
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -104,7 +105,7 @@ internal class WeatherListFragment : Fragment() {
     }
 
     private fun initListAdapterAndRecyclerAdapter() {
-        listAdapter = WeatherListAdapter(onClickListItem)
+        listAdapter = WeatherListAdapter(onClickListItem,this)
         binding.recyclerViewMain.adapter = listAdapter
     }
 
@@ -196,9 +197,14 @@ internal class WeatherListFragment : Fragment() {
         weather: WeatherParams,
         dialog: DialogInterface
     ) {
-        viewModel.onCityApprovedByUser(weather)
-        listAdapter.onItemAdded(Weather(weather.city))
-        isListSizeChanged = true
+        if (!listAdapter.hasWeatherInList(weather.city)) {
+            viewModel.onCityApprovedByUser(weather)
+            listAdapter.onItemAdded(Weather(weather.city))
+            isListSizeChanged = true
+        } else {
+            Toast.makeText(requireContext(), "Вы уже добавили этот город", Toast.LENGTH_SHORT)
+                .show()
+        }
         dialog.dismiss()
     }
 
@@ -217,5 +223,12 @@ internal class WeatherListFragment : Fragment() {
 
     interface OnClickItem {
         fun onClick(position: Int)
+    }
+
+    override fun onItemDelete(result: Boolean,weather: Weather) {
+        if (result) {
+            viewModel.deleteAllWeatherData(weather)
+            isListSizeChanged = true
+        }
     }
 }

@@ -79,18 +79,21 @@ class RepositoryImpl : Repository {
         }
     }
 
-    override fun deleteAllWeatherParamsFromDataBase() {
+    override fun deleteAllWeatherParamsFromDataBase(weather: Weather) {
         val handler = Handler(createThread().looper)
         handler.post {
             val listDao = KotlinStartApplication.getHistoryDao().all()
-            for (i in listDao.indices) {
-                KotlinStartApplication.getHistoryDao().delete(listDao[i])
-            }
+           listDao.map {
+               if (it.city == weather.cityName) {
+                   KotlinStartApplication.getHistoryDao().delete(it)
+               }
+           }
         }
     }
 
     private fun createThread(): HandlerThread {
-        val handlerThread = HandlerThread("MyThread2")
+        val s = "MyThread2"
+        val handlerThread = HandlerThread(s)
         handlerThread.start()
         return handlerThread
     }

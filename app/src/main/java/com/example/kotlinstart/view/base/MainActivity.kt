@@ -8,8 +8,11 @@ import com.example.kotlinstart.view.mainscreen.MainFragment
 
 //Последние работы по этому приложению ДЗ:
 
-// разобраться с удалением элементво из бд
-// проверкой на дубли
+// разобраться с удалением элементво из бд +
+
+// проверкой на дубли +
+
+// доработать функционал по onBackPress() выводить тост с уведомлением для выхода +
 
 
 
@@ -29,16 +32,15 @@ internal class MainActivity : AppCompatActivity() {
             .commitAllowingStateLoss()
     }
 
-    /*override fun onBackPressed() {
-        super.onBackPressed()
+    override fun onBackPressed() {
         when (supportFragmentManager.backStackEntryCount) {
             0 -> checkExit()
             else -> {
-                supportFragmentManager.popBackStack()
+                super.onBackPressed()
                 isExit = false
             }
         }
-    }*/
+    }
 
     private fun checkExit() {
         when (isExit) {
