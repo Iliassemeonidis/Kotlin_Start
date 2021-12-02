@@ -40,10 +40,8 @@
         <activity
             android:name=".view.base.MainActivity"
             android:configChanges="uiMode"
-            android:screenOrientation="portrait">
-
-
-
+            android:screenOrientation="portrait"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -52,11 +50,7 @@
 
         <service android:name=".view.detailsscreen.MainService" />
 
-        <receiver android:name=".view.experiments.MainBroadcastReceiver">
-            <intent-filter>
-                <action android:name="Receive weather info sdfghsrdfgh" />
-            </intent-filter>
-        </receiver>
+
     </application>
 
 </manifest>

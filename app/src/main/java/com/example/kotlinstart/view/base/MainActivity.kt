@@ -6,19 +6,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.kotlinstart.R
 import com.example.kotlinstart.view.mainscreen.MainFragment
 
-//По ДЗ:
+//Последние работы по этому приложению ДЗ:
 
-// java.lang.NullPointerException: addresses[0].locality must not be null +
-
-// отрабоать 4 сченария по обработки навигации между фрагментами +
-
-// разобраться с onBackPressed() +
-
-// * узнать как делать рефрешь фрагмента и тогда убрать добавление нового фрагмента в weatherListFragment +
-
-
-// * разобраться с удалением элементво из бд
-// * разобраться почему не работает меню
+// разобраться с удалением элементво из бд
+// проверкой на дубли
 
 
 
