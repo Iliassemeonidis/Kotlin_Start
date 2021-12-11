@@ -24,11 +24,23 @@
             android:textSize="30sp"
             />
 
+
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             />
+
+        <me.relex.circleindicator.CircleIndicator3
+            android:id="@+id/indicator"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_gravity="fill_vertical"
+            android:background="@color/white"
+            app:ci_drawable= "@xml/white_radius"
+            android:layout_marginBottom="48dp"
+            android:padding="30dp"/>
+
     </FrameLayout>
 
     <com.google.android.material.bottomappbar.BottomAppBar

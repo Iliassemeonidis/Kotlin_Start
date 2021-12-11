@@ -18,6 +18,7 @@ import com.example.kotlinstart.view.weatherlistscreen.WeatherListFragment
 import com.example.kotlinstart.view.weatherlistscreen.WeatherListFragment.Companion.LIST_STATE_KEY
 import com.example.kotlinstart.view.weatherlistscreen.WeatherListFragment.Companion.REQUEST_KEY
 import com.google.android.material.bottomappbar.BottomAppBar
+import me.relex.circleindicator.CircleIndicator3
 
 class MainFragment : Fragment() {
 
@@ -94,6 +95,12 @@ class MainFragment : Fragment() {
     private fun initAdapterAndPager(position: Int = 0) {
         adapter = DetailsViewPagerAdapter(requireActivity(), mutableListOf())
         binding.pager.adapter = adapter
+
+        val indicator: CircleIndicator3 = binding.indicator
+
+        indicator.setViewPager(binding.pager)
+        adapter.registerAdapterDataObserver(indicator.adapterDataObserver)
+
         setPagerPosition(position)
     }
 

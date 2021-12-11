@@ -17,6 +17,7 @@ internal class DetailsViewModel(
 
     lateinit var city: String
     private val callBack = object : retrofit2.Callback<WeatherDTO> {
+
         override fun onResponse(call: Call<WeatherDTO>, response: Response<WeatherDTO>) {
             val stateSuccess = getStateOnResponse(city, response)
             detailsLiveData.postValue(stateSuccess)
