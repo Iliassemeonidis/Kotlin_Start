@@ -12,6 +12,8 @@
         <entry key="..\:/Users/sanek/Desktop/Profi/Ilias/Kotlin_Start/app/src/main/res/menu/menu_bottom_bar.xml" value="0.36041666666666666" />
         <entry key="..\:/Users/sanek/Desktop/Profi/Ilias/Kotlin_Start/app/src/main/res/mipmap-anydpi-v26/ic_la.xml" value="0.25" />
         <entry key="..\:/Users/sanek/Desktop/Profi/Ilias/Kotlin_Start/app/src/main/res/mipmap-anydpi-v26/ic_la_round.xml" value="0.25" />
+        <entry key="app/src/main/res/drawable-v24/baseline_thermostat_20.xml" value="0.191" />
+        <entry key="app/src/main/res/drawable-v24/baseline_thermostat_24.xml" value="0.191" />
         <entry key="app/src/main/res/drawable-v24/bg_white_rounded.xml" value="0.2222222222222222" />
         <entry key="app/src/main/res/drawable-v24/ic_russia.xml" value="0.25885416666666666" />
         <entry key="app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.25625" />
@@ -19,7 +21,7 @@
         <entry key="app/src/main/res/layout/activity_contacts.xml" value="0.1743659420289855" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.14719202898550723" />
         <entry key="app/src/main/res/layout/fragment_city_dialog.xml" value="0.19672059670058598" />
-        <entry key="app/src/main/res/layout/fragment_details.xml" value="0.45" />
+        <entry key="app/src/main/res/layout/fragment_details.xml" value="0.30985915492957744" />
         <entry key="app/src/main/res/layout/fragment_details2.xml" value="0.14855072463768115" />
         <entry key="app/src/main/res/layout/fragment_google_maps.xml" value="0.15896739130434784" />
         <entry key="app/src/main/res/layout/fragment_list.xml" value="0.14855072463768115" />

@@ -12,13 +12,11 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/SkyBlue">
+        android:background="@color/CornflowerBlue">
 
         <TextView
             android:id="@+id/text_view_city"
-            style="@style/MainCityItemStyle"
-            android:textColorHighlight="@color/black"
-            android:textColor="@color/white"
+            style="@style/TextViewCity"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="@string/city_name" />
@@ -48,7 +46,7 @@
             android:layout_margin="@dimen/margin_icon"
             android:contentDescription="@string/icon_sun"
             android:paddingBottom="@dimen/bottom_icon"
-            android:src="@drawable/sun"
+            android:src="@drawable/icons8"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
