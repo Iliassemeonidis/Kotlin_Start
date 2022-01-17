@@ -23,13 +23,4 @@ class DetailsViewPagerAdapter(
         listDetailsFragment = list
         notifyDataSetChanged()
     }
-
-    fun addNewItem(item:DetailsFragment) {
-        listDetailsFragment.add(item)
-        if (listDetailsFragment.size == 0) {
-            notifyItemChanged(0)
-        } else {
-            notifyItemChanged(listDetailsFragment.size-1)
-        }
-    }
 }
